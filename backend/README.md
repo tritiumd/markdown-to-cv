@@ -26,3 +26,10 @@
 - Swagger UI: http://localhost:8000/docs
 - Redoc: http://localhost:8000/redoc
 
+# Folder structure
+
+- `app`: Contains the main application
+- `app/api`: the API routes
+- `app/core`: the configs, dependencies, and utilities
+- `app/models`: the Pydantic models
+- `app/tests`: the tests, run with `pytest`
