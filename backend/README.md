@@ -1,9 +1,8 @@
 # Write CV on Markdown
 
 ## Tech stack
-- Python 3.11
-- Flask 3.0.3
-- HTML, CSS
+- Python 3.10
+- FastAPI 0.111.0
 
 ## Features
 - Drag and drop to upload files
@@ -21,3 +20,9 @@
     ```bash
    flask run
     ```
+
+# Testing (API):
+
+- Swagger UI: http://localhost:8000/docs
+- Redoc: http://localhost:8000/redoc
+
