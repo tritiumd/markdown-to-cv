@@ -17,7 +17,7 @@
     source venv/bin/activate
     pip install -r requirements.txt
     ``` 
-3. Run the app
+3. Run the backend
     ```bash
-    python app.py
+   flask run
     ```
