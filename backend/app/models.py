@@ -27,3 +27,8 @@ class File(FileBase):
 
 class MarkdownFile(File, table=True):
     id: int = Field(default=None, nullable=False, primary_key=True)
+
+
+class HTMLFile(File, table=True):
+    id: int = Field(default=None, nullable=False, primary_key=True)
+    input_id: int
