@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { DeleteOutlined, InboxOutlined } from "@ant-design/icons";
 import { Button, Flex, message, Upload } from "antd";
+import _ from "lodash";
 const { Dragger } = Upload;
 
 const url = "http://127.0.0.1:8000/api/v1";
@@ -37,51 +38,66 @@ export default function UploadField() {
   //   };
   //   fetchData();
   // }, [uploadedMap]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const promises = Object.entries(outputMap).map(([key, value]) => {
-        const fetchUrl = `${url}/outputfile?file_id=${value}`;
-        return fetch(fetchUrl).then((response) => response.json());
-      });
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const promises = Object.entries(outputMap).map(([key, value]) => {
+  //       const fetchUrl = `${url}/outputfile?file_id=${value}`;
+  //       return fetch(fetchUrl)
+  //         .then((response) => response.json())
+  //         .then((data) => ({ key, data }));
+  //     });
 
-      try {
-        const data = await Promise.all(promises);
-        // Do something with the data
-        console.log("Fetched data:", data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, [outputMap]);
+  //     try {
+  //       const data = await Promise.all(promises);
+  //       // Do something with the data
+  //       console.log("Fetched data:", data);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [outputMap]);
 
   const props = {
     name: "file",
     multiple: true,
     action: `${url}/uploadfile`,
     onChange({ file, fileList, event }) {
+      console.log(file.status);
+      if (file.status == "removed") {
+        setOutputMap(_.omit(outputMap, [file.uid]));
+        setUploadedList(uploadedList.filter((info) => info.uid !== file.uid));
+      }
       if (file.status !== "uploading") {
-        console.log(file, fileList);
+        console.log("File status!", file, fileList);
       }
       if (file.status === "done") {
         message.success(`${file.name} file uploaded successfully.`);
+        const value = file.response.id;
+        let callAPI = `${url}/outputfile?file_id=${value}`;
+        file.url = callAPI;
+        setUploadedList((prev) => [file, ...prev]);
+        console.log("File list:", fileList);
       } else if (file.status === "error") {
         message.error(`${file.name} file upload failed.`);
       }
-      setUploadedList(fileList);
-      if (file?.response?.id) {
-        setOutputMap((prev) => {
-          return { ...prev, [file.uid]: file?.response?.id };
-        });
-      }
+
+      // if (file?.response?.id) {
+      //   setOutputMap((prev) => {
+      //     return { ...prev, [file.uid]: file?.response?.id };
+      //   });
+      // }
     },
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
     },
     defaultFileList: [],
+    // fileList: [...uploadedList],
     showUploadList: {
-      showDownloadIcon: true,
-      downloadIcon: "Get CV",
+      // showDownloadIcon: true,
+      // downloadIcon: (
+      //   <a onClick={(e) => console.log(e, "custom Download event")}>Get CV</a>
+      // ),
       showRemoveIcon: true,
       removeIcon: (
         <DeleteOutlined
@@ -108,8 +124,7 @@ export default function UploadField() {
           Support for a single or bulk upload. Strictly prohibited from
           uploading company data or other banned files.
         </p>
-        {console.log("list file", uploadedList)}
-        {console.log("list file map", outputMap)}
+        {console.log("Uploaded list: ", uploadedList)}
       </Dragger>
     </Flex>
   );

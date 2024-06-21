@@ -5,6 +5,7 @@ from typing import Any
 
 from fastapi import APIRouter, File, UploadFile, Depends, HTTPException
 from sqlmodel import Session, select
+from starlette.responses import HTMLResponse
 
 from app.core.config import settings
 from app.core.db import get_session
@@ -69,8 +70,11 @@ async def get_output_file(file_id: int, session: Session = Depends(get_session))
     query = select(HTMLFile).where(HTMLFile.input_id == file_id)
     output_file = session.exec(query).one()
     filename = output_file.data_path.split("/")
+    with open(output_file.data_path, "r") as f:
+        content = f.read()
     # Escape the HTML content
-    print("filename", filename[-1])
-    return {"filename": filename[-1]}
+    # print("filename", filename[-1])
+    # return StaticFiles(directory=output_file.data_path, html=True)
+    return HTMLResponse(content=content, status_code=200)
 
     # query = session.get(HTMLFile, )
