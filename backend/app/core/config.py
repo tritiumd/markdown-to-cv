@@ -48,6 +48,7 @@ class Settings(BaseSettings):
 
     DATA_FOLDER_PATH: str = "./markdown"
     DATA_OUTPUT_FOLDER_PATH: str = "./html"
+    DEPLOY_DIRECTORY: str = "./deploy"
 
     @computed_field  # type: ignore[misc]
     @property

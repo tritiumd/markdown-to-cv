@@ -15,7 +15,7 @@ router = APIRouter()
 
 def create_output_file(upload_dir: str, output_dir: str, filename: str):
     # TODO: remove later
-    deploy_dir = "/home/delus/Documents/code/personal/pandoc-cv/deploy"
+    deploy_dir = settings.DEPLOY_DIRECTORY
     os.system(f"cp {upload_dir}/{filename}.md {deploy_dir}/{filename}.md")
     os.system(f"bash {deploy_dir}/run_md2html.sh {deploy_dir} {filename}")
     os.system(f"cp {deploy_dir}/{filename}.html {output_dir}/{filename}.html")
