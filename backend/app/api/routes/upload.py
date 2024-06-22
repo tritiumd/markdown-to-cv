@@ -57,13 +57,13 @@ async def create_upload_file(file: UploadFile = File(...), session: Session = De
             title=file.filename + ".html",
             data_path=output_file_path,
             owner_id=0,
-            input_id=file_instance.id,
+            uid=new_uid,
         )
         session.add(file_output)
         session.commit()
         session.refresh(file_output)
 
-        data = {"filename": file.filename, "id": file_instance.id}
+        data = {"filename": file.filename, "uid": new_uid}
         # return HTTPResponse(content=data, status_code=200)
         return data
     except Exception:
@@ -72,8 +72,8 @@ async def create_upload_file(file: UploadFile = File(...), session: Session = De
 
 
 @router.get("/outputfile")
-async def get_output_file(file_id: int, session: Session = Depends(get_session)) -> Any:
-    query = select(HTMLFile).where(HTMLFile.input_id == file_id)
+async def get_output_file(file_uid: str, session: Session = Depends(get_session)) -> Any:
+    query = select(HTMLFile).where(HTMLFile.uid == file_uid)
     output_file = session.exec(query).one()
     filename = output_file.data_path.split("/")
     with open(output_file.data_path, "r") as f:
