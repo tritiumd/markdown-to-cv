@@ -9,55 +9,6 @@ const url = "http://127.0.0.1:8000/api/v1";
 export default function UploadField() {
   const [uploadedList, setUploadedList] = useState([]);
   const [outputMap, setOutputMap] = useState({});
-  // useMemo(() => {
-  //   const fetchData = async () => {
-  //     // for (const upload of uploadedList) {
-  //     const newUploadedMap = Object.entries(uploadedMap).map(
-  //       async ([uid, upload]) => {
-  //         const output_id = upload?.response?.id;
-  //         if (output_id) {
-  //           try {
-  //             const response = await fetch(
-  //               `${url}/outputfile?file_id=${output_id}`
-  //             );
-  //             // Do something with the response data
-  //             console.log("response: ", response);
-  //             const fileURL = URL.createObjectURL(response.text());
-  //             upload.response.url = fileURL.toString();
-  //             return upload;
-  //           } catch (error) {
-  //             console.error(
-  //               `Error fetching data for output file ${output_id}:`,
-  //               error
-  //             );
-  //           }
-  //         }
-  //       }
-  //     );
-  //     setUploadedMap(newUploadedMap);
-  //   };
-  //   fetchData();
-  // }, [uploadedMap]);
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const promises = Object.entries(outputMap).map(([key, value]) => {
-  //       const fetchUrl = `${url}/outputfile?file_id=${value}`;
-  //       return fetch(fetchUrl)
-  //         .then((response) => response.json())
-  //         .then((data) => ({ key, data }));
-  //     });
-
-  //     try {
-  //       const data = await Promise.all(promises);
-  //       // Do something with the data
-  //       console.log("Fetched data:", data);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [outputMap]);
-
   const props = {
     name: "file",
     multiple: true,
@@ -111,7 +62,7 @@ export default function UploadField() {
     },
   };
   return (
-    <Flex gap="middle" wrap>
+    <Flex gap="middle" wrap className="p-24">
       <Dragger {...props}>
         <p className="ant-upload-drag-icon">
           {" "}
