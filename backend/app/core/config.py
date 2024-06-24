@@ -6,6 +6,7 @@ from pydantic import (
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+
 def parse_cors(v: Any) -> list[str] | str:
     if isinstance(v, str) and not v.startswith("["):
         return [i.strip() for i in v.split(",")]
@@ -45,7 +46,9 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str = ""
 
-    DATA_FOLDER_PATH: str = "./"
+    DATA_FOLDER_PATH: str = "./markdown"
+    DATA_OUTPUT_FOLDER_PATH: str = "./html"
+    DEPLOY_DIRECTORY: str = "./deploy"
 
     @computed_field  # type: ignore[misc]
     @property

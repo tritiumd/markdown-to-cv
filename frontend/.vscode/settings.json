@@ -1,0 +1,4 @@
+{
+    // on save: format the code at frontend folder
+    "editor.formatOnSave": true,
+}

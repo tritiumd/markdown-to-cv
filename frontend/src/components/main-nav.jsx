@@ -1,26 +1,73 @@
-export default function MainNav() {
-    return (
-        <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Home 
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            {/* <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            /> */}
-          </a>
+/**
+ * v0 by Vercel.
+ * @see https://v0.dev/t/ZPrRUV51n0W
+ * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
+ */
+import Link from "next/link"
+
+export default function NavBar() {
+  return (
+    <nav className="fixed inset-x-0 top-0 z-50 bg-white shadow dark:bg-gray-950">
+      <div className="container px-4 md:px-6">
+        <div className="flex h-14 items-center">
+          <Link href="#" className="mr-auto flex items-center gap-2 text-lg font-semibold" prefetch={false}>
+            <PackageIcon className="w-5 h-5" />
+            <span>Tritiumd</span>
+          </Link>
+          <nav className="ml-auto flex items-center space-x-4">
+            <Link
+              href="#"
+              className="font-medium text-sm border-b-2 border-transparent transition-colors hover:text-gray-900 hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
+              prefetch={false}
+            >
+              Home
+            </Link>
+            <Link
+              href="#"
+              className="font-medium text-sm border-b-2 border-transparent transition-colors hover:text-gray-900 hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
+              prefetch={false}
+            >
+              Features
+            </Link>
+            <Link
+              href="#"
+              className="font-medium text-sm border-b-2 border-transparent transition-colors hover:text-gray-900 hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
+              prefetch={false}
+            >
+              Pricing
+            </Link>
+            <Link
+              href="#"
+              className="font-medium text-sm border-b-2 border-transparent transition-colors hover:text-gray-900 hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
+              prefetch={false}
+            >
+              Contact
+            </Link>
+          </nav>
         </div>
       </div>
-    )
+    </nav>
+  )
+}
+
+function PackageIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m7.5 4.27 9 5.15" />
+      <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+      <path d="m3.3 7 8.7 5 8.7-5" />
+      <path d="M12 22V12" />
+    </svg>
+  )
 }
