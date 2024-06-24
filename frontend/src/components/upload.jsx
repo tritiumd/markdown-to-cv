@@ -15,14 +15,26 @@ export default function UploadField() {
     name: "file",
     multiple: true,
     action: `${url}/uploadfile`,
+    beforeUpload: (file) => {
+      // check if file is markdown or text/markdown
+      const isMarkdown = file.type === "text/markdown";
+      const isEndWithMD = file.name.endsWith(".md");
+      const isLt50K = file.size / 1024 < 50;
+
+      if (!isMarkdown || !isEndWithMD) {
+        message.error("You can only upload markdown file!");
+      } else if (!isLt50K) {
+        message.error("File must be smaller than 50KB!");
+      }
+      return isMarkdown && isEndWithMD && isLt50K;
+    },
+
     onChange({ file, fileList, event }) {
-      console.log(file.status);
       if (file.status == "removed") {
         setOutputMap(_.omit(outputMap, [file.uid]));
         setUploadedList(uploadedList.filter((info) => info.uid !== file.uid));
       }
       if (file.status !== "uploading") {
-        console.log("File status!", file, fileList);
       }
       if (file.status === "done") {
         message.success(`${file.name} file uploaded successfully.`);
@@ -34,7 +46,6 @@ export default function UploadField() {
       } else if (file.status === "error") {
         message.error(`${file.name} file upload failed.`);
       }
-
     },
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
@@ -58,7 +69,7 @@ export default function UploadField() {
       <Dragger {...props}>
         <p className="ant-upload-drag-icon">
           {" "}
-          <InboxOutlined />
+          <InboxOutlined style={{ color: "black" }} />
         </p>
         <p className="ant-upload-text">
           Click or drag file to this area to upload

@@ -25,6 +25,10 @@ def create_output_file(upload_dir: str, output_dir: str, filename: str):
 @router.post("/uploadfile/")
 async def create_upload_file(file: UploadFile = File(...), session: Session = Depends(get_session)
                              ):
+    # Check if file is markdown
+    if not file.filename.endswith(".md") or file.content_type != "text/markdown":
+        raise HTTPException(status_code=406, detail="File must be markdown file")
+
     # TODO: change all logic to services
     uploaded_file = file
     print(file)
@@ -66,21 +70,21 @@ async def create_upload_file(file: UploadFile = File(...), session: Session = De
         data = {"filename": file.filename, "uid": new_uid}
         # return HTTPResponse(content=data, status_code=200)
         return data
-    except Exception:
+    except Exception as e:
         session.rollback()
-        raise HTTPException(status_code=404, detail="Cannot upload file")
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 @router.get("/outputfile")
 async def get_output_file(file_uid: str, session: Session = Depends(get_session)) -> Any:
-    query = select(HTMLFile).where(HTMLFile.uid == file_uid)
-    output_file = session.exec(query).one()
-    filename = output_file.data_path.split("/")
-    with open(output_file.data_path, "r") as f:
-        content = f.read()
-    # Escape the HTML content
-    # print("filename", filename[-1])
-    # return StaticFiles(directory=output_file.data_path, html=True)
-    return HTMLResponse(content=content, status_code=200)
+    try:
+        query = select(HTMLFile).where(HTMLFile.uid == file_uid)
+        output_file = session.exec(query).one()
+        filename = output_file.data_path.split("/")
+        with open(output_file.data_path, "r") as f:
+            content = f.read()
+        return HTMLResponse(content=content, status_code=200)
+    except Exception:
+        return HTTPException(status_code="406", detail="Cannot find file")
 
     # query = session.get(HTMLFile, )
