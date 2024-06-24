@@ -1,14 +1,16 @@
 "use client";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useLayoutEffect } from "react";
 import { DeleteOutlined, InboxOutlined } from "@ant-design/icons";
 import { Button, Flex, message, Upload } from "antd";
 import _ from "lodash";
 const { Dragger } = Upload;
 
-const url = "http://127.0.0.1:8000/api/v1";
+// const url = "http://localhost:8000/api/v1";
+const url = process.env.NEXT_PUBLIC_MY_URL;
 export default function UploadField() {
   const [uploadedList, setUploadedList] = useState([]);
   const [outputMap, setOutputMap] = useState({});
+
   const props = {
     name: "file",
     multiple: true,
@@ -24,8 +26,8 @@ export default function UploadField() {
       }
       if (file.status === "done") {
         message.success(`${file.name} file uploaded successfully.`);
-        const value = file.response.id;
-        let callAPI = `${url}/outputfile?file_id=${value}`;
+        const value = file.response.uid;
+        let callAPI = `${url}/outputfile?file_uid=${value}`;
         file.url = callAPI;
         setUploadedList((prev) => [file, ...prev]);
         console.log("File list:", fileList);
@@ -33,22 +35,12 @@ export default function UploadField() {
         message.error(`${file.name} file upload failed.`);
       }
 
-      // if (file?.response?.id) {
-      //   setOutputMap((prev) => {
-      //     return { ...prev, [file.uid]: file?.response?.id };
-      //   });
-      // }
     },
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
     },
     defaultFileList: [],
-    // fileList: [...uploadedList],
     showUploadList: {
-      // showDownloadIcon: true,
-      // downloadIcon: (
-      //   <a onClick={(e) => console.log(e, "custom Download event")}>Get CV</a>
-      // ),
       showRemoveIcon: true,
       removeIcon: (
         <DeleteOutlined
@@ -75,7 +67,6 @@ export default function UploadField() {
           Support for a single or bulk upload. Strictly prohibited from
           uploading company data or other banned files.
         </p>
-        {console.log("Uploaded list: ", uploadedList)}
       </Dragger>
     </Flex>
   );
