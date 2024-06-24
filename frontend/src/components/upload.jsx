@@ -11,6 +11,13 @@ export default function UploadField() {
   const [uploadedList, setUploadedList] = useState([]);
   const [outputMap, setOutputMap] = useState({});
 
+  // Config message
+  message.config({
+    top: 100,
+    duration: 2,
+    maxCount: 3,
+  });
+
   const props = {
     name: "file",
     multiple: true,
