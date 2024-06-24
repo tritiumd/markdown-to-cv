@@ -34,15 +34,12 @@ export default function UploadField() {
         setOutputMap(_.omit(outputMap, [file.uid]));
         setUploadedList(uploadedList.filter((info) => info.uid !== file.uid));
       }
-      if (file.status !== "uploading") {
-      }
       if (file.status === "done") {
         message.success(`${file.name} file uploaded successfully.`);
         const value = file.response.uid;
         let callAPI = `${url}/outputfile?file_uid=${value}`;
         file.url = callAPI;
         setUploadedList((prev) => [file, ...prev]);
-        console.log("File list:", fileList);
       } else if (file.status === "error") {
         message.error(`${file.name} file upload failed.`);
       }
@@ -65,20 +62,20 @@ export default function UploadField() {
     },
   };
   return (
-    <Flex gap="middle" wrap className="p-24">
-      <Dragger {...props}>
-        <p className="ant-upload-drag-icon">
-          {" "}
-          <InboxOutlined style={{ color: "black" }} />
-        </p>
-        <p className="ant-upload-text">
-          Click or drag file to this area to upload
-        </p>
-        <p className="ant-upload-hint">
-          Support for a single or bulk upload. Strictly prohibited from
-          uploading company data or other banned files.
-        </p>
-      </Dragger>
-    </Flex>
+    // <Flex gap="middle" wrap className="p-24">
+    <Dragger {...props} className="p-24">
+      <p className="ant-upload-drag-icon">
+        {" "}
+        <InboxOutlined style={{ color: "black" }} />
+      </p>
+      <p className="ant-upload-text">
+        Click or drag file to this area to upload
+      </p>
+      <p className="ant-upload-hint">
+        Support for a single or bulk upload. Strictly prohibited from uploading
+        company data or other banned files.
+      </p>
+    </Dragger>
+    // </Flex>
   );
 }
