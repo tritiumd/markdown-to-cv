@@ -1,8 +1,9 @@
 import os
 import uuid
 from typing import Any
+import subprocess
 
-from fastapi import APIRouter, File, UploadFile, Depends, HTTPException
+from fastapi import APIRouter, File, UploadFile, Depends, HTTPException, BackgroundTasks
 from sqlmodel import Session, select
 from starlette.responses import HTMLResponse
 
@@ -14,17 +15,21 @@ router = APIRouter()
 
 
 def create_output_file(upload_dir: str, output_dir: str, filename: str):
-    # TODO: remove later
     deploy_dir = settings.DEPLOY_DIRECTORY
-    os.system(f"cp {upload_dir}/{filename}.md {deploy_dir}/{filename}.md")
-    os.system(f"bash {deploy_dir}/run_md2html.sh {deploy_dir} {filename}")
-    os.system(f"cp {deploy_dir}/{filename}.html {output_dir}/{filename}.html")
-    os.system(f"bash {deploy_dir}/cleanup_file.sh {deploy_dir} {filename}")
+    subprocess.run(["cp", f"{upload_dir}/{filename}.md", f"{deploy_dir}/{filename}.md"], check=True)
+    subprocess.run(["bash", f"{deploy_dir}/run_md2html.sh", deploy_dir, filename], check=True)
+    subprocess.run(["cp", f"{deploy_dir}/{filename}.html", f"{output_dir}/{filename}.html"], check=True)
+    subprocess.run(["bash", f"{deploy_dir}/cleanup_file.sh", deploy_dir, filename], check=True)
 
 
 @router.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...), session: Session = Depends(get_session)
+async def create_upload_file(background_tasks: BackgroundTasks, file: UploadFile = File(...),
+                             session: Session = Depends(get_session)
                              ):
+    # Check if file is markdown
+    if not file.filename.endswith(".md") or file.content_type != "text/markdown":
+        raise HTTPException(status_code=406, detail="File must be markdown file")
+
     # TODO: change all logic to services
     uploaded_file = file
     print(file)
@@ -46,9 +51,7 @@ async def create_upload_file(file: UploadFile = File(...), session: Session = De
         os.makedirs(output_dir)
 
     output_file_path = os.path.join(output_dir, new_uid + ".html")
-    # task = BackgroundTasks()
-    # task.add_task(create_output_file, upload_dir, output_dir, new_uid)
-    create_output_file(upload_dir, output_dir, new_uid)
+    background_tasks.add_task(create_output_file, upload_dir, output_dir, new_uid)
     try:
         session.add(file_instance)
         session.flush()
@@ -66,21 +69,21 @@ async def create_upload_file(file: UploadFile = File(...), session: Session = De
         data = {"filename": file.filename, "uid": new_uid}
         # return HTTPResponse(content=data, status_code=200)
         return data
-    except Exception:
+    except Exception as e:
         session.rollback()
-        raise HTTPException(status_code=404, detail="Cannot upload file")
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 @router.get("/outputfile")
 async def get_output_file(file_uid: str, session: Session = Depends(get_session)) -> Any:
-    query = select(HTMLFile).where(HTMLFile.uid == file_uid)
-    output_file = session.exec(query).one()
-    filename = output_file.data_path.split("/")
-    with open(output_file.data_path, "r") as f:
-        content = f.read()
-    # Escape the HTML content
-    # print("filename", filename[-1])
-    # return StaticFiles(directory=output_file.data_path, html=True)
-    return HTMLResponse(content=content, status_code=200)
+    try:
+        query = select(HTMLFile).where(HTMLFile.uid == file_uid)
+        output_file = session.exec(query).one()
+        filename = output_file.data_path.split("/")
+        with open(output_file.data_path, "r") as f:
+            content = f.read()
+        return HTMLResponse(content=content, status_code=200)
+    except HTTPException:
+        return HTTPException(status_code=406, detail="Cannot find file")
 
     # query = session.get(HTMLFile, )

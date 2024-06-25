@@ -11,18 +11,35 @@ export default function UploadField() {
   const [uploadedList, setUploadedList] = useState([]);
   const [outputMap, setOutputMap] = useState({});
 
+  // Config message
+  message.config({
+    top: 100,
+    duration: 2,
+    maxCount: 3,
+  });
+
   const props = {
     name: "file",
     multiple: true,
     action: `${url}/uploadfile`,
+    beforeUpload: (file) => {
+      // check if file is markdown or text/markdown
+      const isMarkdown = file.type === "text/markdown";
+      const isEndWithMD = file.name.endsWith(".md");
+      const isLt50K = file.size / 1024 < 50;
+
+      if (!isMarkdown || !isEndWithMD) {
+        message.error("You can only upload markdown file!");
+      } else if (!isLt50K) {
+        message.error("File must be smaller than 50KB!");
+      }
+      return isMarkdown && isEndWithMD && isLt50K;
+    },
+
     onChange({ file, fileList, event }) {
-      console.log(file.status);
       if (file.status == "removed") {
         setOutputMap(_.omit(outputMap, [file.uid]));
         setUploadedList(uploadedList.filter((info) => info.uid !== file.uid));
-      }
-      if (file.status !== "uploading") {
-        console.log("File status!", file, fileList);
       }
       if (file.status === "done") {
         message.success(`${file.name} file uploaded successfully.`);
@@ -30,11 +47,9 @@ export default function UploadField() {
         let callAPI = `${url}/outputfile?file_uid=${value}`;
         file.url = callAPI;
         setUploadedList((prev) => [file, ...prev]);
-        console.log("File list:", fileList);
       } else if (file.status === "error") {
         message.error(`${file.name} file upload failed.`);
       }
-
     },
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
@@ -54,20 +69,20 @@ export default function UploadField() {
     },
   };
   return (
-    <Flex gap="middle" wrap className="p-24">
-      <Dragger {...props}>
-        <p className="ant-upload-drag-icon">
-          {" "}
-          <InboxOutlined />
-        </p>
-        <p className="ant-upload-text">
-          Click or drag file to this area to upload
-        </p>
-        <p className="ant-upload-hint">
-          Support for a single or bulk upload. Strictly prohibited from
-          uploading company data or other banned files.
-        </p>
-      </Dragger>
-    </Flex>
+    // <Flex gap="middle" wrap className="p-24">
+    <Dragger {...props} className="p-24">
+      <p className="ant-upload-drag-icon">
+        {" "}
+        <InboxOutlined style={{ color: "black" }} />
+      </p>
+      <p className="ant-upload-text">
+        Click or drag file to this area to upload
+      </p>
+      <p className="ant-upload-hint">
+        Support for a single or bulk upload. Strictly prohibited from uploading
+        company data or other banned files.
+      </p>
+    </Dragger>
+    // </Flex>
   );
 }
