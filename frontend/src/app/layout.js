@@ -1,12 +1,12 @@
-import "@/styles/globals.css"
-import { Inter as FontSans } from "next/font/google"
+import "@/styles/globals.css";
+import { Inter as FontSans } from "next/font/google";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
-})
+});
 
 export default function RootLayout({ children }) {
   return (
@@ -21,6 +21,5 @@ export default function RootLayout({ children }) {
         {children}
       </body>
     </html>
-  )
+  );
 }
-
