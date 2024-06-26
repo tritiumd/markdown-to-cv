@@ -5,7 +5,7 @@
  */
 import Link from "next/link";
 
-export default function NavBar() {
+export default function NavbarComponent() {
   return (
     <nav className="fixed inset-x-0 top-0 z-50 bg-white shadow dark:bg-gray-950">
       <div className="container px-4 md:px-6">

@@ -2,8 +2,7 @@ import "@/styles/globals.css";
 import { Inter as FontSans } from "next/font/google";
 
 import { cn } from "@/lib/utils";
-import NavBar from "@/components/main-nav";
-import Footer from "@/components/footer";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -13,16 +12,16 @@ const fontSans = FontSans({
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
-      <body
-        className={cn(
-          "flex flex-col min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
-        )}
-      >
-        <NavBar />
-        <div className="flex-grow">{children}</div>
-        <Footer />
+      {/* <NavbarComponent /> */}
+      <body className={cn("flex", fontSans.variable)}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
