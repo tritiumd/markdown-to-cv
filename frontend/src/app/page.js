@@ -1,5 +1,5 @@
 import Footer from "@/components/footer";
-import MainNav from "@/components/main-nav";
+import MainNav from "@/components/mainNav";
 import UploadField from "@/components/upload";
 
 export default function Home() {
