@@ -49,6 +49,11 @@ class Settings(BaseSettings):
     DATA_FOLDER_PATH: str = "./markdown"
     DATA_OUTPUT_FOLDER_PATH: str = "./html"
     DEPLOY_DIRECTORY: str = "./deploy"
+    
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_QUEUE_DB: int = 0
+    REDIS_BACKEND_DB: int = 1
 
     @computed_field  # type: ignore[misc]
     @property
