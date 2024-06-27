@@ -25,13 +25,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const FormSchema = z.object({
-  name: z
+  username: z
     .string()
     .min(5, {
-      message: "Your name on CV",
+      message: "Your name on CV must be at least 5 characters.",
     })
     .max(160, {
-      message: "Bio must not be longer than 30 characters.",
+      message: "Your name must not be longer than 30 characters.",
     }),
 });
 
@@ -59,32 +59,33 @@ export default function FormUploadField() {
           >
             <FormField
               control={form.control}
-              name="name"
+              name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Bio</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Tell us a little bit about yourself"
-                      className="resize-none"
-                      {...field}
-                    />
+                    <Accordion type="single" className="text-white" collapsible>
+                      <AccordionItem value="item-1">
+                        <AccordionTrigger>
+                          <FormLabel className="text-white">Username</FormLabel>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <Input
+                            placeholder="Put your name here!"
+                            className="text-black rounded-sm"
+                            {...field}
+                          />
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
                   </FormControl>
                   <FormDescription>
-                    You can <span>@mention</span> other users and organizations.
+                    Must be full name, not less than 5 characters
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Accordion type="single" className="text-white" collapsible>
-              <AccordionItem value="item-1">
-                <AccordionTrigger>Name</AccordionTrigger>
-                <AccordionContent>
-                  <Textarea>Input your name</Textarea>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+            <Button type="submit">Submit</Button>
           </form>
         </Form>
       </div>
