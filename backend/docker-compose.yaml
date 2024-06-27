@@ -23,9 +23,9 @@ services:
       dockerfile: Dockerfile.yaml
     volumes:
       - ./app:/src/app
-      - markdown_file_data:/data
+      - $DATA_FOLDER_PATH:/data
     ports:
-      - "5006:5006"
+      - "8000:8000"
     depends_on:
       - db
       - redis
@@ -42,7 +42,7 @@ services:
       mode: replicated
       replicas: 2
     volumes:
-      - ../app:/app
+      - $DATA_FOLDER_PATH:/data
     depends_on:
       - db
       - redis

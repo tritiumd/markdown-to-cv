@@ -2,7 +2,7 @@
 
 set -e
 
-mkdir -p $DATA_FOLDER_PATH
+mkdir -p $DATA_INPUT_FOLDER_PATH
 mkdir -p $DATA_OUTPUT_FOLDER_PATH
 
 DEFAULT_MODULE_NAME=app.main

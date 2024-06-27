@@ -13,6 +13,7 @@ from app.models import MarkdownFile, HTMLFile
 
 router = APIRouter()
 
+
 @router.post("/uploadfile/")
 async def create_upload_file(background_tasks: BackgroundTasks, file: UploadFile = File(...),
                              session: Session = Depends(get_session)
@@ -24,7 +25,7 @@ async def create_upload_file(background_tasks: BackgroundTasks, file: UploadFile
     # TODO: change all logic to services
     uploaded_file = file
     print(file)
-    upload_dir = settings.DATA_FOLDER_PATH
+    upload_dir = settings.DATA_INPUT_FOLDER_PATH
     if not os.path.exists(upload_dir):
         os.makedirs(upload_dir)
     new_uid = str(uuid.uuid4())
@@ -37,12 +38,13 @@ async def create_upload_file(background_tasks: BackgroundTasks, file: UploadFile
         data_path=file_path,
         owner_id=0
     )
+    input_dir = settings.DATA_INPUT_FOLDER_PATH
     output_dir = settings.DATA_OUTPUT_FOLDER_PATH
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
     output_file_path = os.path.join(output_dir, new_uid + ".html")
-    create_output_file.delay(file_path, output_file_path, new_uid)
+    create_output_file.delay(input_dir, output_dir, new_uid)
     try:
         session.add(file_instance)
         session.flush()

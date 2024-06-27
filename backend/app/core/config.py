@@ -46,10 +46,10 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str = ""
 
-    DATA_FOLDER_PATH: str = "./markdown"
+    DATA_INPUT_FOLDER_PATH: str = "./markdown"
     DATA_OUTPUT_FOLDER_PATH: str = "./html"
     DEPLOY_DIRECTORY: str = "./deploy"
-    
+
     REDIS_HOST: str = "localhost"
     REDIS_PORT: int = 6379
     REDIS_QUEUE_DB: int = 0
