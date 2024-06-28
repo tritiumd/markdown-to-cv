@@ -25,7 +25,7 @@ export default function UploadField() {
     beforeUpload: (file) => {
       // check if file is markdown or text/markdown
       const isMarkdown = file.type === "text/markdown";
-      const isEndWithMD = file.name.endsWith(".md");
+      const isEndWithMD = file.name.toLowerCase().endsWith(".md");
       const isLt50K = file.size / 1024 < 50;
 
       if (!isMarkdown || !isEndWithMD) {

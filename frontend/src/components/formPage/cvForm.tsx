@@ -1,10 +1,11 @@
 "use client";
 import * as z from "zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,6 +20,8 @@ import {
   SelectItem,
   Select,
 } from "@/components/ui/select";
+
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Accordion,
   AccordionContent,
@@ -26,34 +29,21 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import { Github, Linkedin, Phone, Twitter } from "lucide-react";
 
 const formSchema = z.object({
   username: z.string().max(100),
   position: z.string().max(100),
+  info: z.array(
+    z.object({
+      icon: z.string(),
+      value: z.string(),
+    })
+  ),
   summary: z.string().max(1000),
   skills: z.string().max(1000),
 });
-//   .refine(
-//     (data) => {
-//       return data.password === data.passwordConfirm;
-//     },
-//     {
-//       message: "Passwords do not match",
-//       path: ["passwordConfirm"],
-//     }
-//   )
-//   .refine(
-//     (data) => {
-//       if (data.accountType === "company") {
-//         return !!data.companyName;
-//       }
-//       return true;
-//     },
-//     {
-//       message: "Company name is required",
-//       path: ["companyName"],
-//     }
-//   );
 
 export default function CvForm() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -63,12 +53,22 @@ export default function CvForm() {
       position: "",
       summary: "",
       skills: "",
+      info: [
+        { icon: "fa-regular fa-phone", value: "0123456789" },
+        { icon: "fa-brands fa-github", value: "https://github.com/kidclone3" },
+      ],
     },
   });
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     console.log({ values });
   };
+
+  // This can come from your database or API.
+  const { fields, append } = useFieldArray({
+    name: "info",
+    control: form.control,
+  });
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-between p-10">
@@ -92,10 +92,137 @@ export default function CvForm() {
                         <FormLabel>Name</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Put your name here"
+                            placeholder="Your name"
                             type="text"
                             {...field}
                           />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+                <FormField
+                  control={form.control}
+                  name="info"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <FormControl>
+                          <Accordion
+                            type="single"
+                            className="w-full"
+                            collapsible
+                          >
+                            <AccordionItem value="info">
+                              <AccordionTrigger className="flex justify-between items-center">
+                                <FormLabel> Fill info </FormLabel>
+                              </AccordionTrigger>
+                              <AccordionContent className="p-2">
+                                <div>
+                                  {fields.map((field, index) => (
+                                    <>
+                                      <FormField
+                                        control={form.control}
+                                        key={field.id}
+                                        name={`info.${index}`}
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            {console.log(field)}
+
+                                            <FormControl>
+                                              <div>
+                                                <Select
+                                                  defaultValue={
+                                                    field.value.icon
+                                                  }
+                                                  onChange={(value) => {
+                                                    field.onChange({
+                                                      target: {
+                                                        value: value,
+                                                        name: field.name,
+                                                      },
+                                                    });
+                                                  }}
+                                                >
+                                                  <SelectTrigger></SelectTrigger>
+                                                  <SelectContent>
+                                                    <SelectItem
+                                                      value="fa-regular fa-phone"
+                                                      className="flex items-center"
+                                                    >
+                                                      <Phone />
+                                                    </SelectItem>
+                                                    <SelectItem
+                                                      value="fa-brands fa-github"
+                                                      className="flex items-center"
+                                                    >
+                                                      <Github />
+                                                    </SelectItem>
+                                                    <SelectItem
+                                                      value="fa-brands fa-twitter"
+                                                      className="flex items-center"
+                                                    >
+                                                      <Twitter />
+                                                    </SelectItem>
+                                                    <SelectItem
+                                                      value="fa-brands fa-linkedin"
+                                                      className="flex items-center"
+                                                    >
+                                                      <Linkedin />
+                                                    </SelectItem>
+                                                  </SelectContent>
+                                                </Select>
+                                                <Input {...field} />
+                                              </div>
+                                            </FormControl>
+                                            <FormMessage />
+                                          </FormItem>
+                                        )}
+                                      />
+                                      <FormField
+                                        control={form.control}
+                                        key={field.id}
+                                        name={`info.${index}.value`}
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel
+                                              className={cn(
+                                                index !== 0 && "sr-only"
+                                              )}
+                                            >
+                                              URLs
+                                            </FormLabel>
+                                            <FormDescription
+                                              className={cn(
+                                                index !== 0 && "sr-only"
+                                              )}
+                                            >
+                                              Add links to your website, blog,
+                                              or social media profiles.
+                                            </FormDescription>
+                                            <FormControl>
+                                              <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                          </FormItem>
+                                        )}
+                                      />
+                                    </>
+                                  ))}
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="mt-2"
+                                    onClick={() => append({ value: "" })}
+                                  >
+                                    Add URL
+                                  </Button>
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          </Accordion>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -112,7 +239,7 @@ export default function CvForm() {
                         <FormLabel>Position</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Put your position here"
+                            placeholder="Applying Position"
                             type="text"
                             {...field}
                           />
