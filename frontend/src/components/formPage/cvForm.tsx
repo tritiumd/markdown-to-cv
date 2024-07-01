@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/accordion";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Github, Linkedin, Phone, Twitter } from "lucide-react";
+import { Github, Linkedin, Phone, Plus, Twitter } from "lucide-react";
 
 const formSchema = z.object({
   username: z.string().max(100),
@@ -43,6 +43,50 @@ const formSchema = z.object({
   ),
   summary: z.string().max(1000),
   skills: z.string().max(1000),
+  certificates: z.array(
+    z.object({
+      name: z.string().max(100),
+      date: z.string().max(100),
+      extra: z.string().max(200).optional(),
+    })
+  ),
+  education: z.array(
+    z.object({
+      time: z.string().max(50),
+      place: z.string().max(100),
+      major: z.string().max(100),
+      extra: z.string().max(200).optional(),
+    })
+  ),
+  experiences: z.array(
+    z.object({
+      place: z.string().max(100),
+      phase: z.object({
+        time: z.string().max(50),
+        position: z.string().max(100),
+        detail: z.string().max(200),
+      }),
+    })
+  ),
+  activities: z.array(
+    z.object({
+      place: z.string().max(100),
+      phase: z.object({
+        time: z.string().max(50),
+        position: z.string().max(100),
+        detail: z.string().max(200),
+      }),
+    })
+  ),
+  references: z
+    .array(
+      z.object({
+        name: z.string().max(100),
+        position: z.string().max(100),
+        contact: z.string().max(100),
+      })
+    )
+    .optional(),
 });
 
 export default function CvForm() {
@@ -57,6 +101,11 @@ export default function CvForm() {
         { icon: "fa-regular fa-phone", value: "0123456789" },
         { icon: "fa-brands fa-github", value: "https://github.com/kidclone3" },
       ],
+      certificates: [],
+      education: [],
+      experiences: [],
+      activities: [],
+      references: [],
     },
   });
 
@@ -65,8 +114,13 @@ export default function CvForm() {
   };
 
   // This can come from your database or API.
-  const { fields, append } = useFieldArray({
+  const { fields: infos, append: appendInfos } = useFieldArray({
     name: "info",
+    control: form.control,
+  });
+
+  const { fields: certificates, append: appendCertificates } = useFieldArray({
+    name: "certificates",
     control: form.control,
   });
 
@@ -115,109 +169,42 @@ export default function CvForm() {
                             collapsible
                           >
                             <AccordionItem value="info">
-                              <AccordionTrigger className="flex justify-between items-center">
-                                <FormLabel> Fill info </FormLabel>
+                              <AccordionTrigger className="flex items-center">
+                                <FormLabel className="flex-grow-0">
+                                  Contact
+                                </FormLabel>
+                                <FormDescription className="text-xs text-gray-400 flex-1">
+                                  : phone, email, Github...
+                                </FormDescription>
                               </AccordionTrigger>
                               <AccordionContent className="p-2">
                                 <div>
-                                  {fields.map((field, index) => (
-                                    <>
-                                      <FormField
-                                        control={form.control}
-                                        key={field.id}
-                                        name={`info.${index}`}
-                                        render={({ field }) => (
-                                          <FormItem>
-                                            {console.log(field)}
-
-                                            <FormControl>
-                                              <div>
-                                                <Select
-                                                  defaultValue={
-                                                    field.value.icon
-                                                  }
-                                                  onChange={(value) => {
-                                                    field.onChange({
-                                                      target: {
-                                                        value: value,
-                                                        name: field.name,
-                                                      },
-                                                    });
-                                                  }}
-                                                >
-                                                  <SelectTrigger></SelectTrigger>
-                                                  <SelectContent>
-                                                    <SelectItem
-                                                      value="fa-regular fa-phone"
-                                                      className="flex items-center"
-                                                    >
-                                                      <Phone />
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                      value="fa-brands fa-github"
-                                                      className="flex items-center"
-                                                    >
-                                                      <Github />
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                      value="fa-brands fa-twitter"
-                                                      className="flex items-center"
-                                                    >
-                                                      <Twitter />
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                      value="fa-brands fa-linkedin"
-                                                      className="flex items-center"
-                                                    >
-                                                      <Linkedin />
-                                                    </SelectItem>
-                                                  </SelectContent>
-                                                </Select>
-                                                <Input {...field} />
-                                              </div>
-                                            </FormControl>
-                                            <FormMessage />
-                                          </FormItem>
-                                        )}
-                                      />
-                                      <FormField
-                                        control={form.control}
-                                        key={field.id}
-                                        name={`info.${index}.value`}
-                                        render={({ field }) => (
-                                          <FormItem>
-                                            <FormLabel
-                                              className={cn(
-                                                index !== 0 && "sr-only"
-                                              )}
-                                            >
-                                              URLs
-                                            </FormLabel>
-                                            <FormDescription
-                                              className={cn(
-                                                index !== 0 && "sr-only"
-                                              )}
-                                            >
-                                              Add links to your website, blog,
-                                              or social media profiles.
-                                            </FormDescription>
-                                            <FormControl>
-                                              <Input {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                          </FormItem>
-                                        )}
-                                      />
-                                    </>
+                                  {/* TODO: choose icon button and delete button*/}
+                                  {infos.map((field, index) => (
+                                    <FormField
+                                      control={form.control}
+                                      key={field.id}
+                                      name={`info.${index}.value`}
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormControl>
+                                            <Input {...field} />
+                                          </FormControl>
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
                                   ))}
                                   <Button
                                     type="button"
                                     variant="outline"
                                     size="sm"
                                     className="mt-2"
-                                    onClick={() => append({ value: "" })}
+                                    onClick={() =>
+                                      appendInfos({ icon: "", value: "" })
+                                    }
                                   >
-                                    Add URL
+                                    <Plus size={16} />
                                   </Button>
                                 </div>
                               </AccordionContent>
@@ -273,12 +260,195 @@ export default function CvForm() {
                   render={({ field }) => {
                     return (
                       <FormItem>
-                        <FormLabel>Skill</FormLabel>
+                        <FormLabel>Skills</FormLabel>
                         <FormControl>
                           <Textarea
                             placeholder="Put your skills here"
                             {...field}
                           />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+                <FormField
+                  control={form.control}
+                  name="certificates"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <FormControl>
+                          <Accordion
+                            type="single"
+                            className="w-full"
+                            collapsible
+                          >
+                            <AccordionItem value="certificates">
+                              <AccordionTrigger className="flex justify-between items-center">
+                                <FormLabel> Certificates </FormLabel>
+                                <FormDescription className="text-xs text-gray-400">
+                                  : name, date, extra...
+                                </FormDescription>
+                              </AccordionTrigger>
+                              <AccordionContent className="p-2">
+                                <div>
+                                  {certificates.map((field, index) => (
+                                    <FormField
+                                      control={form.control}
+                                      key={field.id}
+                                      name={`certificates.${index}.name`}
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormControl>
+                                            <Input {...field} />
+                                          </FormControl>
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
+                                  ))}
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="mt-2"
+                                    onClick={() =>
+                                      appendCertificates({
+                                        name: "",
+                                        date: "",
+                                        extra: "",
+                                      })
+                                    }
+                                  >
+                                    <Plus size={16} />
+                                  </Button>
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          </Accordion>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+                <FormField
+                  control={form.control}
+                  name="education"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <FormControl>
+                          <Accordion
+                            type="single"
+                            className="w-full"
+                            collapsible
+                          >
+                            <AccordionItem value="education">
+                              <AccordionTrigger className="flex justify-between items-center">
+                                <FormLabel className=""> Education </FormLabel>
+                                <FormDescription className="text-xs text-gray-400">
+                                  : school, major, time...
+                                </FormDescription>
+                              </AccordionTrigger>
+                              <AccordionContent className="p-2">
+                                <div>
+                                  {certificates.map((field, index) => (
+                                    <FormField
+                                      control={form.control}
+                                      key={field.id}
+                                      name={`certificates.${index}.name`}
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormControl>
+                                            <Input {...field} />
+                                          </FormControl>
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
+                                  ))}
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="mt-2"
+                                    onClick={() =>
+                                      appendCertificates({
+                                        name: "",
+                                        date: "",
+                                        extra: "",
+                                      })
+                                    }
+                                  >
+                                    <Plus size={16} />
+                                  </Button>
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          </Accordion>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+                <FormField
+                  control={form.control}
+                  name="certificates"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <FormControl>
+                          <Accordion
+                            type="single"
+                            className="w-full"
+                            collapsible
+                          >
+                            <AccordionItem value="certificates">
+                              <AccordionTrigger className="flex flex-start items-center">
+                                <FormLabel> Activities </FormLabel>
+                                <FormDescription className="text-xs text-gray-400 self-end">
+                                  : school, volunteer, ...
+                                </FormDescription>
+                              </AccordionTrigger>
+                              <AccordionContent className="p-2">
+                                <div>
+                                  {certificates.map((field, index) => (
+                                    <FormField
+                                      control={form.control}
+                                      key={field.id}
+                                      name={`certificates.${index}.name`}
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormControl>
+                                            <Input {...field} />
+                                          </FormControl>
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
+                                  ))}
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="mt-2"
+                                    onClick={() =>
+                                      appendCertificates({
+                                        name: "",
+                                        date: "",
+                                        extra: "",
+                                      })
+                                    }
+                                  >
+                                    <Plus size={16} />
+                                  </Button>
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          </Accordion>
                         </FormControl>
                         <FormMessage />
                       </FormItem>

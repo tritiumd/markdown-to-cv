@@ -12,7 +12,7 @@ export default function FormPage() {
     <main className="min-h-screen flex-col items-center justify-between p-2">
       <MainNav />
       <ResizablePanelGroup direction="horizontal" className="w-full">
-        <ResizablePanel defaultSize={25} minSize={20}>
+        <ResizablePanel defaultSize={35} minSize={30}>
           <CvForm />
         </ResizablePanel>
         <ResizableHandle />
