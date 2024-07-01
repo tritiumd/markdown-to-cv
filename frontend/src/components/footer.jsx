@@ -5,11 +5,12 @@
  */
 "use client";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 import { Github, Linkedin, Mail } from "lucide-react";
 
-export default function Footer() {
+export default function Footer({className, ...props}) {
   return (
-    <footer className="bg-muted text-muted-foreground py-12">
+    <footer className={cn("bg-muted text-muted-foreground py-12", className)}>
       <div className="container max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="flex items-center gap-4">
           <Avatar key="BD">

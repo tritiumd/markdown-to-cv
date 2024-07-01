@@ -9,25 +9,23 @@ import {
 import Image from "next/image";
 export default function FormPage() {
   return (
-    <main className="min-h-screen flex-col items-center justify-between p-2">
-      <MainNav />
-      <ResizablePanelGroup direction="horizontal" className="w-full">
-        <ResizablePanel defaultSize={35} minSize={30}>
+    <main className="flex min-h-screen max-w-full flex-col items-center justify-between p-2 break-words">
+      <MainNav className="" />
+      <ResizablePanelGroup direction="horizontal" className="">
+        <ResizablePanel defaultSize={34} minSize={30} className="">
           <CvForm />
         </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel>
-          <div className="w-full">
-            <Image
-              src="/assets/Image_placeholder_upright.png"
-              alt="hero"
-              width={500}
-              height={500}
-            />
-          </div>
+        <ResizableHandle className="" />
+        <ResizablePanel className="">
+          <Image
+            src="/assets/Image_placeholder_upright.png"
+            alt="hero"
+            width={700}
+            height={700}
+          />
         </ResizablePanel>
       </ResizablePanelGroup>
-      <Footer />
+      <Footer className="h-32" />
     </main>
   );
 }

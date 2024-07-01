@@ -101,11 +101,15 @@ export default function CvForm() {
         { icon: "fa-regular fa-phone", value: "0123456789" },
         { icon: "fa-brands fa-github", value: "https://github.com/kidclone3" },
       ],
-      certificates: [],
-      education: [],
-      experiences: [],
-      activities: [],
-      references: [],
+      certificates: [{ name: "", date: "", extra: "" }],
+      education: [{ time: "", place: "", major: "", extra: "" }],
+      experiences: [
+        { place: "", phase: { time: "", position: "", detail: "" } },
+      ],
+      activities: [
+        { place: "", phase: { time: "", position: "", detail: "" } },
+      ],
+      references: [{ name: "", position: "", contact: "" }],
     },
   });
 
@@ -406,7 +410,10 @@ export default function CvForm() {
                             className="w-full"
                             collapsible
                           >
-                            <AccordionItem value="certificates">
+                            <AccordionItem
+                              value="certificates"
+                              className="border-0"
+                            >
                               <AccordionTrigger className="flex flex-start items-center">
                                 <FormLabel> Activities </FormLabel>
                                 <FormDescription className="text-xs text-gray-400 self-end">
