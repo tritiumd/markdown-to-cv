@@ -11,7 +11,7 @@ export default function FormPage() {
   return (
     <main className="flex min-h-screen max-w-full flex-col items-center justify-between p-2 break-words">
       <MainNav className="" />
-      <ResizablePanelGroup direction="horizontal" className="">
+      <ResizablePanelGroup direction="horizontal" className="overflow-auto">
         <ResizablePanel defaultSize={34} minSize={30} className="">
           <CvForm />
         </ResizablePanel>

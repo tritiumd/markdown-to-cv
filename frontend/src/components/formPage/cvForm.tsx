@@ -32,6 +32,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Github, Linkedin, Phone, Plus, Twitter } from "lucide-react";
 
+import ChooseIconButton from "@/components/custom/button/chooseIconButton";
+
 const formSchema = z.object({
   username: z.string().max(100),
   position: z.string().max(100),
@@ -118,7 +120,11 @@ export default function CvForm() {
   };
 
   // This can come from your database or API.
-  const { fields: infos, append: appendInfos } = useFieldArray({
+  const {
+    fields: infos,
+    append: appendInfos,
+    remove: removeInfos,
+  } = useFieldArray({
     name: "info",
     control: form.control,
   });
@@ -160,66 +166,56 @@ export default function CvForm() {
                     );
                   }}
                 />
-                <FormField
-                  control={form.control}
-                  name="info"
-                  render={({ field }) => {
-                    return (
-                      <FormItem>
-                        <FormControl>
-                          <Accordion
-                            type="single"
-                            className="w-full"
-                            collapsible
-                          >
-                            <AccordionItem value="info">
-                              <AccordionTrigger className="flex items-center">
-                                <FormLabel className="flex-grow-0">
-                                  Contact
-                                </FormLabel>
-                                <FormDescription className="text-xs text-gray-400 flex-1">
-                                  : phone, email, Github...
-                                </FormDescription>
-                              </AccordionTrigger>
-                              <AccordionContent className="p-2">
-                                <div>
-                                  {/* TODO: choose icon button and delete button*/}
-                                  {infos.map((field, index) => (
-                                    <FormField
-                                      control={form.control}
-                                      key={field.id}
-                                      name={`info.${index}.value`}
-                                      render={({ field }) => (
-                                        <FormItem>
-                                          <FormControl>
-                                            <Input {...field} />
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
-                                  ))}
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    className="mt-2"
-                                    onClick={() =>
-                                      appendInfos({ icon: "", value: "" })
-                                    }
-                                  >
-                                    <Plus size={16} />
-                                  </Button>
-                                </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          </Accordion>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    );
-                  }}
-                />
+                <Accordion type="single" className="w-full" collapsible>
+                  <AccordionItem value="info">
+                    <AccordionTrigger className="flex items-center">
+                      <FormLabel className="flex-grow-0">Contact</FormLabel>
+                      <FormDescription className="text-xs text-gray-400 flex-1">
+                        : phone, email, Github...
+                      </FormDescription>
+                    </AccordionTrigger>
+                    <AccordionContent className="p-2">
+                      <div>
+                        {/* TODO: choose icon button and delete button*/}
+                        {infos.map((field, index) => (
+                          <FormField
+                            control={form.control}
+                            key={field.id}
+                            name={`info.${index}.value`}
+                            render={({ field }) => (
+                              <FormItem className="py-0">
+                                <FormControl>
+                                  <div className="flex items-center">
+                                    <ChooseIconButton />
+                                    <Input {...field} />
+                                    <Button
+                                      type="button"
+                                      variant="default"
+                                      onClick={() => removeInfos(index)}
+                                      size={"sm"}
+                                    >
+                                      Delete
+                                    </Button>
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        ))}
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="mt-2"
+                          onClick={() => appendInfos({ icon: "", value: "" })}
+                        >
+                          <Plus size={16} />
+                        </Button>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
 
                 <FormField
                   control={form.control}
@@ -276,7 +272,7 @@ export default function CvForm() {
                     );
                   }}
                 />
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="certificates"
                   render={({ field }) => {
@@ -461,7 +457,7 @@ export default function CvForm() {
                       </FormItem>
                     );
                   }}
-                />
+                /> */}
               </AccordionContent>
             </AccordionItem>
           </Accordion>

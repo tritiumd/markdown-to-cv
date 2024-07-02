@@ -8,10 +8,15 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { Github, Linkedin, Mail } from "lucide-react";
 
-export default function Footer({className, ...props}) {
+export default function Footer({ className, ...props }) {
   return (
-    <footer className={cn("bg-muted text-muted-foreground py-12", className)}>
-      <div className="container max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8">
+    <footer
+      className={cn(
+        "min-w-full bg-muted text-muted-foreground py-12",
+        className
+      )}
+    >
+      <div className="container grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="flex items-center gap-4">
           <Avatar key="BD">
             <AvatarImage src="https://github.com/kidclone3.png" />
