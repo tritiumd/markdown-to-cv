@@ -23,20 +23,21 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import * as React from "react";
+import { cn } from "@/lib/utils";
 const icons = [
-  { id: 1, name: "Phone", Component: FaPhone },
-  { id: 2, name: "Github", Component: FaGithub },
-  { id: 3, name: "Linkedin", Component: FaLinkedinIn },
-  { id: 4, name: "Mail", Component: FaRegEnvelope },
+  { name: "Phone", Component: FaPhone, value: "fa-phone" },
+  { name: "Github", Component: FaGithub, value: "fa-github" },
+  { name: "Linkedin", Component: FaLinkedinIn, value: "fa-linkedin" },
+  { name: "Mail", Component: FaRegEnvelope, value: "fa-envelope-o" },
 ];
 
-export default function ChooseIconButton() {
-  const [selectedId, setSelected] = React.useState(1);
+const ChooseIconButton = React.forwardRef(({ className, ...props }, ref) => {
+  const [selectedId, setSelected] = React.useState(props.value);
   const [open, setOpen] = React.useState(false);
   const selectedIcon =
-    icons.find((icon) => icon.id === selectedId)?.Component || Phone;
+    icons.find((icon) => icon.value === selectedId)?.Component || FaPhone;
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} className={cn("", className)}>
       <PopoverTrigger asChild>
         <Button variant="outline" className="flex items-center gap-2">
           {React.createElement(selectedIcon, { className: "h-4 w-4" })}
@@ -50,11 +51,12 @@ export default function ChooseIconButton() {
             <CommandGroup>
               {icons.map((icon) => (
                 <CommandItem
-                  key={icon.id}
-                  value={icon.id}
+                  key={icon.value}
+                  value={icon.value}
                   onSelect={() => {
-                    setSelected(icon.id);
+                    setSelected(icon.value);
                     setOpen(false);
+                    props.onChange(icon.value);
                   }}
                   className="flex items-center gap-2"
                 >
@@ -70,4 +72,7 @@ export default function ChooseIconButton() {
       </PopoverContent>
     </Popover>
   );
-}
+});
+
+ChooseIconButton.displayName = "ChooseIconButton";
+export { ChooseIconButton };

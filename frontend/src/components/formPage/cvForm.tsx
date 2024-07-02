@@ -30,9 +30,11 @@ import {
 } from "@/components/ui/accordion";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Github, Linkedin, Phone, Plus, Twitter } from "lucide-react";
+import { CircleX, Github, Linkedin, Phone, Plus, Twitter } from "lucide-react";
 
-import ChooseIconButton from "@/components/custom/button/chooseIconButton";
+import * as React from "react";
+
+import { ChooseIconButton } from "@/components/custom/button/chooseIconButton";
 
 const formSchema = z.object({
   username: z.string().max(100),
@@ -100,8 +102,8 @@ export default function CvForm() {
       summary: "",
       skills: "",
       info: [
-        { icon: "fa-regular fa-phone", value: "0123456789" },
-        { icon: "fa-brands fa-github", value: "https://github.com/kidclone3" },
+        { icon: "fa-phone", value: "0123456789" },
+        { icon: "fa-github", value: "https://github.com/kidclone3" },
       ],
       certificates: [{ name: "", date: "", extra: "" }],
       education: [{ time: "", place: "", major: "", extra: "" }],
@@ -158,6 +160,7 @@ export default function CvForm() {
                           <Input
                             placeholder="Your name"
                             type="text"
+                            className="border-spacing-1"
                             {...field}
                           />
                         </FormControl>
@@ -176,32 +179,49 @@ export default function CvForm() {
                     </AccordionTrigger>
                     <AccordionContent className="p-2">
                       <div>
-                        {/* TODO: choose icon button and delete button*/}
                         {infos.map((field, index) => (
-                          <FormField
-                            control={form.control}
-                            key={field.id}
-                            name={`info.${index}.value`}
-                            render={({ field }) => (
-                              <FormItem className="py-0">
-                                <FormControl>
-                                  <div className="flex items-center">
-                                    <ChooseIconButton />
-                                    <Input {...field} />
-                                    <Button
-                                      type="button"
-                                      variant="default"
-                                      onClick={() => removeInfos(index)}
-                                      size={"sm"}
-                                    >
-                                      Delete
-                                    </Button>
-                                  </div>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                          <div key={index} className="flex items-center gap-1">
+                            <FormField
+                              control={form.control}
+                              key={field.icon}
+                              name={`info.${index}.icon`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <ChooseIconButton {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              key={field.value}
+                              name={`info.${index}.value`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <div className="flex">
+                                      <Input {...field} className="pr-2" />
+                                      <Button
+                                        type="button"
+                                        variant="ghost"
+                                        onClick={() => removeInfos(index)}
+                                        size="icon"
+                                        className="min-w-1.5"
+                                      >
+                                        <CircleX
+                                          className="h-4 w-4"
+                                          color="red"
+                                        />
+                                      </Button>
+                                    </div>
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
                         ))}
                         <Button
                           type="button"
