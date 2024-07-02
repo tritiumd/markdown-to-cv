@@ -10,7 +10,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react",
     "incremental": true,
     "plugins": [
       {
@@ -27,7 +27,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/components/custom/button/chooseIconButton.jsx"
+    "src/components/custom/button/chooseIconButton.jsx",
   ],
   "exclude": ["node_modules"]
 }

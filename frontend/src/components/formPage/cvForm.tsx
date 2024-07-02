@@ -30,11 +30,11 @@ import {
 } from "@/components/ui/accordion";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { CircleX, Github, Linkedin, Phone, Plus, Twitter } from "lucide-react";
-
 import * as React from "react";
+import { Plus, CircleMinus } from "lucide-react";
 
 import { ChooseIconButton } from "@/components/custom/button/chooseIconButton";
+import "./form.css";
 
 const formSchema = z.object({
   username: z.string().max(100),
@@ -96,6 +96,7 @@ const formSchema = z.object({
 export default function CvForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    mode: "onBlur",
     defaultValues: {
       username: "",
       position: "",
@@ -177,13 +178,10 @@ export default function CvForm() {
                         : phone, email, Github...
                       </FormDescription>
                     </AccordionTrigger>
-                    <AccordionContent className="p-2">
-                      <div>
+                    <AccordionContent>
+                      <div className="relative">
                         {infos.map((field, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center gap-1 p-1"
-                          >
+                          <div key={index} className="w-full flex gap-x-3 p-1">
                             <FormField
                               control={form.control}
                               key={field.icon}
@@ -202,38 +200,29 @@ export default function CvForm() {
                               key={field.value}
                               name={`info.${index}.value`}
                               render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="grow">
                                   <FormControl>
-                                    <div className="flex w-full">
-                                      <Input
-                                        {...field}
-                                        className="pr-2 flex-grow"
-                                      />
-                                      <Button
-                                        type="button"
-                                        variant="ghost"
-                                        onClick={() => removeInfos(index)}
-                                        size="icon"
-                                        className="min-w-1.5"
-                                      >
-                                        <CircleX
-                                          className="h-4 w-4"
-                                          color="red"
-                                        />
-                                      </Button>
-                                    </div>
+                                    <Input {...field} className="pr-2" />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
                               )}
                             />
+                            <Button
+                              variant="link"
+                              onClick={() => removeInfos(index)}
+                              size="icon"
+                              className="dynamic-delete-button"
+                            >
+                              <CircleMinus />
+                            </Button>
                           </div>
                         ))}
                         <Button
                           type="button"
                           variant="outline"
                           size="sm"
-                          className="mt-2"
+                          className="m-1"
                           onClick={() => appendInfos({ icon: "", value: "" })}
                         >
                           <Plus size={16} />
@@ -298,7 +287,7 @@ export default function CvForm() {
                     );
                   }}
                 />
-                {/* <FormField
+                <FormField
                   control={form.control}
                   name="certificates"
                   render={({ field }) => {
@@ -337,7 +326,6 @@ export default function CvForm() {
                                   <Button
                                     type="button"
                                     variant="outline"
-                                    size="sm"
                                     className="mt-2"
                                     onClick={() =>
                                       appendCertificates({
@@ -483,7 +471,7 @@ export default function CvForm() {
                       </FormItem>
                     );
                   }}
-                /> */}
+                />
               </AccordionContent>
             </AccordionItem>
           </Accordion>
