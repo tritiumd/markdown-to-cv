@@ -39,8 +39,8 @@ const ChooseIconButton = React.forwardRef(({ className, ...props }, ref) => {
   return (
     <Popover open={open} onOpenChange={setOpen} className={cn("", className)}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="flex items-center gap-2">
-          {React.createElement(selectedIcon, { className: "h-4 w-4" })}
+        <Button variant="outline" className="">
+          {React.createElement(selectedIcon)}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-4">

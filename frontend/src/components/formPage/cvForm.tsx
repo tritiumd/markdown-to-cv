@@ -180,7 +180,10 @@ export default function CvForm() {
                     <AccordionContent className="p-2">
                       <div>
                         {infos.map((field, index) => (
-                          <div key={index} className="flex items-center gap-1">
+                          <div
+                            key={index}
+                            className="flex items-center gap-1 p-1"
+                          >
                             <FormField
                               control={form.control}
                               key={field.icon}
@@ -201,8 +204,11 @@ export default function CvForm() {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormControl>
-                                    <div className="flex">
-                                      <Input {...field} className="pr-2" />
+                                    <div className="flex w-full">
+                                      <Input
+                                        {...field}
+                                        className="pr-2 flex-grow"
+                                      />
                                       <Button
                                         type="button"
                                         variant="ghost"
