@@ -49,48 +49,26 @@ const formSchema = z.object({
   skills: z.string().max(1000),
   certificates: z.array(
     z.object({
-      name: z.string().max(100),
-      date: z.string().max(100),
-      extra: z.string().max(200).optional(),
+      value: z.string(),
     })
   ),
   education: z.array(
     z.object({
-      time: z.string().max(50),
-      place: z.string().max(100),
-      major: z.string().max(100),
-      extra: z.string().max(200).optional(),
+      value: z.string(),
     })
   ),
   experiences: z.array(
     z.object({
-      place: z.string().max(100),
-      phase: z.object({
-        time: z.string().max(50),
-        position: z.string().max(100),
-        detail: z.string().max(200),
-      }),
+      value: z.string(),
     })
   ),
   activities: z.array(
     z.object({
-      place: z.string().max(100),
-      phase: z.object({
-        time: z.string().max(50),
-        position: z.string().max(100),
-        detail: z.string().max(200),
-      }),
+      value: z.string(),
     })
   ),
-  references: z
-    .array(
-      z.object({
-        name: z.string().max(100),
-        position: z.string().max(100),
-        contact: z.string().max(100),
-      })
-    )
-    .optional(),
+
+  references: z.array(z.string().max(200)).optional(),
 });
 
 export default function CvForm() {
@@ -106,15 +84,11 @@ export default function CvForm() {
         { icon: "fa-phone", value: "0123456789" },
         { icon: "fa-github", value: "https://github.com/kidclone3" },
       ],
-      certificates: [{ name: "", date: "", extra: "" }],
-      education: [{ time: "", place: "", major: "", extra: "" }],
-      experiences: [
-        { place: "", phase: { time: "", position: "", detail: "" } },
-      ],
-      activities: [
-        { place: "", phase: { time: "", position: "", detail: "" } },
-      ],
-      references: [{ name: "", position: "", contact: "" }],
+      certificates: [{ value: "" }],
+      education: [{ value: "" }],
+      experiences: [{ value: "" }],
+      activities: [{ value: "" }],
+      references: [""],
     },
   });
 
@@ -132,13 +106,34 @@ export default function CvForm() {
     control: form.control,
   });
 
-  const { fields: certificates, append: appendCertificates } = useFieldArray({
+  const {
+    fields: certificates,
+    append: appendCertificates,
+    remove: removeCertificates,
+  } = useFieldArray({
     name: "certificates",
     control: form.control,
   });
 
+  const {
+    fields: educations,
+    append: appendEducations,
+    remove: removeEducations,
+  } = useFieldArray({
+    name: "education",
+    control: form.control,
+  });
+  const {
+    fields: activities,
+    append: appendActivities,
+    remove: removeActivities,
+  } = useFieldArray({
+    name: "activities",
+    control: form.control,
+  });
+
   return (
-    <div className="flex min-h-fit flex-col items-center justify-between p-10 overflow:auto">
+    <div className="flex min-h-fit flex-col items-center justify-between p-10 overflow-hidden">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
@@ -186,7 +181,10 @@ export default function CvForm() {
                     <AccordionContent>
                       <div className="relative">
                         {infos.map((field, index) => (
-                          <div key={index} className="w-full flex gap-x-3 p-1">
+                          <div
+                            key={field.id}
+                            className="w-full flex gap-x-3 p-1"
+                          >
                             <FormField
                               control={form.control}
                               key={field.icon}
@@ -308,22 +306,36 @@ export default function CvForm() {
               <AccordionContent className="p-2">
                 <div>
                   {certificates.map((field, index) => (
-                    <FormField
-                      control={form.control}
-                      key={field.id}
-                      name={`certificates.${index}.name`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Textarea
-                              {...field}
-                              placeholder="Put your certificates here"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div key={field.id} className="flex justify-between">
+                      <FormField
+                        control={form.control}
+                        key={field.id}
+                        name={`certificates.${index}.value`}
+                        render={({ field }) => (
+                          <FormItem className="w-full">
+                            <FormControl>
+                              <Textarea
+                                {...field}
+                                placeholder={
+                                  index === 0
+                                    ? "year: 2024\nname: APTIS B2\nextra: British Council"
+                                    : ""
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button
+                        variant="link"
+                        onClick={() => removeCertificates(index)}
+                        size="icon"
+                        className="dynamic-delete-button self-center"
+                      >
+                        <CircleMinus />
+                      </Button>
+                    </div>
                   ))}
                   <div className="p-2">
                     <Button
@@ -331,9 +343,7 @@ export default function CvForm() {
                       className="w-full"
                       onClick={() =>
                         appendCertificates({
-                          name: "",
-                          date: "",
-                          extra: "",
+                          value: "",
                         })
                       }
                     >
@@ -355,23 +365,38 @@ export default function CvForm() {
               </AccordionTrigger>
               <AccordionContent className="p-2">
                 <div>
-                  {certificates.map((field, index) => (
-                    <FormField
-                      control={form.control}
-                      key={field.id}
-                      name={`certificates.${index}.name`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Textarea
-                              {...field}
-                              placeholder="Put your education here"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                  {educations.map((field, index) => (
+                    <div key={field.id} className="flex justify-between">
+                      <FormField
+                        control={form.control}
+                        key={field.id}
+                        name={`education.${index}.value`}
+                        render={({ field }) => (
+                          <FormItem className="w-full">
+                            <FormControl>
+                              <Textarea
+                                {...field}
+                                rows={4}
+                                placeholder={
+                                  index === 0
+                                    ? "place: Hanoi\nmajor: IT\ntime: 2020\nextra: Distinction grade"
+                                    : ""
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button
+                        variant="link"
+                        onClick={() => removeEducations(index)}
+                        size="icon"
+                        className="dynamic-delete-button self-center"
+                      >
+                        <CircleMinus />
+                      </Button>
+                    </div>
                   ))}
                   <div className="p-2">
                     <Button
@@ -379,10 +404,8 @@ export default function CvForm() {
                       size="sm"
                       className="w-full"
                       onClick={() =>
-                        appendCertificates({
-                          name: "",
-                          date: "",
-                          extra: "",
+                        appendEducations({
+                          value: "",
                         })
                       }
                     >
@@ -404,23 +427,38 @@ export default function CvForm() {
               </AccordionTrigger>
               <AccordionContent className="p-2">
                 <div>
-                  {certificates.map((field, index) => (
-                    <FormField
-                      control={form.control}
-                      key={field.id}
-                      name={`certificates.${index}.name`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Textarea
-                              {...field}
-                              placeholder="Put your activities here"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                  {activities.map((field, index) => (
+                    <div key={field.id} className="flex justify-between">
+                      <FormField
+                        control={form.control}
+                        key={field.id}
+                        name={`activities.${index}.value`}
+                        render={({ field }) => (
+                          <FormItem className="w-full">
+                            <FormControl>
+                              <Textarea
+                                {...field}
+                                rows={6}
+                                placeholder={
+                                  index === 0
+                                    ? "place: Hanoi\nphase: \n\t- time: 2020\n\tposition: Vice president of HAMIC\n\tdetail:\n\t\t- Teach secondary school student play shooting game"
+                                    : ""
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button
+                        variant="link"
+                        onClick={() => removeEducations(index)}
+                        size="icon"
+                        className="dynamic-delete-button self-center"
+                      >
+                        <CircleMinus />
+                      </Button>
+                    </div>
                   ))}
                   <div className="p-2">
                     <Button
@@ -428,10 +466,8 @@ export default function CvForm() {
                       size="sm"
                       className="w-full"
                       onClick={() =>
-                        appendCertificates({
-                          name: "",
-                          date: "",
-                          extra: "",
+                        appendActivities({
+                          value: "",
                         })
                       }
                     >

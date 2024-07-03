@@ -6,6 +6,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import * as React from "react";
 export default function FormPage() {
@@ -13,13 +14,14 @@ export default function FormPage() {
     <main className="flex min-h-screen max-w-full flex-col items-center justify-between p-2 break-words">
       <MainNav className="" />
       <ResizablePanelGroup direction="horizontal" className="overflow-auto">
-        <ResizablePanel defaultSize={34} minSize={30} className="">
-          {/* Scrollable */}
-
-          <CvForm />
+        <ResizablePanel defaultSize={34} minSize={30} order={1}>
+          <ScrollArea className="h-full">
+            <CvForm />
+          </ScrollArea>
         </ResizablePanel>
         <ResizableHandle className="" />
-        <ResizablePanel className="">
+
+        <ResizablePanel defaultSize={67} order={2}>
           <Image
             src="/assets/Image_placeholder_upright.png"
             alt="hero"
