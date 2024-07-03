@@ -14,6 +14,8 @@ export default function FormPage() {
       <MainNav className="" />
       <ResizablePanelGroup direction="horizontal" className="overflow-auto">
         <ResizablePanel defaultSize={34} minSize={30} className="">
+          {/* Scrollable */}
+
           <CvForm />
         </ResizablePanel>
         <ResizableHandle className="" />

@@ -138,19 +138,17 @@ export default function CvForm() {
   });
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-between p-10">
+    <div className="flex min-h-fit flex-col items-center justify-between p-10 overflow:auto">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className="max-w-md w-full flex flex-col gap-4"
+          className="max-w-screen-lg w-full flex flex-col gap-4"
         >
           <Accordion type="single" className="w-full" collapsible>
             <AccordionItem value="details">
-              <AccordionTrigger className="flex justify-between items-center">
-                <p className="self-start text-xl font-semibold mr-auto">
-                  Personal information
-                </p>
-                <FormDescription className="text-xs text-gray-400">
+              <AccordionTrigger className="accordion-trigger">
+                <p>Personal information</p>
+                <FormDescription className="form-description">
                   : school, major, time...
                 </FormDescription>
               </AccordionTrigger>
@@ -177,9 +175,11 @@ export default function CvForm() {
                 />
                 <Accordion type="single" className="w-full" collapsible>
                   <AccordionItem value="info">
-                    <AccordionTrigger className="flex items-center">
-                      <FormLabel className="flex-grow-0">Contact</FormLabel>
-                      <FormDescription className="text-xs text-gray-400 flex-1">
+                    <AccordionTrigger className="accordion-trigger">
+                      <FormLabel className="flex-grow-0 mr-auto">
+                        Contact
+                      </FormLabel>
+                      <FormDescription className="form-description">
                         : phone, email, Github...
                       </FormDescription>
                     </AccordionTrigger>
@@ -299,11 +299,9 @@ export default function CvForm() {
 
           <Accordion type="single" className="w-full" collapsible>
             <AccordionItem value="certificates">
-              <AccordionTrigger className="flex justify-between items-center">
-                <p className="flex-grow-0 text-xl font-semibold mr-auto">
-                  Certificates
-                </p>
-                <FormDescription className="text-xs text-gray-400">
+              <AccordionTrigger className="accordion-trigger">
+                <p>Certificates</p>
+                <FormDescription className="form-description">
                   : school, major, time...
                 </FormDescription>
               </AccordionTrigger>
@@ -349,11 +347,9 @@ export default function CvForm() {
 
           <Accordion type="single" className="w-full" collapsible>
             <AccordionItem value="education">
-              <AccordionTrigger className="flex justify-between items-center">
-                <p className="flex-grow-0 text-xl font-semibold mr-auto">
-                  Education
-                </p>
-                <FormDescription className="text-xs text-gray-400">
+              <AccordionTrigger className="accordion-trigger">
+                <p>Education</p>
+                <FormDescription className="form-description">
                   : school, major, time...
                 </FormDescription>
               </AccordionTrigger>
@@ -400,11 +396,9 @@ export default function CvForm() {
 
           <Accordion type="single" className="w-full" collapsible>
             <AccordionItem value="certificates" className="border-0">
-              <AccordionTrigger className="flex flex-start items-center">
-                <p className="flex-grow-0 text-xl font-semibold mr-auto">
-                  Activities
-                </p>
-                <FormDescription className="text-xs text-gray-400 self-end">
+              <AccordionTrigger className="accordion-trigger">
+                <p>Activities</p>
+                <FormDescription className="form-description">
                   : school, volunteer, ...
                 </FormDescription>
               </AccordionTrigger>
