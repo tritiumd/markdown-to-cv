@@ -7,6 +7,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import Image from "next/image";
+import * as React from "react";
 export default function FormPage() {
   return (
     <main className="flex min-h-screen max-w-full flex-col items-center justify-between p-2 break-words">

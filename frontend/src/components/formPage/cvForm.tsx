@@ -145,9 +145,14 @@ export default function CvForm() {
           className="max-w-md w-full flex flex-col gap-4"
         >
           <Accordion type="single" className="w-full" collapsible>
-            <AccordionItem value="item-1">
+            <AccordionItem value="details">
               <AccordionTrigger className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold">Personal information</h2>
+                <p className="self-start text-xl font-semibold mr-auto">
+                  Personal information
+                </p>
+                <FormDescription className="text-xs text-gray-400">
+                  : school, major, time...
+                </FormDescription>
               </AccordionTrigger>
               <AccordionContent className="p-2">
                 <FormField
@@ -218,20 +223,21 @@ export default function CvForm() {
                             </Button>
                           </div>
                         ))}
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          className="m-1"
-                          onClick={() => appendInfos({ icon: "", value: "" })}
-                        >
-                          <Plus size={16} />
-                        </Button>
+                        <div className="p-2">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="w-full"
+                            onClick={() => appendInfos({ icon: "", value: "" })}
+                          >
+                            <Plus size={16} />
+                          </Button>
+                        </div>
                       </div>
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
-
                 <FormField
                   control={form.control}
                   name="position"
@@ -287,191 +293,158 @@ export default function CvForm() {
                     );
                   }}
                 />
-                <FormField
-                  control={form.control}
-                  name="certificates"
-                  render={({ field }) => {
-                    return (
-                      <FormItem>
-                        <FormControl>
-                          <Accordion
-                            type="single"
-                            className="w-full"
-                            collapsible
-                          >
-                            <AccordionItem value="certificates">
-                              <AccordionTrigger className="flex justify-between items-center">
-                                <FormLabel> Certificates </FormLabel>
-                                <FormDescription className="text-xs text-gray-400">
-                                  : name, date, extra...
-                                </FormDescription>
-                              </AccordionTrigger>
-                              <AccordionContent className="p-2">
-                                <div>
-                                  {certificates.map((field, index) => (
-                                    <FormField
-                                      control={form.control}
-                                      key={field.id}
-                                      name={`certificates.${index}.name`}
-                                      render={({ field }) => (
-                                        <FormItem>
-                                          <FormControl>
-                                            <Input {...field} />
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
-                                  ))}
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    className="mt-2"
-                                    onClick={() =>
-                                      appendCertificates({
-                                        name: "",
-                                        date: "",
-                                        extra: "",
-                                      })
-                                    }
-                                  >
-                                    <Plus size={16} />
-                                  </Button>
-                                </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          </Accordion>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    );
-                  }}
-                />
-                <FormField
-                  control={form.control}
-                  name="education"
-                  render={({ field }) => {
-                    return (
-                      <FormItem>
-                        <FormControl>
-                          <Accordion
-                            type="single"
-                            className="w-full"
-                            collapsible
-                          >
-                            <AccordionItem value="education">
-                              <AccordionTrigger className="flex justify-between items-center">
-                                <FormLabel className=""> Education </FormLabel>
-                                <FormDescription className="text-xs text-gray-400">
-                                  : school, major, time...
-                                </FormDescription>
-                              </AccordionTrigger>
-                              <AccordionContent className="p-2">
-                                <div>
-                                  {certificates.map((field, index) => (
-                                    <FormField
-                                      control={form.control}
-                                      key={field.id}
-                                      name={`certificates.${index}.name`}
-                                      render={({ field }) => (
-                                        <FormItem>
-                                          <FormControl>
-                                            <Input {...field} />
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
-                                  ))}
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    className="mt-2"
-                                    onClick={() =>
-                                      appendCertificates({
-                                        name: "",
-                                        date: "",
-                                        extra: "",
-                                      })
-                                    }
-                                  >
-                                    <Plus size={16} />
-                                  </Button>
-                                </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          </Accordion>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    );
-                  }}
-                />
-                <FormField
-                  control={form.control}
-                  name="certificates"
-                  render={({ field }) => {
-                    return (
-                      <FormItem>
-                        <FormControl>
-                          <Accordion
-                            type="single"
-                            className="w-full"
-                            collapsible
-                          >
-                            <AccordionItem
-                              value="certificates"
-                              className="border-0"
-                            >
-                              <AccordionTrigger className="flex flex-start items-center">
-                                <FormLabel> Activities </FormLabel>
-                                <FormDescription className="text-xs text-gray-400 self-end">
-                                  : school, volunteer, ...
-                                </FormDescription>
-                              </AccordionTrigger>
-                              <AccordionContent className="p-2">
-                                <div>
-                                  {certificates.map((field, index) => (
-                                    <FormField
-                                      control={form.control}
-                                      key={field.id}
-                                      name={`certificates.${index}.name`}
-                                      render={({ field }) => (
-                                        <FormItem>
-                                          <FormControl>
-                                            <Input {...field} />
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
-                                  ))}
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    className="mt-2"
-                                    onClick={() =>
-                                      appendCertificates({
-                                        name: "",
-                                        date: "",
-                                        extra: "",
-                                      })
-                                    }
-                                  >
-                                    <Plus size={16} />
-                                  </Button>
-                                </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          </Accordion>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    );
-                  }}
-                />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+
+          <Accordion type="single" className="w-full" collapsible>
+            <AccordionItem value="certificates">
+              <AccordionTrigger className="flex justify-between items-center">
+                <p className="flex-grow-0 text-xl font-semibold mr-auto">
+                  Certificates
+                </p>
+                <FormDescription className="text-xs text-gray-400">
+                  : school, major, time...
+                </FormDescription>
+              </AccordionTrigger>
+              <AccordionContent className="p-2">
+                <div>
+                  {certificates.map((field, index) => (
+                    <FormField
+                      control={form.control}
+                      key={field.id}
+                      name={`certificates.${index}.name`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Textarea
+                              {...field}
+                              placeholder="Put your certificates here"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  ))}
+                  <div className="p-2">
+                    <Button
+                      variant="ghost"
+                      className="w-full"
+                      onClick={() =>
+                        appendCertificates({
+                          name: "",
+                          date: "",
+                          extra: "",
+                        })
+                      }
+                    >
+                      <Plus size={16} />
+                    </Button>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+
+          <Accordion type="single" className="w-full" collapsible>
+            <AccordionItem value="education">
+              <AccordionTrigger className="flex justify-between items-center">
+                <p className="flex-grow-0 text-xl font-semibold mr-auto">
+                  Education
+                </p>
+                <FormDescription className="text-xs text-gray-400">
+                  : school, major, time...
+                </FormDescription>
+              </AccordionTrigger>
+              <AccordionContent className="p-2">
+                <div>
+                  {certificates.map((field, index) => (
+                    <FormField
+                      control={form.control}
+                      key={field.id}
+                      name={`certificates.${index}.name`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Textarea
+                              {...field}
+                              placeholder="Put your education here"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  ))}
+                  <div className="p-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full"
+                      onClick={() =>
+                        appendCertificates({
+                          name: "",
+                          date: "",
+                          extra: "",
+                        })
+                      }
+                    >
+                      <Plus size={16} />
+                    </Button>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+
+          <Accordion type="single" className="w-full" collapsible>
+            <AccordionItem value="certificates" className="border-0">
+              <AccordionTrigger className="flex flex-start items-center">
+                <p className="flex-grow-0 text-xl font-semibold mr-auto">
+                  Activities
+                </p>
+                <FormDescription className="text-xs text-gray-400 self-end">
+                  : school, volunteer, ...
+                </FormDescription>
+              </AccordionTrigger>
+              <AccordionContent className="p-2">
+                <div>
+                  {certificates.map((field, index) => (
+                    <FormField
+                      control={form.control}
+                      key={field.id}
+                      name={`certificates.${index}.name`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Textarea
+                              {...field}
+                              placeholder="Put your activities here"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  ))}
+                  <div className="p-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full"
+                      onClick={() =>
+                        appendCertificates({
+                          name: "",
+                          date: "",
+                          extra: "",
+                        })
+                      }
+                    >
+                      <Plus size={16} />
+                    </Button>
+                  </div>
+                </div>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
