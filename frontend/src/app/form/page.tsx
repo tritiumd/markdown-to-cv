@@ -1,3 +1,5 @@
+"use client";
+
 import Footer from "@/components/footer";
 import CvForm from "@/components/formPage/cvForm";
 import MainNav from "@/components/mainNav";
@@ -6,18 +8,18 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import * as React from "react";
+
 export default function FormPage() {
   return (
-    <main className="flex min-h-screen max-w-full flex-col items-center justify-between break-words">
+    <main className="flex-col items-center break-words">
       <MainNav className="" />
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={50} minSize={30} order={1}>
           <CvForm />
         </ResizablePanel>
-        <ResizableHandle className="" />
+        <ResizableHandle />
 
         <ResizablePanel defaultSize={50} order={2}>
           <Image
