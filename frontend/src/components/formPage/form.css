@@ -18,17 +18,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  > p {
-    font-size: 1.25rem /* 20px */;
+  > h3 {
     line-height: 1.75rem /* 28px */;
     font-weight: 600;
     margin-right: auto;
   }
-  > .form-description {
+  > p {
     font-size: 0.75em;
     line-height: 1em;
     --tw-text-opacity: 1;
     color: rgb(156 163 175 / var(--tw-text-opacity)) /* #9ca3af */;
     margin-right: 0.5rem;
+  }
+  > .card-title {
+    font-size: 1.25rem /* 20px */;
+    line-height: 1.75rem /* 28px */;
+    font-weight: 600;
+    margin-right: auto;
   }
 }
