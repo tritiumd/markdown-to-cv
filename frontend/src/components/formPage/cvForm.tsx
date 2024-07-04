@@ -323,7 +323,7 @@ export default function CvForm() {
                             key={field.id}
                             name={`certificates.${index}.value`}
                             render={({ field }) => (
-                              <FormItem className="w-full">
+                              <FormItem className="w-full m-1">
                                 <FormControl>
                                   <Textarea
                                     {...field}
@@ -389,7 +389,7 @@ export default function CvForm() {
                             key={field.id}
                             name={`education.${index}.value`}
                             render={({ field }) => (
-                              <FormItem className="w-full">
+                              <FormItem className="w-full m-1">
                                 <FormControl>
                                   <Textarea
                                     {...field}
@@ -457,7 +457,7 @@ export default function CvForm() {
                             key={field.id}
                             name={`activities.${index}.value`}
                             render={({ field }) => (
-                              <FormItem className="w-full">
+                              <FormItem className="w-full m-1">
                                 <FormControl>
                                   <Textarea
                                     {...field}
