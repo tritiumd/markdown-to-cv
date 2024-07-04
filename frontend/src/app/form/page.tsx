@@ -11,13 +11,11 @@ import Image from "next/image";
 import * as React from "react";
 export default function FormPage() {
   return (
-    <main className="flex min-h-screen max-w-full flex-col items-center justify-between p-2 break-words">
+    <main className="flex min-h-screen max-w-full flex-col items-center justify-between break-words">
       <MainNav className="" />
       <ResizablePanelGroup direction="horizontal" className="overflow-auto">
         <ResizablePanel defaultSize={34} minSize={30} order={1}>
-          <ScrollArea className="h-full">
-            <CvForm />
-          </ScrollArea>
+          <CvForm />
         </ResizablePanel>
         <ResizableHandle className="" />
 
