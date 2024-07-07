@@ -1,6 +1,6 @@
 import json
 
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Request
 from pydantic import BaseModel, ValidationError, Field
 from typing import List, AnyStr, Optional
 
@@ -75,21 +75,25 @@ class FormSchema(BaseModel):
 
 
 @router.post("/form/submit-form/")
-async def submit_form(form_data_str: str = Body()):
+async def submit_form(request: Request):
     """
-    Submit form data to the backend
-    :param form_data_str:
-    :return:
+    Submit form data
+    Args:
+        request: Request: Request object
+
+    Returns:
+
     """
     # json_data = jsonable_encoder(form_data)
     # print(form_data)
     try:
-        form_data = json.loads(form_data_str)
-        form = FormSchema(**form_data)
-        print(form.dict())
+        data = await request.json()
+        form_data = FormSchema(**data)
         return {"message": "Form submitted successfully"}
 
     except json.JSONDecodeError:
         return {"message": "Invalid JSON format"}
     except ValidationError as e:
         return {"error": "Validation error", "details": e.errors()}
+    except Exception as e:
+        return {"error": str(e)}

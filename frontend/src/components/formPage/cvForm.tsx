@@ -34,7 +34,10 @@ import { Plus, CircleMinus } from "lucide-react";
 
 import { ChooseIconButton } from "@/components/custom/button/chooseIconButton";
 import "./form.css";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
+const url = process.env.NEXT_PUBLIC_MY_URL;
 const formSchema = z.object({
   username: z.string().max(100),
   position: z.string().max(100),
@@ -75,10 +78,19 @@ const formSchema = z.object({
       .optional()
   ),
 
-  references: z.array(z.string().max(200)).optional(),
+  references: z
+    .array(
+      z
+        .object({
+          value: z.string(),
+        })
+        .optional()
+    )
+    .optional(),
 });
 
 export default function CvForm() {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onBlur",
@@ -95,12 +107,42 @@ export default function CvForm() {
       education: [{ value: "" }],
       experiences: [{ value: "" }],
       activities: [{ value: "" }],
-      references: [""],
+      references: [{ value: "" }],
     },
   });
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log({ values });
+    console.log(values);
+    // post to your API
+    fetch(`${url}/form/submit-form`, {
+      method: "POST",
+      body: JSON.stringify(values),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Submission data:", data);
+
+        toast({
+          title: "Success",
+          description: "Your CV has been submitted",
+        });
+      })
+      .catch((error) => {
+        console.error("Submission error:", error);
+        // Optionally, show an error toast
+        toast({
+          title: "Error",
+          description: "There was an issue!",
+          variant: "destructive",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
+      });
+    console.log("json", JSON.stringify(values));
   };
 
   // This can come from your database or API.
@@ -141,7 +183,7 @@ export default function CvForm() {
 
   return (
     <div className="flex-col items-center justify-between px-10 pt-2 overflow-hidden max-h-full">
-      <Card>
+      <Card className="overflow-y-auto">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="">
             <div className="form-container">
@@ -178,7 +220,12 @@ export default function CvForm() {
                             );
                           }}
                         />
-                        <Accordion type="single" className="w-full" collapsible>
+                        <Accordion
+                          type="single"
+                          className="w-full"
+                          collapsible
+                          defaultValue="info"
+                        >
                           <AccordionItem value="info" className="border-0">
                             <AccordionTrigger className="accordion-trigger">
                               <FormLabel className="flex-grow-0 mr-auto">
