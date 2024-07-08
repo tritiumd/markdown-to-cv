@@ -34,7 +34,7 @@ def custom_openapi():
 
 app.openapi = custom_openapi
 
-app.mount("/static", StaticFiles(directory=settings.DATA_OUTPUT_FOLDER_PATH), name="static")
+app.mount("/static", StaticFiles(directory=settings.DATA_FOLDER_PATH_HTML), name="static")
 
 # Set all CORS enabled origins
 if settings.BACKEND_CORS_ORIGINS:

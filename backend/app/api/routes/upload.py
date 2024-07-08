@@ -15,7 +15,7 @@ router = APIRouter()
 
 
 def create_output_file(upload_dir: str, output_dir: str, filename: str):
-    deploy_dir = settings.DEPLOY_DIRECTORY
+    deploy_dir = settings.DATA_FOLDER_PATH_DEPLOY
     subprocess.run(["cp", f"{upload_dir}/{filename}.md", f"{deploy_dir}/{filename}.md"], check=True)
     subprocess.run(["bash", f"{deploy_dir}/run_md2html.sh", deploy_dir, filename], check=True)
     subprocess.run(["cp", f"{deploy_dir}/{filename}.html", f"{output_dir}/{filename}.html"], check=True)
@@ -32,8 +32,7 @@ async def create_upload_file(background_tasks: BackgroundTasks, file: UploadFile
 
     # TODO: change all logic to services
     uploaded_file = file
-    print(file)
-    upload_dir = settings.DATA_FOLDER_PATH
+    upload_dir = settings.DATA_FOLDER_PATH_MARKDOWN
     if not os.path.exists(upload_dir):
         os.makedirs(upload_dir)
     new_uid = str(uuid.uuid4())
@@ -46,7 +45,7 @@ async def create_upload_file(background_tasks: BackgroundTasks, file: UploadFile
         data_path=file_path,
         owner_id=0
     )
-    output_dir = settings.DATA_OUTPUT_FOLDER_PATH
+    output_dir = settings.DATA_FOLDER_PATH_HTML
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 

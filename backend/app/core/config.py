@@ -1,7 +1,7 @@
 from typing import Any, Literal, Annotated
 
 from pydantic import (
-    AnyUrl, BeforeValidator, HttpUrl, computed_field, PostgresDsn
+    AnyUrl, BeforeValidator, HttpUrl, computed_field, PostgresDsn, DirectoryPath
 )
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -46,10 +46,13 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str = ""
 
-    DATA_FOLDER_PATH: str = "./markdown"
-    DATA_OUTPUT_FOLDER_PATH: str = "./html"
-    DEPLOY_DIRECTORY: str = "./deploy"
+    DATA_FOLDER_PATH: DirectoryPath = "./data"
+    DATA_FOLDER_PATH_MARKDOWN: DirectoryPath = "./data/markdown"
+    DATA_FOLDER_PATH_HTML: DirectoryPath = "./data/html"
+    DATA_FOLDER_PATH_DEPLOY: DirectoryPath = "./data/deploy"
+    DATA_FOLDER_PATH_YAML: DirectoryPath = "./data/yaml"
 
+    # Folder path validation
     @computed_field  # type: ignore[misc]
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:

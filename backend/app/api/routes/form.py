@@ -1,15 +1,20 @@
 import json
+import os
+import uuid
 
 from fastapi import APIRouter, Request
 from pydantic import BaseModel, ValidationError, Field
 from typing import List, AnyStr, Optional
+from pydantic_yaml import to_yaml_str
+
+from app.core.config import settings
 
 router = APIRouter()
 
 
 class InfoDetailSchema(BaseModel):
     icon: AnyStr
-    value: AnyStr
+    data: AnyStr
 
 
 class CertificateSchema(BaseModel):
@@ -89,7 +94,20 @@ async def submit_form(request: Request):
     try:
         data = await request.json()
         form_data = FormSchema(**data)
-        return {"message": "Form submitted successfully"}
+        form_dir = settings.DATA_FOLDER_PATH_YAML
+        # Generate uuid for the form
+        new_uid = str(uuid.uuid4())
+        file_path = os.path.join(form_dir, f"{new_uid}.yaml")
+        # Write the yaml file to YAML folder:
+        with open(file_path, "w") as f:
+            f.write(to_yaml_str(form_data))
+
+        # Services:
+        # 1. create yaml file and save it to the database
+        # 2. call the engine to generate it to markdown and html file
+        # 3. save the generated files to the database
+
+        return {"message": "Form submitted successfully", "uid": new_uid}
 
     except json.JSONDecodeError:
         return {"message": "Invalid JSON format"}

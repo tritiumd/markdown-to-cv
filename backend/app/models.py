@@ -1,4 +1,7 @@
+from typing import Optional
+
 from sqlmodel import Field, SQLModel
+import datetime
 
 
 # Shared properties
@@ -20,15 +23,20 @@ class FileUpdate(FileBase):
 
 # Database model, database table inferred from class name
 class File(FileBase):
-    title: str | None
+    id: int = Field(default=None, nullable=False, primary_key=True)
+    title: Optional[str]
     data_path: str
     owner_id: int | None = 0  # Will change whenever we implement authentication and user table
+    time_stamp: Optional[datetime.datetime] = None
 
 
 class MarkdownFile(File, table=True):
-    id: int = Field(default=None, nullable=False, primary_key=True)
+    pass
 
 
 class HTMLFile(File, table=True):
-    id: int = Field(default=None, nullable=False, primary_key=True)
+    uid: str
+
+
+class YAMLFile(File, table=True):
     uid: str
