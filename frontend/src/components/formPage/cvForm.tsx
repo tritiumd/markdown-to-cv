@@ -44,7 +44,7 @@ const formSchema = z.object({
   info: z.array(
     z.object({
       icon: z.string(),
-      value: z.string(),
+      data: z.string(),
     })
   ),
   summary: z.string().max(1000),
@@ -100,8 +100,9 @@ export default function CvForm() {
       summary: "",
       skills: "",
       info: [
-        { icon: "fa-phone", value: "0123456789" },
-        { icon: "fa-github", value: "https://github.com/kidclone3" },
+        { icon: "fa-phone", data: "Your phone number" },
+        { icon: "fab .fa-github", data: "Your github" },
+        { icon: "fa-envelope", data: "Your email" },
       ],
       certificates: [{ value: "" }],
       education: [{ value: "" }],
@@ -111,38 +112,36 @@ export default function CvForm() {
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-    // post to your API
-    fetch(`${url}/form/submit-form`, {
-      method: "POST",
-      body: JSON.stringify(values),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Submission data:", data);
-
-        toast({
-          title: "Success",
-          description: "Your CV has been submitted",
-        });
-      })
-      .catch((error) => {
-        console.error("Submission error:", error);
-        // Optionally, show an error toast
-        toast({
-          title: "Error",
-          description: "There was an issue!",
-          variant: "destructive",
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        });
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      // post to your API
+      const response = await fetch(`${url}/form/submit-form`, {
+        method: "POST",
+        body: JSON.stringify(values),
       });
-    console.log("json", JSON.stringify(values));
+      if (!response.ok) {
+        throw new Error("Failed to submit the data. Please try again.");
+      }
+      // Handle response if necessary
+      const data = await response.json();
+
+      console.log("Submission data:", data);
+      console.log("Form data:", values);
+
+      toast({
+        title: "Success",
+        description: "Your CV has been submitted",
+      });
+    } catch (error) {
+      console.error("Submission error:", error);
+      // Optionally, show an error toast
+      toast({
+        title: "Error",
+        description: "There was an issue!",
+        variant: "destructive",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    }
   };
 
   // This can come from your database or API.
@@ -257,8 +256,8 @@ export default function CvForm() {
                                     />
                                     <FormField
                                       control={form.control}
-                                      key={field.value}
-                                      name={`info.${index}.value`}
+                                      key={field.data}
+                                      name={`info.${index}.data`}
                                       render={({ field }) => (
                                         <FormItem className="grow">
                                           <FormControl>
@@ -288,7 +287,7 @@ export default function CvForm() {
                                     size="sm"
                                     className="w-full"
                                     onClick={() =>
-                                      appendInfos({ icon: "", value: "" })
+                                      appendInfos({ icon: "", data: "" })
                                     }
                                   >
                                     <Plus size={16} />
@@ -543,7 +542,7 @@ export default function CvForm() {
                               />
                               <Button
                                 variant="link"
-                                onClick={() => removeEducations(index)}
+                                onClick={() => removeActivities(index)}
                                 size="icon"
                                 className="dynamic-delete-button self-center"
                               >

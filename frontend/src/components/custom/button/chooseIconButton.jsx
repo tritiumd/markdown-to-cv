@@ -30,12 +30,12 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 const icons = [
   { name: "Phone", Component: FaPhone, value: "fa-phone" },
-  { name: "Github", Component: FaGithub, value: "fa-github" },
-  { name: "Linkedin", Component: FaLinkedinIn, value: "fa-linkedin" },
-  { name: "Mail", Component: FaRegEnvelope, value: "fa-envelope-o" },
-  { name: "Twitter", Component: FaTwitter, value: "fa-twitter" },
-  { name: "Facebook", Component: FaFacebook, value: "fa-facebook" },
-  { name: "Instagram", Component: FaInstagram, value: "fa-instagram" },
+  { name: "Github", Component: FaGithub, value: "fab .fa-github" },
+  { name: "Linkedin", Component: FaLinkedinIn, value: "fab .fa-linkedin" },
+  { name: "Mail", Component: FaRegEnvelope, value: "fa-envelope" },
+  { name: "Twitter", Component: FaTwitter, value: "fab .fa-twitter" },
+  { name: "Facebook", Component: FaFacebook, value: "fab .fa-facebook" },
+  { name: "Instagram", Component: FaInstagram, value: "fab .fa-instagram" },
   { name: "Birthday", Component: FaCakeCandles, value: "fa-cake-candles" },
 ];
 

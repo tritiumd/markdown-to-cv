@@ -43,11 +43,11 @@ class ReferenceSchema(BaseModel):
 
 
 class FormSchema(BaseModel):
-    username: str = Field(
+    name: str = Field(
         ...,
-        title="Username",
-        description="Username of the user",
-        max_length=50,
+        title="Your name",
+        description="Your name",
+        max_length=100,
         min_length=0,
     )
     position: str = Field(
