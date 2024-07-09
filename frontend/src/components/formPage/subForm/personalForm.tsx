@@ -88,42 +88,13 @@ export default function PersonalForm() {
                   <AccordionContent>
                     <div className="relative">
                       {infos.map((field, index) => (
-                        <div key={field.id} className="w-full flex gap-x-3 p-1">
-                          <FormField
-                            control={methods.control}
-                            key={`${field.id}-icon`}
-                            name={`info.${index}.icon`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <ChooseIconButton {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={methods.control}
-                            key={`${field.id}-data`}
-                            name={`info.${index}.data`}
-                            render={({ field }) => (
-                              <FormItem className="grow">
-                                <FormControl>
-                                  <Input {...field} className="pr-2" />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <Button
-                            variant="link"
-                            onClick={() => removeInfos(index)}
-                            size="icon"
-                            className="dynamic-delete-button"
-                          >
-                            <CircleMinus />
-                          </Button>
-                        </div>
+                        <InfoDetailField
+                          id={field.id}
+                          key={field.id}
+                          index={index}
+                          control={methods.control}
+                          remove={removeInfos}
+                        />
                       ))}
                       <div className="p-2">
                         <Button
@@ -200,5 +171,46 @@ export default function PersonalForm() {
         </AccordionItem>
       </Accordion>
     </Card>
+  );
+}
+
+function InfoDetailField({ id, index, control, remove }: any) {
+  return (
+    <div className="w-full flex gap-x-3 p-1">
+      <FormField
+        control={control}
+        key={`${id}-icon`}
+        name={`info.${index}.icon`}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <ChooseIconButton {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        key={`${id}-data`}
+        name={`info.${index}.data`}
+        render={({ field }) => (
+          <FormItem className="grow">
+            <FormControl>
+              <Input {...field} className="pr-2" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <Button
+        variant="link"
+        onClick={() => remove(index)}
+        size="icon"
+        className="dynamic-delete-button"
+      >
+        <CircleMinus />
+      </Button>
+    </div>
   );
 }

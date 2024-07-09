@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/card";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,6 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
 import { CircleMinus, Plus } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
@@ -50,38 +50,15 @@ export default function CertificateForm() {
           <CardContent>
             <AccordionContent className="p-2">
               <div>
-                <FormLabel>Put your certificates like below</FormLabel>
+                {/* <FormLabel>Put your certificates like below</FormLabel> */}
                 {certificates.map((field, index) => (
-                  <div key={field.id} className="flex justify-between">
-                    <FormField
-                      control={methods.control}
-                      key={field.id}
-                      name={`certificates.${index}.value`}
-                      render={({ field }) => (
-                        <FormItem className="w-full m-1">
-                          <FormControl>
-                            <Textarea
-                              {...field}
-                              placeholder={
-                                index === 0
-                                  ? "year: 2024\nname: APTIS B2\nextra: British Council"
-                                  : ""
-                              }
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <Button
-                      variant="link"
-                      onClick={() => removeCertificates(index)}
-                      size="icon"
-                      className="dynamic-delete-button self-center"
-                    >
-                      <CircleMinus />
-                    </Button>
-                  </div>
+                  <SubCertificateField
+                    key={field.id}
+                    id={field.id}
+                    index={index}
+                    control={methods.control}
+                    remove={removeCertificates}
+                  />
                 ))}
                 <div className="p-2">
                   <Button
@@ -102,5 +79,66 @@ export default function CertificateForm() {
         </AccordionItem>
       </Accordion>
     </Card>
+  );
+}
+function SubCertificateField({ id, index, control, remove }: any) {
+  return (
+    <div key={id} className="flex flex-col gap-1">
+      <FormField
+        control={control}
+        key={`${id}-name`}
+        name={`certificates.${index}.name`}
+        render={({ field }) => (
+          <FormItem className="w-full m-1">
+            <FormLabel>Name</FormLabel>
+            <FormControl>
+              <Input {...field} placeholder={"Certificate name"} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        key={`${id}-year`}
+        name={`certificates.${index}.year`}
+        render={({ field }) => (
+          <FormItem className="w-full m-1">
+            <FormLabel>Year</FormLabel>
+            <FormControl>
+              <Input {...field} placeholder={"Certificate year"} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={control}
+        key={`${id}-extra`}
+        name={`certificates.${index}.extra`}
+        render={({ field }) => (
+          <FormItem className="w-full m-1">
+            <FormLabel>Extra information</FormLabel>
+            <FormControl>
+              <Textarea
+                {...field}
+                placeholder={"Extra information (if needed)"}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <Button
+        variant="secondary"
+        onClick={() => remove(index)}
+        size="icon"
+        className="dynamic-delete-button self-end"
+      >
+        <CircleMinus />
+      </Button>
+      <Separator />
+    </div>
   );
 }

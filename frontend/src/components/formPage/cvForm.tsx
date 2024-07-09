@@ -1,38 +1,10 @@
 "use client";
 import * as z from "zod";
-import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { Card, CardFooter } from "@/components/ui/card";
 import * as React from "react";
-import { Plus, CircleMinus } from "lucide-react";
-
-import { ChooseIconButton } from "@/components/custom/button/chooseIconButton";
 import "./form.css";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
@@ -56,7 +28,9 @@ const formSchema = z.object({
   certificates: z.array(
     z
       .object({
-        value: z.string(),
+        year: z.string(),
+        name: z.string(),
+        extra: z.string().optional(),
       })
       .optional()
   ),
@@ -108,7 +82,7 @@ export default function CvForm() {
         { icon: "fab .fa-github", data: "Your github" },
         { icon: "fa-envelope", data: "Your email" },
       ],
-      certificates: [{ value: "" }],
+      certificates: [{ year: "", name: "" }],
       education: [{ value: "" }],
       experiences: [{ value: "" }],
       activities: [{ value: "" }],
