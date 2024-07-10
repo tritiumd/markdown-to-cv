@@ -12,6 +12,7 @@ import PersonalForm from "./subForm/personalForm";
 import CertificateForm from "./subForm/certificateForm";
 import EducationForm from "./subForm/educationForm";
 import ActivityForm from "./subForm/activityForm";
+import ExperienceForm from "./subForm/experienceForm";
 
 const url = process.env.NEXT_PUBLIC_MY_URL;
 const formSchema = z.object({
@@ -37,21 +38,42 @@ const formSchema = z.object({
   education: z.array(
     z
       .object({
-        value: z.string(),
+        place: z.string().describe("Your Institution"),
+        major: z.string().describe("Your Major"),
+        time: z.string().describe("Your Time"),
+        extra: z.string().optional(),
       })
       .optional()
   ),
   experiences: z.array(
     z
       .object({
-        value: z.string(),
+        place: z.string().describe("Your company in past"),
+        phase: z.array(
+          z
+            .object({
+              time: z.string().describe("Your Time"),
+              position: z.string().describe("Your Position"),
+              detail: z.string().describe("Your Detail").optional(),
+            })
+            .optional()
+        ),
       })
       .optional()
   ),
   activities: z.array(
     z
       .object({
-        value: z.string(),
+        place: z.string().describe("Your group in past"),
+        phase: z.array(
+          z
+            .object({
+              time: z.string().describe("Your Time"),
+              position: z.string().describe("Your Position"),
+              detail: z.string().describe("Your Detail"),
+            })
+            .optional()
+        ),
       })
       .optional()
   ),
@@ -83,9 +105,37 @@ export default function CvForm() {
         { icon: "fa-envelope", data: "Your email" },
       ],
       certificates: [{ year: "", name: "" }],
-      education: [{ value: "" }],
-      experiences: [{ value: "" }],
-      activities: [{ value: "" }],
+      education: [
+        {
+          place: "",
+          major: "",
+          time: "",
+        },
+      ],
+      experiences: [
+        {
+          place: "",
+          phase: [
+            {
+              time: "",
+              position: "",
+              detail: "",
+            },
+          ],
+        },
+      ],
+      activities: [
+        {
+          place: "",
+          phase: [
+            {
+              time: "",
+              position: "",
+              detail: "",
+            },
+          ],
+        },
+      ],
       references: [{ value: "" }],
     },
   });
@@ -132,6 +182,7 @@ export default function CvForm() {
               <CertificateForm />
               <EducationForm />
               <ActivityForm />
+              <ExperienceForm />
             </div>
             <CardFooter className="pt-10">
               <Button type="submit" className="w-full">

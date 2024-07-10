@@ -50,39 +50,15 @@ export default function EducationForm() {
           <CardContent>
             <AccordionContent className="p-2">
               <div>
-                <FormLabel>Put your education like below</FormLabel>
+                {/* <FormLabel>Put your education like below</FormLabel> */}
                 {educations.map((field, index) => (
-                  <div key={field.id} className="flex justify-between">
-                    <FormField
-                      control={methods.control}
-                      key={field.id}
-                      name={`education.${index}.value`}
-                      render={({ field }) => (
-                        <FormItem className="w-full m-1">
-                          <FormControl>
-                            <Textarea
-                              {...field}
-                              rows={4}
-                              placeholder={
-                                index === 0
-                                  ? "place: Hanoi\nmajor: IT\ntime: 2020\nextra: Distinction grade"
-                                  : ""
-                              }
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <Button
-                      variant="link"
-                      onClick={() => removeEducations(index)}
-                      size="icon"
-                      className="dynamic-delete-button self-center"
-                    >
-                      <CircleMinus />
-                    </Button>
-                  </div>
+                  <SubEducationField
+                    key={field.id}
+                    id={field.id}
+                    index={index}
+                    control={methods.control}
+                    remove={removeEducations}
+                  />
                 ))}
                 <div className="p-2">
                   <Button
@@ -104,5 +80,85 @@ export default function EducationForm() {
         </AccordionItem>
       </Accordion>
     </Card>
+  );
+}
+
+function SubEducationField({ id, index, control, remove }: any) {
+  return (
+    <div key={id} className="flex justify-between flex-col">
+      <FormField
+        control={control}
+        key={`${id}-place`}
+        name={`education.${index}.place`}
+        render={({ field }) => (
+          <FormItem className="w-full m-1">
+            <FormLabel>Your Institution</FormLabel>
+            <FormControl>
+              <Input {...field} placeholder={"Your Institution"} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        key={`${id}-major`}
+        name={`education.${index}.major`}
+        render={({ field }) => (
+          <FormItem className="w-full m-1">
+            <FormLabel>
+              Your Major
+              {/* {console.log(field)} */}
+            </FormLabel>
+            <FormControl>
+              <Input {...field} placeholder={"Your Major"} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        key={`${id}-time`}
+        name={`education.${index}.time`}
+        render={({ field }) => (
+          <FormItem className="w-full m-1">
+            <FormLabel>
+              Your time
+              {/* {console.log(field)} */}
+            </FormLabel>
+            <FormControl>
+              <Input {...field} placeholder={"Your time"} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        key={`${id}-extra`}
+        name={`education.${index}.extra`}
+        render={({ field }) => (
+          <FormItem className="w-full m-1">
+            <FormLabel>
+              Extra information
+              {/* {console.log(field)} */}
+            </FormLabel>
+            <FormControl>
+              <Textarea {...field} placeholder={"Like: \n- First\n- Second"} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <Button
+        variant="secondary"
+        onClick={() => remove(index)}
+        size="icon"
+        className="dynamic-delete-button self-end"
+      >
+        <CircleMinus />
+      </Button>
+    </div>
   );
 }

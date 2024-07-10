@@ -26,23 +26,23 @@ import { CircleMinus, Plus } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import PhaseField from "../commonField/phaseField";
 
-export default function ActivityForm() {
+export default function ExperienceForm() {
   const methods = useFormContext();
   const {
-    fields: activities,
-    append: appendActivities,
-    remove: removeActivities,
+    fields: experiences,
+    append: appendExperiences,
+    remove: removeExperiences,
   } = useFieldArray({
-    name: "activities",
+    name: "experience",
     control: methods.control,
   });
   return (
     <Card>
       <Accordion type="single" className="w-full p-2" collapsible>
-        <AccordionItem value="activities" className="border-0">
+        <AccordionItem value="experiences" className="border-0">
           <CardHeader>
             <AccordionTrigger className="accordion-trigger">
-              <CardTitle>Activities</CardTitle>
+              <CardTitle>Experiences</CardTitle>
               <CardDescription className="form-description">
                 : school, volunteer, ...
               </CardDescription>
@@ -51,13 +51,13 @@ export default function ActivityForm() {
           <CardContent>
             <AccordionContent className="p-2">
               <div>
-                {activities.map((field, index) => (
-                  <SubActivityField
+                {experiences.map((field, index) => (
+                  <SubExperienceField
                     key={field.id}
                     id={field.id}
                     index={index}
                     control={methods.control}
-                    remove={removeActivities}
+                    remove={removeExperiences}
                   />
                 ))}
                 <div className="p-2">
@@ -66,7 +66,7 @@ export default function ActivityForm() {
                     size="sm"
                     className="w-full"
                     onClick={() =>
-                      appendActivities({
+                      appendExperiences({
                         value: "",
                       })
                     }
@@ -83,13 +83,13 @@ export default function ActivityForm() {
   );
 }
 
-function SubActivityField({ id, index, control, remove }: any) {
+function SubExperienceField({ id, index, control, remove }: any) {
   return (
     <div key={id} className="flex justify-between flex-col">
       <FormField
         control={control}
         key={id}
-        name={`activities.${index}.place`}
+        name={`experiences.${index}.place`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
             <FormLabel>Place</FormLabel>

@@ -123,7 +123,9 @@ function SubCertificateField({ id, index, control, remove }: any) {
             <FormControl>
               <Textarea
                 {...field}
-                placeholder={"Extra information (if needed)"}
+                placeholder={
+                  "Extra information (if needed), like:\n- First\n- Second"
+                }
               />
             </FormControl>
             <FormMessage />
