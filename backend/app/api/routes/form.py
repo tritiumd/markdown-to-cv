@@ -4,7 +4,7 @@ import uuid
 
 from fastapi import APIRouter, Request
 from pydantic import BaseModel, ValidationError, Field
-from typing import List, AnyStr, Optional
+from typing import List, Optional
 from pydantic_yaml import to_yaml_str
 
 from app.core.config import settings
@@ -13,33 +13,42 @@ router = APIRouter()
 
 
 class InfoDetailSchema(BaseModel):
-    icon: AnyStr
-    data: AnyStr
+    icon: str
+    data: str
 
 
 class CertificateSchema(BaseModel):
-    # TODO: Add more fields
-    value: AnyStr
+    year: str
+    name: str
+    extra: Optional[str] = Field(default=None)
 
 
 class EducationSchema(BaseModel):
-    # TODO: Add more fields
-    value: AnyStr
+    place: str
+    major: str
+    time: str
+    extra: Optional[str] = Field(default=None)
+
+
+class PhaseSchema(BaseModel):
+    time: str
+    position: str
+    detail: Optional[str] = Field(default=None)
 
 
 class ExperienceSchema(BaseModel):
-    # TODO: Add more fields
-    value: AnyStr
+    place: str
+    phase: List[PhaseSchema]
 
 
 class ActivitySchema(BaseModel):
-    # TODO: Add more fields
-    value: AnyStr
+    place: str
+    phase: List[PhaseSchema]
 
 
 class ReferenceSchema(BaseModel):
     # TODO: Add more fields
-    value: AnyStr
+    value: str
 
 
 class FormSchema(BaseModel):
@@ -72,11 +81,11 @@ class FormSchema(BaseModel):
         max_length=500,
         min_length=0,
     )
-    certificates: Optional[List[CertificateSchema]]
-    education: Optional[List[EducationSchema]]
-    experiences: Optional[List[ExperienceSchema]]
-    activities: Optional[List[ActivitySchema]]
-    references: Optional[List[ReferenceSchema]]
+    certificates: Optional[List[CertificateSchema]] = Field(default=None)
+    education: Optional[List[EducationSchema]] = Field(default=None)
+    experiences: Optional[List[ExperienceSchema]] = Field(default=None)
+    activities: Optional[List[ActivitySchema]] = Field(default=None)
+    references: Optional[List[ReferenceSchema]] = Field(default=None)
 
 
 @router.post("/form/submit-form/")

@@ -47,12 +47,45 @@ def default_form_pydantic():
         "skills": "",
         "summary": "Your summary",
         "certificates": [
+            {
+                "year": "2021",
+                "name": "Certificate name",
+            },
+            {
+                "year": "2021",
+                "name": "Certificate name",
+                "extra": "Extra information"
+            }
         ],
         "education": [
+            {
+                "place": "University name",
+                "major": "Your major",
+                "time": "2021",
+                "extra": "Extra information"
+            }
         ],
         "experiences": [
+            {
+                "place": "Company name",
+                "phase": [{
+                    "time": "2021",
+                    "position": "Your position",
+                    "detail": "Your detail"
+                }]
+            }
         ],
         "activities": [
+            {
+                "place": "Club of something",
+                "phase": [
+                    {
+                        "time": "2021",
+                        "position": "Your position",
+                        "detail": "Your detail"
+                    }
+                ]
+            }
         ],
         "references": [
         ]
@@ -103,4 +136,4 @@ def test_upload_default_form(client: TestClient, default_form_pydantic: FormSche
     file_dir = settings.DATA_FOLDER_PATH_YAML
     file_path = os.path.join(file_dir, f"{filename}.yaml")
     assert os.path.exists(file_path)
-    # delete_file(file_path)
+    delete_file(file_path)
