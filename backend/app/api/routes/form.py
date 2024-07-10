@@ -8,6 +8,7 @@ from typing import List, Optional
 from pydantic_yaml import to_yaml_str
 
 from app.core.config import settings
+from app.core.utils import create_markdown_file
 
 router = APIRouter()
 
@@ -111,6 +112,7 @@ async def submit_form(request: Request):
         with open(file_path, "w") as f:
             f.write(to_yaml_str(form_data))
 
+        create_markdown_file(new_uid)
         # Services:
         # 1. create yaml file and save it to the database
         # 2. call the engine to generate it to markdown and html file

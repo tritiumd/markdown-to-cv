@@ -1,7 +1,6 @@
 import os
 import uuid
 from typing import Any
-import subprocess
 
 from fastapi import APIRouter, File, UploadFile, Depends, HTTPException, BackgroundTasks
 from sqlmodel import Session, select
@@ -9,17 +8,10 @@ from starlette.responses import HTMLResponse
 
 from app.core.config import settings
 from app.core.db import get_session
+from app.core.utils import create_output_file
 from app.models import MarkdownFile, HTMLFile
 
 router = APIRouter()
-
-
-def create_output_file(upload_dir: str, output_dir: str, filename: str):
-    deploy_dir = settings.DATA_FOLDER_PATH_DEPLOY
-    subprocess.run(["cp", f"{upload_dir}/{filename}.md", f"{deploy_dir}/{filename}.md"], check=True)
-    subprocess.run(["bash", f"{deploy_dir}/run_md2html.sh", deploy_dir, filename], check=True)
-    subprocess.run(["cp", f"{deploy_dir}/{filename}.html", f"{output_dir}/{filename}.html"], check=True)
-    subprocess.run(["bash", f"{deploy_dir}/cleanup_file.sh", deploy_dir, filename], check=True)
 
 
 @router.post("/uploadfile/")
