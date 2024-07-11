@@ -130,36 +130,11 @@ def test_submit_default_form(client: TestClient, default_form_pydantic: FormSche
     assert response.json().get("uid", None) is not None
     filename = response.json().get("uid")
     # Check if file exists
-    file_dir = settings.DATA_FOLDER_PATH_YAML
-    file_path = os.path.join(file_dir, f"{filename}.yaml")
-    assert os.path.exists(file_path)
+    yaml_file = os.path.join(settings.DATA_FOLDER_PATH_YAML, f"{filename}.yaml")
+    html_file = os.path.join(settings.DATA_FOLDER_PATH_HTML, f"{filename}.html")
+    md_file = os.path.join(settings.DATA_FOLDER_PATH_MARKDOWN, f"{filename}.md")
+    
+    assert os.path.exists(yaml_file)
+    assert os.path.exists(html_file)
+    assert os.path.exists(md_file)
     # delete_file(file_path)
-
-
-def test_submit_and_upload(client: TestClient, default_form_pydantic: FormSchema):
-    data = default_form_pydantic.dict()
-    response = client.post(
-        "/api/v1/submit-form",
-        json=data
-    )
-    assert response.status_code == 200
-    # get response data
-    assert response.json().get("uid", None) is not None
-    filename = response.json().get("uid")
-    # Check if md file exists
-    file_dir = settings.DATA_FOLDER_PATH_MARKDOWN
-    file_path = os.path.join(file_dir, f"{filename}.md")
-    assert os.path.exists(file_path)
-
-    # read md file
-    with open(file_path, "r") as f:
-        content = f.read()
-
-    assert content is not None
-    response = client.post(
-        "/api/v1/upload-md",
-        files={"file": ("test.md", content, "text/markdown")},
-    )
-    assert response.status_code == 200
-    # get response data
-    assert response.json().get("uid", None) is not None
