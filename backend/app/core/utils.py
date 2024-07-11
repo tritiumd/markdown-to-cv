@@ -8,7 +8,8 @@ def create_output_file(upload_dir: str, output_dir: str, filename: str):
     subprocess.run(["cp", f"{upload_dir}/{filename}.md", f"{deploy_dir}/{filename}.md"], check=True)
     subprocess.run(["bash", f"{deploy_dir}/run_md2html.sh", deploy_dir, filename], check=True)
     subprocess.run(["cp", f"{deploy_dir}/{filename}.html", f"{output_dir}/{filename}.html"], check=True)
-    subprocess.run(["bash", f"{deploy_dir}/cleanup_file.sh", deploy_dir, filename], check=True)
+    # subprocess.run(["bash", f"{deploy_dir}/cleanup_file.sh", deploy_dir, filename], check=True)
+    subprocess.run(f"rm -r {deploy_dir}/{filename}.*", shell=True)
 
 
 def create_markdown_file(filename: str):
@@ -19,4 +20,5 @@ def create_markdown_file(filename: str):
     subprocess.run(["cp", f"{upload_dir}/{filename}.yaml", f"{deploy_dir}/{filename}.yaml"], check=True)
     subprocess.run(["bash", f"{deploy_dir}/run_yaml2md.sh", deploy_dir, filename], check=True)
     subprocess.run(["cp", f"{deploy_dir}/{filename}.md", f"{output_dir}/{filename}.md"], check=True)
-    subprocess.run(["bash", f"{deploy_dir}/cleanup_file.sh", deploy_dir, filename], check=True)
+    # subprocess.run(["bash", f"{deploy_dir}/cleanup_file.sh", deploy_dir, filename], check=True)
+    subprocess.run(f"rm -r {deploy_dir}/{filename}.*", shell=True)
