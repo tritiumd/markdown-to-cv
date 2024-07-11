@@ -100,7 +100,7 @@ def delete_file(file_path: str):
         os.remove(file_path)
 
 
-def test_upload_empty_form(client: TestClient, empty_form_pydantic: FormSchema):
+def test_submit_empty_form(client: TestClient, empty_form_pydantic: FormSchema):
     data = empty_form_pydantic.model_dump()
     response = client.post(
         "/api/v1/form/submit-form",
@@ -120,8 +120,8 @@ def test_upload_empty_form(client: TestClient, empty_form_pydantic: FormSchema):
     delete_file(file_path)
 
 
-def test_upload_default_form(client: TestClient, default_form_pydantic: FormSchema):
-    data = default_form_pydantic.model_dump()
+def test_submit_default_form(client: TestClient, default_form_pydantic: FormSchema):
+    data = default_form_pydantic.dict()
     response = client.post(
         "/api/v1/form/submit-form",
         json=data
