@@ -9,7 +9,7 @@ import {
 import Preview from "@/components/formPage/preview";
 import * as React from "react";
 
-export default function ResizableGroup({
+export default function CustomResizableGroup({
   defaultLayout = [50, 50],
 }: {
   defaultLayout: number[] | undefined;

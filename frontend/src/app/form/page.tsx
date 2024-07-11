@@ -2,6 +2,7 @@
 
 import Footer from "@/components/footer";
 import CvForm from "@/components/formPage/cvForm";
+import CustomResizableGroup from "@/components/formPage/resizableGroup";
 import MainNav from "@/components/mainNav";
 import {
   ResizableHandle,
@@ -14,22 +15,7 @@ export default function FormPage() {
   return (
     <main className="flex-col items-center break-words">
       <MainNav className="" />
-      <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel defaultSize={50} minSize={30} order={1}>
-          <CvForm />
-        </ResizablePanel>
-        <ResizableHandle />
-
-        <ResizablePanel defaultSize={50} order={2}>
-          <Image
-            src="/assets/Image_placeholder_upright.png"
-            alt="hero"
-            width={500}
-            height={500}
-          />
-        </ResizablePanel>
-      </ResizablePanelGroup>
-      {/* <Footer className="h-32" /> */}
+      <CustomResizableGroup defaultLayout={[50, 50]} />
     </main>
   );
 }
