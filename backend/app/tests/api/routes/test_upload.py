@@ -6,7 +6,7 @@ import pytest
 # Write fixture to reduce call api multiple times
 @pytest.fixture(scope="module")
 def upload_file_correct_file(client: TestClient):
-    with open("/home/delus/Documents/code/personal/markdown-to-cv/backend/app/tests/abc.md", "r") as f:
+    with open("./app/tests/abc.md", "r") as f:
         content = f.read()
     response = client.post(
         "/api/v1/uploadfile/",
