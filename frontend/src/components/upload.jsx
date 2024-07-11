@@ -21,7 +21,7 @@ export default function UploadField() {
   const props = {
     name: "file",
     multiple: true,
-    action: `${url}/uploadfile`,
+    action: `${url}/upload-md`,
     beforeUpload: (file) => {
       // check if file is markdown or text/markdown
       const isMarkdown = file.type === "text/markdown";
@@ -44,7 +44,7 @@ export default function UploadField() {
       if (file.status === "done") {
         message.success(`${file.name} file uploaded successfully.`);
         const value = file.response.uid;
-        let callAPI = `${url}/outputfile?file_uid=${value}`;
+        let callAPI = `${url}/output-html/${value}`;
         file.url = callAPI;
         setUploadedList((prev) => [file, ...prev]);
       } else if (file.status === "error") {

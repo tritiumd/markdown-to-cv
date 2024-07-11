@@ -15,7 +15,7 @@ export default function PhaseField({ id, index, control, remove }: any) {
       <FormField
         control={control}
         key={`${id}-time`}
-        name={`experiences.${index}.phase.time`}
+        name={`experience.${index}.phase.time`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
             <FormLabel>Time</FormLabel>
@@ -29,7 +29,7 @@ export default function PhaseField({ id, index, control, remove }: any) {
       <FormField
         control={control}
         key={`${id}-position`}
-        name={`experiences.${index}.phase.position`}
+        name={`experience.${index}.phase.position`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
             <FormLabel>Position</FormLabel>
@@ -43,7 +43,7 @@ export default function PhaseField({ id, index, control, remove }: any) {
       <FormField
         control={control}
         key={`${id}-detail`}
-        name={`experiences.${index}.phase.detail`}
+        name={`experience.${index}.phase.detail`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
             <FormLabel>Detail</FormLabel>

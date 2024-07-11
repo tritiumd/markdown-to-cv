@@ -33,7 +33,7 @@ export default function ActivityForm() {
     append: appendActivities,
     remove: removeActivities,
   } = useFieldArray({
-    name: "activities",
+    name: "activity",
     control: methods.control,
   });
   return (
@@ -89,7 +89,7 @@ function SubActivityField({ id, index, control, remove }: any) {
       <FormField
         control={control}
         key={id}
-        name={`activities.${index}.place`}
+        name={`activity.${index}.place`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
             <FormLabel>Place</FormLabel>

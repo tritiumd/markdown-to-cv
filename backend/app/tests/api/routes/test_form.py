@@ -16,17 +16,17 @@ def empty_form_pydantic():
         "info": [
             {"icon": "", "data": ""}
         ],
-        "skills": "",
+        "skill": "",
         "summary": "",
-        "certificates": [
+        "certificate": [
         ],
         "education": [
         ],
-        "experiences": [
+        "experience": [
         ],
-        "activities": [
+        "activity": [
         ],
-        "references": [
+        "reference": [
         ]
     }
     # parse data to pydantic form
@@ -44,9 +44,9 @@ def default_form_pydantic():
             {"icon": "fa-envelope", "data": "Your email"},
             {"icon": "fab .fa-github", "data": "Your github"},
         ],
-        "skills": "",
+        "skill": "",
         "summary": "Your summary",
-        "certificates": [
+        "certificate": [
             {
                 "year": "2021",
                 "name": "Certificate name",
@@ -65,7 +65,7 @@ def default_form_pydantic():
                 "extra": "Extra information"
             }
         ],
-        "experiences": [
+        "experience": [
             {
                 "place": "Company name",
                 "phase": [{
@@ -75,7 +75,7 @@ def default_form_pydantic():
                 }]
             }
         ],
-        "activities": [
+        "activity": [
             {
                 "place": "Club of something",
                 "phase": [
@@ -87,7 +87,7 @@ def default_form_pydantic():
                 ]
             }
         ],
-        "references": [
+        "reference": [
         ]
     }
     # parse data to pydantic form
@@ -103,8 +103,7 @@ def delete_file(file_path: str):
 def test_submit_empty_form(client: TestClient, empty_form_pydantic: FormSchema):
     data = empty_form_pydantic.model_dump()
     response = client.post(
-        "/api/v1/form/submit-form",
-        # body=json.dumps(data),
+        "/api/v1/submit-form",
         json=data
     )
     assert response.status_code == 200
@@ -123,7 +122,7 @@ def test_submit_empty_form(client: TestClient, empty_form_pydantic: FormSchema):
 def test_submit_default_form(client: TestClient, default_form_pydantic: FormSchema):
     data = default_form_pydantic.dict()
     response = client.post(
-        "/api/v1/form/submit-form",
+        "/api/v1/submit-form",
         json=data
     )
     assert response.status_code == 200
@@ -134,13 +133,13 @@ def test_submit_default_form(client: TestClient, default_form_pydantic: FormSche
     file_dir = settings.DATA_FOLDER_PATH_YAML
     file_path = os.path.join(file_dir, f"{filename}.yaml")
     assert os.path.exists(file_path)
-    delete_file(file_path)
+    # delete_file(file_path)
 
 
 def test_submit_and_upload(client: TestClient, default_form_pydantic: FormSchema):
     data = default_form_pydantic.dict()
     response = client.post(
-        "/api/v1/form/submit-form",
+        "/api/v1/submit-form",
         json=data
     )
     assert response.status_code == 200
@@ -158,7 +157,7 @@ def test_submit_and_upload(client: TestClient, default_form_pydantic: FormSchema
 
     assert content is not None
     response = client.post(
-        "/api/v1/uploadfile",
+        "/api/v1/upload-md",
         files={"file": ("test.md", content, "text/markdown")},
     )
     assert response.status_code == 200

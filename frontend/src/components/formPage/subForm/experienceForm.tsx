@@ -89,7 +89,7 @@ function SubExperienceField({ id, index, control, remove }: any) {
       <FormField
         control={control}
         key={id}
-        name={`experiences.${index}.place`}
+        name={`experience.${index}.place`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
             <FormLabel>Place</FormLabel>
