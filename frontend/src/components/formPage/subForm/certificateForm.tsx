@@ -32,7 +32,7 @@ export default function CertificateForm() {
     append: appendCertificates,
     remove: removeCertificates,
   } = useFieldArray({
-    name: "certificates",
+    name: "certificate",
     control: methods.control,
   });
   return (
@@ -87,7 +87,7 @@ function SubCertificateField({ id, index, control, remove }: any) {
       <FormField
         control={control}
         key={`${id}-name`}
-        name={`certificates.${index}.name`}
+        name={`certificate.${index}.name`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
             <FormLabel>Name</FormLabel>
@@ -101,7 +101,7 @@ function SubCertificateField({ id, index, control, remove }: any) {
       <FormField
         control={control}
         key={`${id}-year`}
-        name={`certificates.${index}.year`}
+        name={`certificate.${index}.year`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
             <FormLabel>Year</FormLabel>
@@ -116,7 +116,7 @@ function SubCertificateField({ id, index, control, remove }: any) {
       <FormField
         control={control}
         key={`${id}-extra`}
-        name={`certificates.${index}.extra`}
+        name={`certificate.${index}.extra`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
             <FormLabel>Extra information</FormLabel>

@@ -25,8 +25,8 @@ const formSchema = z.object({
     })
   ),
   summary: z.string().max(1000),
-  skills: z.string().max(1000),
-  certificates: z.array(
+  skill: z.string().max(1000),
+  certificate: z.array(
     z
       .object({
         year: z.string(),
@@ -45,7 +45,7 @@ const formSchema = z.object({
       })
       .optional()
   ),
-  experiences: z.array(
+  experience: z.array(
     z
       .object({
         place: z.string().describe("Your company in past"),
@@ -61,7 +61,7 @@ const formSchema = z.object({
       })
       .optional()
   ),
-  activities: z.array(
+  activity: z.array(
     z
       .object({
         place: z.string().describe("Your group in past"),
@@ -78,7 +78,7 @@ const formSchema = z.object({
       .optional()
   ),
 
-  references: z
+  reference: z
     .array(
       z
         .object({
@@ -98,13 +98,13 @@ export default function CvForm() {
       name: "",
       position: "",
       summary: "",
-      skills: "",
+      skill: "",
       info: [
         { icon: "fa-phone", data: "Your phone number" },
         { icon: "fab .fa-github", data: "Your github" },
         { icon: "fa-envelope", data: "Your email" },
       ],
-      certificates: [{ year: "", name: "" }],
+      certificate: [{ year: "", name: "" }],
       education: [
         {
           place: "",
@@ -112,7 +112,7 @@ export default function CvForm() {
           time: "",
         },
       ],
-      experiences: [
+      experience: [
         {
           place: "",
           phase: [
@@ -124,7 +124,7 @@ export default function CvForm() {
           ],
         },
       ],
-      activities: [
+      activity: [
         {
           place: "",
           phase: [
@@ -136,14 +136,14 @@ export default function CvForm() {
           ],
         },
       ],
-      references: [{ value: "" }],
+      reference: [{ value: "" }],
     },
   });
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       // post to your API
-      const response = await fetch(`${url}/form/submit-form`, {
+      const response = await fetch(`${url}/submit-form`, {
         method: "POST",
         body: JSON.stringify(values),
       });
