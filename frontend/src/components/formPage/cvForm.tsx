@@ -13,8 +13,9 @@ import CertificateForm from "./subForm/certificateForm";
 import EducationForm from "./subForm/educationForm";
 import ActivityForm from "./subForm/activityForm";
 import ExperienceForm from "./subForm/experienceForm";
+import { BASE_URL } from "@/constants/variables";
 
-const url = process.env.NEXT_PUBLIC_MY_URL;
+const url = BASE_URL;
 const formSchema = z.object({
   name: z.string().max(100),
   position: z.string().max(100),

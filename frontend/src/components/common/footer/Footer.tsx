@@ -1,14 +1,9 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/iGCZb9XsVpn
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
-"use client";
+import * as React from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { Github, Linkedin, Mail } from "lucide-react";
 
-export default function Footer({ className, ...props }) {
+export const Footer: React.FC = ({ className }: { className?: string }) => {
   return (
     <footer
       className={cn(
@@ -68,4 +63,4 @@ export default function Footer({ className, ...props }) {
       </div>
     </footer>
   );
-}
+};

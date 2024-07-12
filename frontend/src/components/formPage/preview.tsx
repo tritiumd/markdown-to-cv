@@ -4,7 +4,6 @@ import * as React from "react";
 import { Card, CardContent } from "../ui/card";
 
 import parse from "node-html-parser";
-import { error } from "console";
 const Preview: React.FC = () => {
   const [content, setContent] = React.useState<string>("");
   React.useEffect(() => {
@@ -20,7 +19,7 @@ const Preview: React.FC = () => {
   }, []);
   return (
     <div className="w-full h-full">
-      <Card className="w-full h-full">
+      <Card className="m-auto w-full h-full">
         <iframe className="w-full h-full" srcDoc={content}></iframe>
       </Card>
     </div>

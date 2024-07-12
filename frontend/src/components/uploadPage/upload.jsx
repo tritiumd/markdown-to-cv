@@ -1,15 +1,15 @@
 "use client";
-import React, { useEffect, useState, useMemo, useLayoutEffect } from "react";
+import * as React from "react";
 import { DeleteOutlined, InboxOutlined } from "@ant-design/icons";
-import { Button, Flex, message, Upload } from "antd";
+import { message, Upload } from "antd";
 import _ from "lodash";
+import { BASE_URL } from "@/constants/variables";
 const { Dragger } = Upload;
 
-// const url = "http://localhost:8000/api/v1";
-const url = process.env.NEXT_PUBLIC_MY_URL;
+const url = BASE_URL;
 export default function UploadField() {
-  const [uploadedList, setUploadedList] = useState([]);
-  const [outputMap, setOutputMap] = useState({});
+  const [uploadedList, setUploadedList] = React.useState([]);
+  const [outputMap, setOutputMap] = React.useState({});
 
   // Config message
   message.config({

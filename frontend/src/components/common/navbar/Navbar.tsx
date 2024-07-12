@@ -1,12 +1,8 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/ZPrRUV51n0W
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import * as React from "react";
 
-export default function NavBar({ className, ...props }) {
+export const Navbar: React.FC = ({ className }: { className?: string }) => {
   return (
     <nav
       className={cn(
@@ -58,9 +54,8 @@ export default function NavBar({ className, ...props }) {
       </div>
     </nav>
   );
-}
-
-function PackageIcon(props) {
+};
+function PackageIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
