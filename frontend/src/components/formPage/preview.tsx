@@ -4,12 +4,13 @@ import * as React from "react";
 import { Card, CardContent } from "../ui/card";
 
 import parse from "node-html-parser";
+import { useSelector } from "react-redux";
+import { getApiUrl } from "@/store/slice";
 const Preview: React.FC = () => {
   const [content, setContent] = React.useState<string>("");
+  const currentUrl = useSelector(getApiUrl);
   React.useEffect(() => {
-    fetch(
-      "http://localhost:8000/api/v1/output-html/9f1434c1-c9fe-4770-91c3-a79e1732bd5e"
-    )
+    fetch(currentUrl)
       .then((res) => res.text())
       .then((data) => {
         const root = parse.parse(data);

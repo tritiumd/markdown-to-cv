@@ -25,3 +25,9 @@ async def get_output_file(file_uid: str, session: Session = Depends(get_session)
         return HTMLResponse(status_code=404, content="File not found")
     except Exception as e:
         return HTMLResponse(status_code=404, content=str(e))
+
+
+@router.get("/output-html")
+async def get_default_output() -> Any:
+    content = await utils.read_file("example/test.html")
+    return HTMLResponse(content=content, status_code=200)

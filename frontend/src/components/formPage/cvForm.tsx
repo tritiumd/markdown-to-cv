@@ -14,6 +14,8 @@ import EducationForm from "./subForm/educationForm";
 import ActivityForm from "./subForm/activityForm";
 import ExperienceForm from "./subForm/experienceForm";
 import { BASE_URL } from "@/constants/variables";
+import { useDispatch } from "react-redux";
+import { setApiUrl } from "@/store/slice";
 
 const url = BASE_URL;
 const formSchema = z.object({
@@ -140,7 +142,7 @@ export default function CvForm() {
       reference: [{ value: "" }],
     },
   });
-
+  const dispatch = useDispatch();
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       // post to your API
@@ -156,6 +158,10 @@ export default function CvForm() {
 
       console.log("Submission data:", data);
       console.log("Form data:", values);
+      // Get the uid from data
+      const uid = data.uid;
+      // Dispatch the uid to the store
+      dispatch(setApiUrl(uid));
 
       toast({
         title: "Success",

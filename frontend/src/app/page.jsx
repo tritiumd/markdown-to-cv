@@ -1,12 +1,13 @@
+"use client";
 import { Footer } from "@/components/common/footer/Footer";
 import { Navbar } from "@/components/common/navbar/Navbar";
 
 import UploadField from "@/components/uploadPage/upload";
 import { Metadata } from "next";
 
-export const metadata = {
-  title: "Tritiumd",
-};
+// export const metadata = {
+//   title: "Tritiumd",
+// };
 
 export default function Home() {
   return (
