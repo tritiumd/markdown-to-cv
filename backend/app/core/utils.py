@@ -3,10 +3,24 @@ import subprocess
 import aiofiles
 
 from app.core.config import settings
+import time
+
+
+def measure_time(func):
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        print(f"{func.__name__} took {end_time - start_time} seconds to complete.")
+        return result
+
+    return wrapper
+
 
 deploy_dir = settings.DATA_FOLDER_PATH_DEPLOY
 
 
+@measure_time
 def create_output_file(filename: str) -> None:
     upload_dir = settings.DATA_FOLDER_PATH_MARKDOWN
     output_dir = settings.DATA_FOLDER_PATH_HTML
@@ -16,6 +30,7 @@ def create_output_file(filename: str) -> None:
     subprocess.run(f"rm -r {deploy_dir}/{filename}.*", shell=True)
 
 
+@measure_time
 def create_markdown_file(filename: str) -> None:
     upload_dir = settings.DATA_FOLDER_PATH_YAML
     output_dir = settings.DATA_FOLDER_PATH_MARKDOWN

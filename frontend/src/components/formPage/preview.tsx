@@ -11,14 +11,27 @@ const Preview: React.FC = () => {
   const [content, setContent] = React.useState<string>("");
   const currentUrl = useSelector(getApiUrl);
   React.useEffect(() => {
-    const timer = setTimeout(() => {
+    const fetchData = () => {
       fetch(currentUrl)
-        .then((res) => res.text())
+        .then((res) => {
+          if (!res.ok && res.status === 404) {
+            // If status code is 404, wait 1s and refetch
+            setTimeout(() => {
+              fetchData(); // Call fetchData again to refetch
+            }, 1000);
+            return Promise.reject("404 Not Found");
+          }
+          return res.text();
+        })
         .then((data) => {
           const root = parse.parse(data);
           setContent(root.toString());
         })
         .catch((error) => console.error("Failed to fetch data:", error));
+    };
+
+    const timer = setTimeout(() => {
+      fetchData(); // Initial fetch
     }, 2000); // 2000 milliseconds delay
 
     return () => clearTimeout(timer); // Cleanup the timeout on component unmount or when currentUrl changes
