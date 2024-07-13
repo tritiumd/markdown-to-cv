@@ -17,7 +17,7 @@ const Preview: React.FC = () => {
         setContent(root.toString());
       })
       .catch((error) => console.error("Failed to fetch data:", error));
-  }, []);
+  }, [currentUrl]);
   return (
     <div className="w-full h-full">
       <Card className="m-auto w-full h-full">
