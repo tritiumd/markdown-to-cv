@@ -8,14 +8,14 @@ import {
 } from "@/components/ui/resizable";
 import Preview from "@/components/formPage/preview";
 import * as React from "react";
-
+import "./resizableGroup.css";
 export default function CustomResizableGroup({
   defaultLayout = [50, 50],
 }: {
   defaultLayout: number[] | undefined;
 }) {
   return (
-    <ResizablePanelGroup direction="horizontal">
+    <ResizablePanelGroup direction="horizontal" className="panel-group">
       <ResizablePanel defaultSize={defaultLayout[0]} minSize={30} order={1}>
         <CvForm />
       </ResizablePanel>
