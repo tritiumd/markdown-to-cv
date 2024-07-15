@@ -5,7 +5,7 @@ import { Navbar } from "@/components/common/navbar/Navbar";
 import UploadField from "@/components/uploadPage/upload";
 import { Metadata } from "next";
 
-// export const metadata = {
+// export const metadata: Metadata = {
 //   title: "Tritiumd",
 // };
 
@@ -14,9 +14,9 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between break-words">
       <Navbar className="flex" />
 
-      <UploadField className="flex-row grow w-full h-4/5" />
+      <UploadField className="flex-row grow h-4/5 overflow-y-auto" />
 
-      <Footer className="mt-auto" />
+      <Footer className="mt-auto grow" />
     </main>
   );
 }

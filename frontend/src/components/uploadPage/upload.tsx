@@ -2,14 +2,14 @@
 import * as React from "react";
 import { DeleteOutlined, InboxOutlined } from "@ant-design/icons";
 import { message, Upload } from "antd";
-import _ from "lodash";
+import type { UploadProps, UploadFile } from "antd";
 import { BASE_URL } from "@/constants/variables";
+import { cn } from "@/lib/utils";
 const { Dragger } = Upload;
 
 const url = BASE_URL;
-export default function UploadField() {
-  const [uploadedList, setUploadedList] = React.useState([]);
-  const [outputMap, setOutputMap] = React.useState({});
+export default function UploadField({ className }: { className?: string }) {
+  const [uploadedList, setUploadedList] = React.useState<UploadFile[]>([]);
 
   // Config message
   message.config({
@@ -18,7 +18,7 @@ export default function UploadField() {
     maxCount: 3,
   });
 
-  const props = {
+  const props: UploadProps = {
     name: "file",
     multiple: true,
     action: `${url}/upload-md`,
@@ -38,15 +38,16 @@ export default function UploadField() {
 
     onChange({ file, fileList, event }) {
       if (file.status == "removed") {
-        setOutputMap(_.omit(outputMap, [file.uid]));
-        setUploadedList(uploadedList.filter((info) => info.uid !== file.uid));
+        setUploadedList(
+          uploadedList.filter((info: UploadFile) => info.uid !== file.uid)
+        );
       }
       if (file.status === "done") {
         message.success(`${file.name} file uploaded successfully.`);
         const value = file.response.uid;
         let callAPI = `${url}/output-html/${value}`;
         file.url = callAPI;
-        setUploadedList((prev) => [file, ...prev]);
+        setUploadedList((prev: any[]) => [file, ...prev]);
       } else if (file.status === "error") {
         message.error(`${file.name} file upload failed.`);
       }
@@ -57,20 +58,12 @@ export default function UploadField() {
     defaultFileList: [],
     showUploadList: {
       showRemoveIcon: true,
-      removeIcon: (
-        <DeleteOutlined
-          onClick={(e) => console.log(e, "custom removeIcon event")}
-        />
-      ),
+      removeIcon: <DeleteOutlined />,
     },
-    onDownload(e) {
-      // console.log("download", e);
-      // window.open
-    },
+    onDownload(e) {},
   };
   return (
-    // <Flex gap="middle" wrap className="p-24">
-    <Dragger {...props} className="p-24">
+    <Dragger {...props} className={cn("p-12", className)}>
       <p className="ant-upload-drag-icon">
         {" "}
         <InboxOutlined style={{ color: "black" }} />
@@ -83,6 +76,5 @@ export default function UploadField() {
         company data or other banned files.
       </p>
     </Dragger>
-    // </Flex>
   );
 }

@@ -3,7 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { Github, Linkedin, Mail } from "lucide-react";
 
-export const Footer: React.FC = ({ className }: { className?: string }) => {
+export const Footer: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <footer
       className={cn(

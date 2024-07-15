@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import * as React from "react";
 
-export const Navbar: React.FC = ({ className }: { className?: string }) => {
+export const Navbar: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <nav
       className={cn(
