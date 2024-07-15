@@ -28,6 +28,15 @@ export const Navbar: React.FC<{ className?: string }> = ({ className }) => {
             >
               Home
             </Link>
+
+            <Link
+              href="/upload"
+              className="font-medium text-sm border-b-2 border-transparent transition-colors hover:text-gray-900 hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
+              prefetch={false}
+            >
+              Upload
+            </Link>
+
             <Link
               href="/form"
               className="font-medium text-sm border-b-2 border-transparent transition-colors hover:text-gray-900 hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
@@ -42,13 +51,6 @@ export const Navbar: React.FC<{ className?: string }> = ({ className }) => {
             >
               About us
             </Link>
-            {/* <Link
-              href="#"
-              className="font-medium text-sm border-b-2 border-transparent transition-colors hover:text-gray-900 hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
-              prefetch={false}
-            >
-              Contact
-            </Link> */}
           </nav>
         </div>
       </div>

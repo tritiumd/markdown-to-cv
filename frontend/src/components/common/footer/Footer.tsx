@@ -7,7 +7,7 @@ export const Footer: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <footer
       className={cn(
-        "min-w-full bg-muted text-muted-foreground py-12",
+        "min-w-full bg-muted text-muted-foreground pt-12 h-8",
         className
       )}
     >
