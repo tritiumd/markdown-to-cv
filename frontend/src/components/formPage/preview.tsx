@@ -1,7 +1,5 @@
 "use client";
-import Image from "next/image";
 import * as React from "react";
-import { Card, CardContent } from "../ui/card";
 
 import parse from "node-html-parser";
 import { useSelector } from "react-redux";
@@ -39,7 +37,6 @@ const Preview: React.FC = () => {
   }, [currentUrl, content]);
   return (
     <div className="w-full h-full">
-      <Card className="m-auto w-full h-full">
         {isLoading ? (
           <div className="flex justify-center items-center w-full h-full">
             <Button disabled>
@@ -50,7 +47,6 @@ const Preview: React.FC = () => {
         ) : (
           <iframe className="w-full h-full" srcDoc={content}></iframe>
         )}
-      </Card>
     </div>
   );
 };
