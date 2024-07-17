@@ -103,7 +103,10 @@ export default function PersonalForm() {
                           variant="ghost"
                           size="sm"
                           className="w-full"
-                          onClick={() => appendInfos({ icon: "", data: "" })}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            appendInfos({ icon: "", data: "" });
+                          }}
                         >
                           <Plus size={16} />
                         </Button>

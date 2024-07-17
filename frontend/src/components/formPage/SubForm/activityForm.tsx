@@ -68,7 +68,8 @@ export default function ActivityForm() {
                     variant="ghost"
                     size="sm"
                     className="w-full"
-                    onClick={() =>
+                    onClick={(e) => {
+                      e.preventDefault();
                       append({
                         place: "",
                         phase: [
@@ -78,8 +79,8 @@ export default function ActivityForm() {
                             detail: "",
                           },
                         ],
-                      })
-                    }
+                      });
+                    }}
                   >
                     <Plus size={16} />
                   </Button>

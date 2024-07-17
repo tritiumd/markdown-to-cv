@@ -66,14 +66,16 @@ export default function EducationForm() {
                     variant="ghost"
                     size="sm"
                     className="w-full"
-                    onClick={() =>
+                    onClick={(e) => {
+                      e.preventDefault();
+
                       appendEducations({
                         place: "",
                         major: "",
                         time: "",
                         extra: "",
-                      })
-                    }
+                      });
+                    }}
                   >
                     <Plus size={16} />
                   </Button>

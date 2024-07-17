@@ -65,13 +65,14 @@ export default function CertificateForm() {
                   <Button
                     variant="ghost"
                     className="w-full"
-                    onClick={() =>
+                    onClick={(e) => {
+                      e.preventDefault();
                       appendCertificates({
                         name: "",
                         year: "",
                         extra: "",
-                      })
-                    }
+                      });
+                    }}
                   >
                     <Plus size={16} />
                   </Button>
