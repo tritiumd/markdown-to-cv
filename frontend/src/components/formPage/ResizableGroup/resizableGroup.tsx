@@ -1,12 +1,12 @@
 "use client";
 
-import CvForm from "@/components/formPage/cvForm";
+import CvForm from "@/components/formPage/MainForm/mainResumeForm";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import Preview from "@/components/formPage/preview";
+import Preview from "@/components/formPage/Preview/preview";
 import * as React from "react";
 import "./resizableGroup.css";
 export default function CustomResizableGroup({

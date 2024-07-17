@@ -1,4 +1,4 @@
-import CustomResizableGroup from "@/components/formPage/resizableGroup";
+import CustomResizableGroup from "@/components/formPage/ResizableGroup/resizableGroup";
 
 import * as React from "react";
 

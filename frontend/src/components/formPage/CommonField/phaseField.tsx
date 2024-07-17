@@ -8,14 +8,25 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useFieldArray, UseFormReturn } from "react-hook-form";
+import { ResumeFormType, useFormContextResume } from "../Schema/formSchema";
+import { use } from "react";
 
-export default function PhaseField({ id, index, control, remove }: any) {
+export default function PhaseField({
+  name,
+  phaseIndex,
+}: {
+  name:
+    | `experience.${number}.phase.${number}`
+    | `activity.${number}.phase.${number}`;
+  phaseIndex: number;
+}) {
+  const methods = useFormContextResume();
   return (
-    <div key={id} className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1">
       <FormField
-        control={control}
-        key={`${id}-time`}
-        name={`experience.${index}.phase.time`}
+        control={methods.control}
+        name={`${name}.time`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
             <FormLabel>Time</FormLabel>
@@ -27,9 +38,8 @@ export default function PhaseField({ id, index, control, remove }: any) {
         )}
       />
       <FormField
-        control={control}
-        key={`${id}-position`}
-        name={`experience.${index}.phase.position`}
+        control={methods.control}
+        name={`${name}.position`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
             <FormLabel>Position</FormLabel>
@@ -41,9 +51,8 @@ export default function PhaseField({ id, index, control, remove }: any) {
         )}
       />
       <FormField
-        control={control}
-        key={`${id}-detail`}
-        name={`experience.${index}.phase.detail`}
+        control={methods.control}
+        name={`${name}.detail`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
             <FormLabel>Detail</FormLabel>
@@ -60,3 +69,27 @@ export default function PhaseField({ id, index, control, remove }: any) {
     </div>
   );
 }
+
+export const RenderMultiplePhaseField = ({
+  name,
+  methods,
+}: {
+  name: `experience.${number}.phase` | `activity.${number}.phase`;
+  methods: UseFormReturn<ResumeFormType>;
+}) => {
+  const { fields } = useFieldArray({
+    name: name,
+    control: methods.control,
+  });
+  return (
+    <div>
+      {fields.map((field, index) => (
+        <PhaseField
+          key={field.id}
+          name={`${name}.${index}`}
+          phaseIndex={index}
+        />
+      ))}
+    </div>
+  );
+};

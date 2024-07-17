@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,27 +22,27 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
 import { CircleMinus, Plus } from "lucide-react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
+import { useFormContextResume } from "../Schema/formSchema";
 
-export default function CertificateForm() {
-  const methods = useFormContext();
+export default function EducationForm() {
+  const methods = useFormContextResume();
   const {
-    fields: certificates,
-    append: appendCertificates,
-    remove: removeCertificates,
+    fields: educations,
+    append: appendEducations,
+    remove: removeEducations,
   } = useFieldArray({
-    name: "certificate",
+    name: "education",
     control: methods.control,
   });
   return (
     <Card>
       <Accordion type="single" className="w-full p-2" collapsible>
-        <AccordionItem value="certificates" className="border-0">
+        <AccordionItem value="education" className="border-0">
           <CardHeader>
             <AccordionTrigger className="accordion-trigger">
-              <CardTitle>Certificates</CardTitle>
+              <CardTitle>Education</CardTitle>
               <CardDescription className="form-description">
                 : school, major, time...
               </CardDescription>
@@ -50,23 +51,27 @@ export default function CertificateForm() {
           <CardContent>
             <AccordionContent className="p-2">
               <div>
-                {/* <FormLabel>Put your certificates like below</FormLabel> */}
-                {certificates.map((field, index) => (
-                  <SubCertificateField
+                {/* <FormLabel>Put your education like below</FormLabel> */}
+                {educations.map((field, index) => (
+                  <SubEducationField
                     key={field.id}
                     id={field.id}
                     index={index}
                     control={methods.control}
-                    remove={removeCertificates}
+                    remove={removeEducations}
                   />
                 ))}
                 <div className="p-2">
                   <Button
                     variant="ghost"
+                    size="sm"
                     className="w-full"
                     onClick={() =>
-                      appendCertificates({
-                        value: "",
+                      appendEducations({
+                        place: "",
+                        major: "",
+                        time: "",
+                        extra: "",
                       })
                     }
                   >
@@ -81,52 +86,70 @@ export default function CertificateForm() {
     </Card>
   );
 }
-function SubCertificateField({ id, index, control, remove }: any) {
-  return (
-    <div key={id} className="flex flex-col gap-1">
-      <FormField
-        control={control}
-        key={`${id}-name`}
-        name={`certificate.${index}.name`}
-        render={({ field }) => (
-          <FormItem className="w-full m-1">
-            <FormLabel>Name</FormLabel>
-            <FormControl>
-              <Input {...field} placeholder={"Certificate name"} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={control}
-        key={`${id}-year`}
-        name={`certificate.${index}.year`}
-        render={({ field }) => (
-          <FormItem className="w-full m-1">
-            <FormLabel>Year</FormLabel>
-            <FormControl>
-              <Input {...field} placeholder={"Certificate year"} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
 
+function SubEducationField({ id, index, control, remove }: any) {
+  return (
+    <div key={id} className="flex justify-between flex-col">
+      <FormField
+        control={control}
+        key={`${id}-place`}
+        name={`education.${index}.place`}
+        render={({ field }) => (
+          <FormItem className="w-full m-1">
+            <FormLabel>Your Institution</FormLabel>
+            <FormControl>
+              <Input {...field} placeholder={"Your Institution"} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        key={`${id}-major`}
+        name={`education.${index}.major`}
+        render={({ field }) => (
+          <FormItem className="w-full m-1">
+            <FormLabel>
+              Your Major
+              {/* {console.log(field)} */}
+            </FormLabel>
+            <FormControl>
+              <Input {...field} placeholder={"Your Major"} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        key={`${id}-time`}
+        name={`education.${index}.time`}
+        render={({ field }) => (
+          <FormItem className="w-full m-1">
+            <FormLabel>
+              Your time
+              {/* {console.log(field)} */}
+            </FormLabel>
+            <FormControl>
+              <Input {...field} placeholder={"Your time"} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
       <FormField
         control={control}
         key={`${id}-extra`}
-        name={`certificate.${index}.extra`}
+        name={`education.${index}.extra`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
-            <FormLabel>Extra information</FormLabel>
+            <FormLabel>
+              Extra information
+              {/* {console.log(field)} */}
+            </FormLabel>
             <FormControl>
-              <Textarea
-                {...field}
-                placeholder={
-                  "Extra information (if needed), like:\n- First\n- Second"
-                }
-              />
+              <Textarea {...field} placeholder={"Like: \n- First\n- Second"} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -140,7 +163,6 @@ function SubCertificateField({ id, index, control, remove }: any) {
       >
         <CircleMinus />
       </Button>
-      <Separator />
     </div>
   );
 }

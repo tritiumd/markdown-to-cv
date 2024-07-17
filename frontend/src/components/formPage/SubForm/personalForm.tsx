@@ -24,10 +24,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { CircleMinus, Plus } from "lucide-react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
+import { useFormContextResume } from "../Schema/formSchema";
 
 export default function PersonalForm() {
-  const methods = useFormContext();
+  const methods = useFormContextResume();
   const {
     fields: infos,
     append: appendInfos,
@@ -150,7 +151,7 @@ export default function PersonalForm() {
               />
               <FormField
                 control={methods.control}
-                name="skills"
+                name="skill"
                 render={({ field }) => {
                   return (
                     <FormItem>

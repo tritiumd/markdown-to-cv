@@ -14,25 +14,24 @@ import {
 } from "@/components/ui/card";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { CircleMinus, Plus } from "lucide-react";
-import { useFieldArray, useFormContext } from "react-hook-form";
-import PhaseField from "../commonField/phaseField";
+import {
+  useFieldArray,
+  UseFieldArrayRemove,
+  UseFormReturn,
+} from "react-hook-form";
+import { ResumeFormType, useFormContextResume } from "../Schema/formSchema";
+import { RenderMultiplePhaseField } from "../CommonField/phaseField";
 
 export default function ExperienceForm() {
-  const methods = useFormContext();
-  const {
-    fields: experiences,
-    append: appendExperiences,
-    remove: removeExperiences,
-  } = useFieldArray({
+  const methods = useFormContextResume();
+  const { fields, append, remove } = useFieldArray({
     name: "experience",
     control: methods.control,
   });
@@ -51,13 +50,12 @@ export default function ExperienceForm() {
           <CardContent>
             <AccordionContent className="p-2">
               <div>
-                {experiences.map((field, index) => (
+                {fields.map((experience, experienceIndex) => (
                   <SubExperienceField
-                    key={field.id}
-                    id={field.id}
-                    index={index}
-                    control={methods.control}
-                    remove={removeExperiences}
+                    key={experience.id}
+                    experienceIndex={experienceIndex}
+                    methods={methods}
+                    remove={remove}
                   />
                 ))}
                 <div className="p-2">
@@ -66,8 +64,15 @@ export default function ExperienceForm() {
                     size="sm"
                     className="w-full"
                     onClick={() =>
-                      appendExperiences({
-                        value: "",
+                      append({
+                        place: "",
+                        phase: [
+                          {
+                            time: "",
+                            position: "",
+                            detail: "",
+                          },
+                        ],
                       })
                     }
                   >
@@ -83,13 +88,20 @@ export default function ExperienceForm() {
   );
 }
 
-function SubExperienceField({ id, index, control, remove }: any) {
+function SubExperienceField({
+  experienceIndex,
+  methods,
+  remove,
+}: {
+  experienceIndex: number;
+  methods: UseFormReturn<ResumeFormType>;
+  remove: UseFieldArrayRemove;
+}) {
   return (
-    <div key={id} className="flex justify-between flex-col">
+    <div className="flex justify-between flex-col">
       <FormField
-        control={control}
-        key={id}
-        name={`experience.${index}.place`}
+        control={methods.control}
+        name={`experience.${experienceIndex}.place`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
             <FormLabel>Place</FormLabel>
@@ -100,16 +112,13 @@ function SubExperienceField({ id, index, control, remove }: any) {
           </FormItem>
         )}
       />
-      <PhaseField
-        key={`${id}-phase`}
-        id={id}
-        index={index}
-        control={control}
-        remove={remove}
+      <RenderMultiplePhaseField
+        name={`experience.${experienceIndex}.phase`}
+        methods={methods}
       />
       <Button
         variant="link"
-        onClick={() => remove(index)}
+        onClick={(e) => remove(experienceIndex)}
         size="icon"
         className="dynamic-delete-button self-end"
       >

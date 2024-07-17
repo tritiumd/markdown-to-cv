@@ -23,16 +23,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { CircleMinus, Plus } from "lucide-react";
-import { useFieldArray, useFormContext } from "react-hook-form";
-import PhaseField from "../commonField/phaseField";
+import {
+  useFieldArray,
+  UseFieldArrayRemove,
+  useFormContext,
+  UseFormReturn,
+} from "react-hook-form";
+import PhaseField, {
+  RenderMultiplePhaseField,
+} from "../CommonField/phaseField";
+import { ResumeFormType, useFormContextResume } from "../Schema/formSchema";
 
 export default function ActivityForm() {
-  const methods = useFormContext();
-  const {
-    fields: activities,
-    append: appendActivities,
-    remove: removeActivities,
-  } = useFieldArray({
+  const methods = useFormContextResume();
+  const { fields, append, remove } = useFieldArray({
     name: "activity",
     control: methods.control,
   });
@@ -51,13 +55,12 @@ export default function ActivityForm() {
           <CardContent>
             <AccordionContent className="p-2">
               <div>
-                {activities.map((field, index) => (
+                {fields.map((field, index) => (
                   <SubActivityField
                     key={field.id}
-                    id={field.id}
-                    index={index}
-                    control={methods.control}
-                    remove={removeActivities}
+                    methods={methods}
+                    activityIndex={index}
+                    remove={remove}
                   />
                 ))}
                 <div className="p-2">
@@ -66,8 +69,15 @@ export default function ActivityForm() {
                     size="sm"
                     className="w-full"
                     onClick={() =>
-                      appendActivities({
-                        value: "",
+                      append({
+                        place: "",
+                        phase: [
+                          {
+                            time: "",
+                            position: "",
+                            detail: "",
+                          },
+                        ],
                       })
                     }
                   >
@@ -83,13 +93,20 @@ export default function ActivityForm() {
   );
 }
 
-function SubActivityField({ id, index, control, remove }: any) {
+function SubActivityField({
+  activityIndex,
+  methods,
+  remove,
+}: {
+  activityIndex: number;
+  methods: UseFormReturn<ResumeFormType>;
+  remove: UseFieldArrayRemove;
+}) {
   return (
-    <div key={id} className="flex justify-between flex-col">
+    <div className="flex justify-between flex-col">
       <FormField
-        control={control}
-        key={id}
-        name={`activity.${index}.place`}
+        control={methods.control}
+        name={`activity.${activityIndex}.place`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
             <FormLabel>Place</FormLabel>
@@ -100,16 +117,13 @@ function SubActivityField({ id, index, control, remove }: any) {
           </FormItem>
         )}
       />
-      <PhaseField
-        key={`${id}-phase`}
-        id={id}
-        index={index}
-        control={control}
-        remove={remove}
+      <RenderMultiplePhaseField
+        name={`activity.${activityIndex}.phase`}
+        methods={methods}
       />
       <Button
         variant="link"
-        onClick={() => remove(index)}
+        onClick={() => remove(activityIndex)}
         size="icon"
         className="dynamic-delete-button self-end"
       >

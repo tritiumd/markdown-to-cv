@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/card";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,26 +21,28 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
 import { CircleMinus, Plus } from "lucide-react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
+import { useFormContextResume } from "../Schema/formSchema";
 
-export default function EducationForm() {
-  const methods = useFormContext();
+export default function CertificateForm() {
+  const methods = useFormContextResume();
   const {
-    fields: educations,
-    append: appendEducations,
-    remove: removeEducations,
+    fields: certificates,
+    append: appendCertificates,
+    remove: removeCertificates,
   } = useFieldArray({
-    name: "education",
+    name: "certificate",
     control: methods.control,
   });
   return (
     <Card>
       <Accordion type="single" className="w-full p-2" collapsible>
-        <AccordionItem value="education" className="border-0">
+        <AccordionItem value="certificates" className="border-0">
           <CardHeader>
             <AccordionTrigger className="accordion-trigger">
-              <CardTitle>Education</CardTitle>
+              <CardTitle>Certificates</CardTitle>
               <CardDescription className="form-description">
                 : school, major, time...
               </CardDescription>
@@ -50,24 +51,25 @@ export default function EducationForm() {
           <CardContent>
             <AccordionContent className="p-2">
               <div>
-                {/* <FormLabel>Put your education like below</FormLabel> */}
-                {educations.map((field, index) => (
-                  <SubEducationField
+                {/* <FormLabel>Put your certificates like below</FormLabel> */}
+                {certificates.map((field, index) => (
+                  <SubCertificateField
                     key={field.id}
                     id={field.id}
                     index={index}
                     control={methods.control}
-                    remove={removeEducations}
+                    remove={removeCertificates}
                   />
                 ))}
                 <div className="p-2">
                   <Button
                     variant="ghost"
-                    size="sm"
                     className="w-full"
                     onClick={() =>
-                      appendEducations({
-                        value: "",
+                      appendCertificates({
+                        name: "",
+                        year: "",
+                        extra: "",
                       })
                     }
                   >
@@ -82,19 +84,18 @@ export default function EducationForm() {
     </Card>
   );
 }
-
-function SubEducationField({ id, index, control, remove }: any) {
+function SubCertificateField({ id, index, control, remove }: any) {
   return (
-    <div key={id} className="flex justify-between flex-col">
+    <div key={id} className="flex flex-col gap-1">
       <FormField
         control={control}
-        key={`${id}-place`}
-        name={`education.${index}.place`}
+        key={`${id}-name`}
+        name={`certificate.${index}.name`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
-            <FormLabel>Your Institution</FormLabel>
+            <FormLabel>Name</FormLabel>
             <FormControl>
-              <Input {...field} placeholder={"Your Institution"} />
+              <Input {...field} placeholder={"Certificate name"} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -102,50 +103,33 @@ function SubEducationField({ id, index, control, remove }: any) {
       />
       <FormField
         control={control}
-        key={`${id}-major`}
-        name={`education.${index}.major`}
+        key={`${id}-year`}
+        name={`certificate.${index}.year`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
-            <FormLabel>
-              Your Major
-              {/* {console.log(field)} */}
-            </FormLabel>
+            <FormLabel>Year</FormLabel>
             <FormControl>
-              <Input {...field} placeholder={"Your Major"} />
+              <Input {...field} placeholder={"Certificate year"} />
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
-      <FormField
-        control={control}
-        key={`${id}-time`}
-        name={`education.${index}.time`}
-        render={({ field }) => (
-          <FormItem className="w-full m-1">
-            <FormLabel>
-              Your time
-              {/* {console.log(field)} */}
-            </FormLabel>
-            <FormControl>
-              <Input {...field} placeholder={"Your time"} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+
       <FormField
         control={control}
         key={`${id}-extra`}
-        name={`education.${index}.extra`}
+        name={`certificate.${index}.extra`}
         render={({ field }) => (
           <FormItem className="w-full m-1">
-            <FormLabel>
-              Extra information
-              {/* {console.log(field)} */}
-            </FormLabel>
+            <FormLabel>Extra information</FormLabel>
             <FormControl>
-              <Textarea {...field} placeholder={"Like: \n- First\n- Second"} />
+              <Textarea
+                {...field}
+                placeholder={
+                  "Extra information (if needed), like:\n- First\n- Second"
+                }
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -159,6 +143,7 @@ function SubEducationField({ id, index, control, remove }: any) {
       >
         <CircleMinus />
       </Button>
+      <Separator />
     </div>
   );
 }
