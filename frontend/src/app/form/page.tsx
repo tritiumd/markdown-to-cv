@@ -1,7 +1,5 @@
 import CustomResizableGroup from "@/components/formPage/ResizableGroup/resizableGroup";
 
-import * as React from "react";
-
 import { Metadata } from "next";
 import { Navbar } from "@/components/common/navbar/Navbar";
 

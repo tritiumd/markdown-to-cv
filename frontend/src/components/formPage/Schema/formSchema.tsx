@@ -53,28 +53,29 @@ export const formResumeSchema = z.object({
   reference: z.array(schemaReference).optional(),
 });
 
+export const initialResumeValue = {
+  name: "",
+  position: "",
+  summary: "",
+  skill: "",
+  info: [
+    { icon: "fa-phone", data: "" },
+    { icon: "fab .fa-github", data: "" },
+    { icon: "fa-envelope", data: "" },
+  ],
+  certificate: [],
+  education: [],
+  experience: [],
+  activity: [],
+  reference: [],
+};
 export type ResumeFormType = z.infer<typeof formResumeSchema>;
 
-export const useFormCreateForm = () =>
+export const useFormCreateForm = (defaultValues: any) =>
   useForm<ResumeFormType>({
     resolver: zodResolver(formResumeSchema),
     mode: "onBlur",
-    defaultValues: {
-      name: "",
-      position: "",
-      summary: "",
-      skill: "",
-      info: [
-        { icon: "fa-phone", data: "" },
-        { icon: "fab .fa-github", data: "" },
-        { icon: "fa-envelope", data: "" },
-      ],
-      certificate: [],
-      education: [],
-      experience: [],
-      activity: [],
-      reference: [],
-    },
+    defaultValues: defaultValues,
   });
 
 export const useFormContextResume = () => useFormContext<ResumeFormType>();

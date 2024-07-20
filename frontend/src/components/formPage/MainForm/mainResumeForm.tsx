@@ -1,8 +1,7 @@
 "use client";
-import { FormProvider, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { FormProvider } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Card, CardFooter } from "@/components/ui/card";
+import { CardFooter } from "@/components/ui/card";
 import * as React from "react";
 import "./form.css";
 import { useToast } from "@/components/ui/use-toast";
@@ -16,16 +15,48 @@ import { BASE_URL } from "@/constants/variables";
 import { useDispatch } from "react-redux";
 import { setApiUrl } from "@/store/slice";
 import {
-  formResumeSchema,
+  initialResumeValue,
   ResumeFormType,
   useFormCreateForm,
 } from "../Schema/formSchema";
-const url = BASE_URL;
 
+const url = BASE_URL;
+const FORM_DATA_KEY = "app_form_local_data";
+export const usePersistForm = ({
+  value,
+  localStorageKey,
+}: {
+  value: any;
+  localStorageKey: any;
+}) => {
+  React.useEffect(() => {
+    localStorage.setItem(localStorageKey, JSON.stringify(value));
+  }, [value, localStorageKey]);
+
+  return;
+};
 export default function CvForm() {
   const { toast } = useToast();
-  const methods = useFormCreateForm();
   const dispatch = useDispatch();
+
+  const getSavedData = () => {
+    let data = localStorage.getItem(FORM_DATA_KEY);
+    if (data) {
+      try {
+        data = JSON.parse(data);
+      } catch (err) {
+        console.log(err);
+      }
+      return data;
+    }
+
+    return initialResumeValue;
+  };
+  const methods = useFormCreateForm(getSavedData());
+  usePersistForm({
+    value: methods.getValues(),
+    localStorageKey: FORM_DATA_KEY,
+  });
   const handleSubmit = async (values: ResumeFormType) => {
     try {
       // post to your API
@@ -61,25 +92,31 @@ export default function CvForm() {
   };
 
   return (
-    <div className="flex-col items-center justify-between px-10 pt-2 overflow-hidden max-h-full">
-      <Card className="overflow-y-auto">
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(handleSubmit)} className="">
-            <div className="form-container">
-              <PersonalForm />
-              <CertificateForm />
-              <EducationForm />
-              <ActivityForm />
-              <ExperienceForm />
-            </div>
-            <CardFooter className="pt-10">
-              <Button type="submit" className="w-full">
-                Submit
-              </Button>
-            </CardFooter>
-          </form>
-        </FormProvider>
-      </Card>
+    <div className="flex-col items-center justify-between px-10 pt-2 overflow-hidden max-h-full overflow-y-auto h-full">
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(handleSubmit)} className="">
+          <div className="form-container">
+            <PersonalForm />
+            <CertificateForm />
+            <EducationForm />
+            <ActivityForm />
+            <ExperienceForm />
+          </div>
+          <CardFooter className="pt-10 gap-2">
+            <Button type="submit" className="w-full">
+              Submit
+            </Button>
+            <Button
+              type={"reset"}
+              variant="outline"
+              className={"place-self-center"}
+              onClick={() => methods.reset(initialResumeValue)}
+            >
+              Reset
+            </Button>
+          </CardFooter>
+        </form>
+      </FormProvider>
     </div>
   );
 }
