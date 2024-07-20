@@ -104,7 +104,7 @@ function SubExperienceField({
         control={methods.control}
         name={`experience.${experienceIndex}.place`}
         render={({ field }) => (
-          <FormItem className="w-full m-1">
+          <FormItem className="w-full my-1">
             <FormLabel>Place</FormLabel>
             <FormControl>
               <Input {...field} placeholder={"Your group in past"} />

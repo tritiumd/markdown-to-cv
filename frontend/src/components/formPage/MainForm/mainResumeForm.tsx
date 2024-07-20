@@ -99,8 +99,8 @@ export default function CvForm() {
             <PersonalForm />
             <CertificateForm />
             <EducationForm />
-            <ActivityForm />
             <ExperienceForm />
+            <ActivityForm />
           </div>
           <CardFooter className="pt-10 gap-2">
             <Button type="submit" className="w-full">
