@@ -30,7 +30,7 @@ export const usePersistForm = ({
   localStorageKey: any;
 }) => {
   React.useEffect(() => {
-    localStorage.setItem(localStorageKey, JSON.stringify(value));
+    window.localStorage.setItem(localStorageKey, JSON.stringify(value));
   }, [value, localStorageKey]);
 
   return;
@@ -40,7 +40,10 @@ export default function CvForm() {
   const dispatch = useDispatch();
 
   const getSavedData = () => {
-    let data = localStorage.getItem(FORM_DATA_KEY);
+    let data;
+    if (typeof window !== "undefined") {
+      data = window.localStorage.getItem(FORM_DATA_KEY);
+    }
     if (data) {
       try {
         data = JSON.parse(data);

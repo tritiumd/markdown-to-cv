@@ -51,9 +51,10 @@ export default function PhaseField({
   phaseIndex: number;
   remove: any;
 }) {
+  const uniqueId = id;
   const methods = useFormContextResume();
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: id });
+    useSortable({ id: uniqueId });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -115,10 +116,7 @@ export default function PhaseField({
             {...attributes}
             {...listeners}
             className={`px-3 mb-auto ${isCursorGrabbing ? "cursor-grabbing" : "cursor-grab"}`}
-            aria-describedby={`DndContext-${id}`}
-            onClick={(e) => {
-              e.preventDefault();
-            }}
+            aria-describedby={`DndContext-${uniqueId}`}
           >
             <svg viewBox="0 0 20 20" width="24">
               <path
@@ -159,11 +157,12 @@ export const RenderMultiplePhaseField = ({
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-  function handleDragEnd(event: any) {
-    const { active, over } = event;
-
-    console.log("active", active);
-    console.log("over", over);
+  function handleDragEnd({ active, over }: { active: any; over: any }) {
+    if (active.id !== over.id) {
+      const oldIndex = fields.findIndex((field) => field.id === active.id);
+      const newIndex = fields.findIndex((field) => field.id === over.id);
+      move(oldIndex, newIndex);
+    }
   }
   return (
     <div>
