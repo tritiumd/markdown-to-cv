@@ -27,7 +27,7 @@ import {
   UseFormReturn,
 } from "react-hook-form";
 import { ResumeFormType, useFormContextResume } from "../Schema/formSchema";
-import { RenderMultiplePhaseField } from "../CommonField/phaseField";
+import RenderMultiplePhaseField from "../CommonField/phaseField";
 
 export default function ExperienceForm() {
   const methods = useFormContextResume();

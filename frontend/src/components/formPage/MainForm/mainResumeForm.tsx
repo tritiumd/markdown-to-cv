@@ -60,8 +60,9 @@ export default function CvForm() {
     value: methods.getValues(),
     localStorageKey: FORM_DATA_KEY,
   });
-  const handleSubmit = async (values: ResumeFormType) => {
+  async function handleSubmit(values: ResumeFormType) {
     try {
+      console.log("submit values", values);
       // post to your API
       const response = await fetch(`${url}/submit-form`, {
         method: "POST",
@@ -92,7 +93,7 @@ export default function CvForm() {
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
     }
-  };
+  }
 
   return (
     <div className="flex-col items-center justify-between px-10 pt-2 overflow-hidden max-h-full overflow-y-auto h-full">

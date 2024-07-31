@@ -29,9 +29,8 @@ import {
   useFormContext,
   UseFormReturn,
 } from "react-hook-form";
-import PhaseField, {
-  RenderMultiplePhaseField,
-} from "../CommonField/phaseField";
+import RenderMultiplePhaseField from "../CommonField/phaseField";
+
 import { ResumeFormType, useFormContextResume } from "../Schema/formSchema";
 
 export default function ActivityForm() {

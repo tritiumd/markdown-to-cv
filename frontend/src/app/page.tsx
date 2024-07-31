@@ -4,6 +4,7 @@ import { Navbar } from "@/components/common/navbar/Navbar";
 
 import UploadField from "@/components/uploadPage/upload";
 import { Metadata } from "next";
+import FormPage from "./form/page";
 
 // export const metadata: Metadata = {
 //   title: "Tritiumd",
