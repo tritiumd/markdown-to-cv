@@ -22,9 +22,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { CircleMinus, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useFieldArray } from "react-hook-form";
 import { useFormContextResume } from "../Schema/formSchema";
+import RemoveSubFieldButton from "@/components/custom/button/RemoveSubFieldButton/RemoveSubFieldButton";
 
 export default function EducationForm() {
   const methods = useFormContextResume();
@@ -157,14 +158,7 @@ function SubEducationField({ id, index, control, remove }: any) {
           </FormItem>
         )}
       />
-      <Button
-        variant="secondary"
-        onClick={() => remove(index)}
-        size="icon"
-        className="dynamic-delete-button self-end"
-      >
-        <CircleMinus />
-      </Button>
+      <RemoveSubFieldButton onClick={() => remove(index)} />
     </div>
   );
 }

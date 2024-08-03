@@ -108,7 +108,7 @@ export default function CvForm() {
           </div>
           <CardFooter className="pt-10 gap-2">
             <Button type="submit" className="w-full">
-              Submit
+              Create CV now
             </Button>
             <Button
               type={"reset"}

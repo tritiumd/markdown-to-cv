@@ -20,7 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { CircleMinus, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import {
   useFieldArray,
   UseFieldArrayRemove,
@@ -28,6 +28,7 @@ import {
 } from "react-hook-form";
 import { ResumeFormType, useFormContextResume } from "../Schema/formSchema";
 import RenderMultiplePhaseField from "../CommonField/phaseField";
+import RemoveSubFieldButton from "@/components/custom/button/RemoveSubFieldButton/RemoveSubFieldButton";
 
 export default function ExperienceForm() {
   const methods = useFormContextResume();
@@ -117,14 +118,8 @@ function SubExperienceField({
         name={`experience.${experienceIndex}.phase`}
         methods={methods}
       />
-      <Button
-        variant="link"
-        onClick={(e) => remove(experienceIndex)}
-        size="icon"
-        className="dynamic-delete-button self-end"
-      >
-        <CircleMinus />
-      </Button>
+
+      <RemoveSubFieldButton onClick={() => remove(experienceIndex)} />
     </div>
   );
 }

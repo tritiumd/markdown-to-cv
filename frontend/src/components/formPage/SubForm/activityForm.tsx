@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { CircleMinus, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import {
   useFieldArray,
   UseFieldArrayRemove,
@@ -32,6 +32,7 @@ import {
 import RenderMultiplePhaseField from "../CommonField/phaseField";
 
 import { ResumeFormType, useFormContextResume } from "../Schema/formSchema";
+import RemoveSubFieldButton from "@/components/custom/button/RemoveSubFieldButton/RemoveSubFieldButton";
 
 export default function ActivityForm() {
   const methods = useFormContextResume();
@@ -121,14 +122,7 @@ function SubActivityField({
         name={`activity.${activityIndex}.phase`}
         methods={methods}
       />
-      <Button
-        variant="link"
-        onClick={() => remove(activityIndex)}
-        size="icon"
-        className="dynamic-delete-button self-end"
-      >
-        <CircleMinus />
-      </Button>
+      <RemoveSubFieldButton onClick={() => remove(activityIndex)} />
     </div>
   );
 }

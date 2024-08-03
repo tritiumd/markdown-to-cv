@@ -29,7 +29,7 @@
     "**/*.js",
     "**/*.jsx",
     ".next/types/**/*.ts",
-    "src/components/custom/button/chooseIconButton.jsx"
+    "src/components/custom/button/ChooseIconButton/ChooseIconButton.jsx"
   ],
   "exclude": ["node_modules"]
 }

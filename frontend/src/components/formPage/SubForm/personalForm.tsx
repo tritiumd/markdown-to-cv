@@ -1,4 +1,4 @@
-import { ChooseIconButton } from "@/components/custom/button/chooseIconButton";
+import { ChooseIconButton } from "@/components/custom/button/ChooseIconButton/ChooseIconButton";
 import {
   Accordion,
   AccordionContent,
@@ -23,9 +23,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { CircleMinus, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useFieldArray } from "react-hook-form";
 import { useFormContextResume } from "../Schema/formSchema";
+import RemoveSubFieldButton from "@/components/custom/button/RemoveSubFieldButton/RemoveSubFieldButton";
 
 export default function PersonalForm() {
   const methods = useFormContextResume();
@@ -207,14 +208,7 @@ function InfoDetailField({ id, index, control, remove }: any) {
           </FormItem>
         )}
       />
-      <Button
-        variant="link"
-        onClick={() => remove(index)}
-        size="icon"
-        className="dynamic-delete-button"
-      >
-        <CircleMinus />
-      </Button>
+      <RemoveSubFieldButton onClick={() => remove(index)} />
     </div>
   );
 }
