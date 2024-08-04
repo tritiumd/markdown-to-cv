@@ -1,0 +1,27 @@
+FROM python:3.11.9-slim
+
+RUN apt-get update && \
+    apt-get install -y gcc libpq-dev && \
+    apt clean && \
+    rm -rf /var/cache/apt/*
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONIOENCODING=utf-8
+
+COPY requirements.txt /tmp/requirements/requirements.txt
+
+RUN pip install -U pip && \
+    pip install --no-cache-dir -r /tmp/requirements/requirements.txt
+
+COPY . /src
+
+ENV PATH "$PATH:/src/script"
+
+RUN useradd -m -d /src -s /bin/bash app \
+    && chown -R app:app /src/* && chmod +x /src/script/*
+
+WORKDIR /src
+USER app
+
+CMD ["./script/start-worker.sh"]

@@ -51,7 +51,7 @@ class Settings(BaseSettings):
     DATA_FOLDER_PATH_HTML: DirectoryPath = "./data/html"
     DATA_FOLDER_PATH_DEPLOY: DirectoryPath = "./data/deploy"
     DATA_FOLDER_PATH_YAML: DirectoryPath = "./data/yaml"
-
+    
     # Folder path validation
     @computed_field  # type: ignore[misc]
     @property
@@ -64,6 +64,12 @@ class Settings(BaseSettings):
             port=self.POSTGRES_PORT,
             path=self.POSTGRES_DB,
         )
+    
+    # Redis configuration
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_QUEUE_DB: int = 0
+    REDIS_BACKEND_DB: int = 1
     #
     # SMTP_TLS: bool = True
     # SMTP_SSL: bool = False
