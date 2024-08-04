@@ -5,8 +5,9 @@
 - FastAPI 0.111.0
 
 ## Features
-- Drag and drop to upload files
-- Download CV in PDF format
+- Drag and drop to upload files (MD file only)
+- Fill in the form to generate a CV
+- Download CV in PDF
 
 ## How to run
 1. Clone this repository
@@ -32,4 +33,4 @@
 - `app/api`: the API routes
 - `app/core`: the configs, dependencies, and utilities
 - `app/models`: the Pydantic models
-- `app/tests`: the tests, run with `pytest`
+- `app/tests`: the tests, run with `pytest` from backend root directory
