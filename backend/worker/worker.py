@@ -1,13 +1,15 @@
 import subprocess
-from app.core.config import settings
+import os
 from celery import Celery
 
-broker_url = (
-    f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}/{settings.REDIS_QUEUE_DB}"
-)
-result_backend = (
-    f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}/{settings.REDIS_BACKEND_DB}"
-)
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_PORT", "6379")
+REDIS_QUEUE_DB = os.getenv("REDIS_QUEUE_DB", "0")
+REDIS_BACKEND_DB = os.getenv("REDIS_BACKEND_DB", "1")
+DEPLOY_DIRECTORY = os.getenv("DEPLOY_DIRECTORY", "/tmp")
+
+broker_url = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_QUEUE_DB}"
+result_backend = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_BACKEND_DB}"
 
 task_serializer = "json"
 result_serializer = "json"
@@ -15,12 +17,22 @@ accept_content = ["json"]
 timezone = "UTC"
 enable_utc = True
 
-celery_app = Celery(__name__, broker=broker_url, backend=result_backend, include=["app.worker"], task_serializer="json", result_serializer="json", accept_content=["json"], timezone="UTC", enable_utc=True)
+celery_app = Celery(
+    __name__,
+    broker=broker_url,
+    backend=result_backend,
+    include=["worker"],
+    task_serializer=task_serializer,
+    result_serializer=result_serializer,
+    accept_content=accept_content,
+    timezone=timezone,
+    enable_utc=enable_utc,
+)
 
 
 @celery_app.task(name="create_output_file")
 def create_output_file(upload_dir: str, output_dir: str, filename: str):
-    deploy_dir = settings.DEPLOY_DIRECTORY
+    deploy_dir = DEPLOY_DIRECTORY
     subprocess.run(
         ["cp", f"{upload_dir}/{filename}.md", f"{deploy_dir}/{filename}.md"], check=True
     )

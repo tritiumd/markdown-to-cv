@@ -13,26 +13,27 @@ services:
       - backend
 
   redis:
-    image: redis:latest
+    image: redis:7.4.0
     networks:
       - backend
 
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile.yaml
-    volumes:
-      - ./app:/src/app
-      - $DATA_FOLDER_PATH:/data
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-      - redis
-    env_file:
-      - .env
-    networks:
-      - backend
+  # api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.yaml
+  #   volumes:
+  #     - ./app:/src/app
+  #     - $DATA_FOLDER_PATH_DOCKER:/data
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     - db
+  #     - redis
+  #   env_file:
+  #     - .env.docker
+  #   networks:
+  #     - backend
+  #   user: "${UID}:${GID}"
 
   worker:
     build:
@@ -40,16 +41,21 @@ services:
       dockerfile: Dockerfile.worker.yaml
     deploy:
       mode: replicated
-      replicas: 2
+      replicas: 1
     volumes:
-      - $DATA_FOLDER_PATH:/data
+      - $DATA_FOLDER_PATH_DOCKER:/data
     depends_on:
       - db
       - redis
     env_file:
-      - .env
+      - .env.docker
+    environment:
+      - REDIS_HOST=redis
     networks:
       - backend
+    user: "${UID}:${GID}"
+
+
 
 volumes:
   markdown_db:

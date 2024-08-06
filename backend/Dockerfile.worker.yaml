@@ -1,9 +1,11 @@
-FROM python:3.11.9-slim
+FROM ngocptblaplafla/pandoc-texlive-full:latest
 
-RUN apt-get update && \
-    apt-get install -y gcc libpq-dev && \
-    apt clean && \
-    rm -rf /var/cache/apt/*
+# Remove old entrypoint
+ENTRYPOINT [ ]
+
+# Install necessary packages
+RUN apk update && \
+    apk add --no-cache gcc musl-dev libpq postgresql-dev python3-dev py3-pip
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -11,17 +13,21 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 COPY requirements.txt /tmp/requirements/requirements.txt
 
-RUN pip install -U pip && \
+# Create and activate virtual environment, then install dependencies
+RUN python3 -m venv /venv && \
+    . /venv/bin/activate && \
+    pip install --upgrade pip && \
     pip install --no-cache-dir -r /tmp/requirements/requirements.txt
 
-COPY . /src
 
-ENV PATH "$PATH:/src/script"
+COPY ./worker /worker
 
-RUN useradd -m -d /src -s /bin/bash app \
-    && chown -R app:app /src/* && chmod +x /src/script/*
+ENV PATH "$PATH:/worker"
 
-WORKDIR /src
+RUN adduser -D -h /worker -s /bin/sh app \
+    && chown -R app:app /worker/* && chmod +x /worker/start-worker.sh
+
+WORKDIR /worker
 USER app
 
-CMD ["./script/start-worker.sh"]
+CMD ["./start-worker.sh"]
