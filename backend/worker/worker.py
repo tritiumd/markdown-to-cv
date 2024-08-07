@@ -29,20 +29,41 @@ celery_app = Celery(
     enable_utc=enable_utc,
 )
 
+DATA_FOLDER_PATH_DEPLOY = os.getenv("DATA_FOLDER_PATH_DEPLOY", "/deploy")
+DATA_FOLDER_PATH_MARKDOWN = os.getenv("DATA_FOLDER_PATH_MARKDOWN", "/data/markdown")
+DATA_FOLDER_PATH_HTML = os.getenv("DATA_FOLDER_PATH_HTML", "/data/html")
+DATA_FOLDER_PATH_YAML = os.getenv("DATA_FOLDER_PATH_YAML", "/data/yaml")
+
+deploy_dir = DATA_FOLDER_PATH_DEPLOY
+parent_dir = os.path.abspath(os.path.join(deploy_dir, os.pardir))
 
 @celery_app.task(name="create_output_file")
-def create_output_file(upload_dir: str, output_dir: str, filename: str):
-    deploy_dir = DEPLOY_DIRECTORY
-    subprocess.run(
-        ["cp", f"{upload_dir}/{filename}.md", f"{deploy_dir}/{filename}.md"], check=True
-    )
-    subprocess.run(
-        ["bash", f"{deploy_dir}/run_md2html.sh", deploy_dir, filename], check=True
-    )
-    subprocess.run(
-        ["cp", f"{deploy_dir}/{filename}.html", f"{output_dir}/{filename}.html"],
-        check=True,
-    )
-    subprocess.run(
-        ["bash", f"{deploy_dir}/cleanup_file.sh", deploy_dir, filename], check=True
-    )
+def create_output_file(filename: str) -> None:
+    upload_dir = DATA_FOLDER_PATH_MARKDOWN
+    output_dir = DATA_FOLDER_PATH_HTML
+    subprocess.run(["cp", f"{upload_dir}/{filename}.md", f"{deploy_dir}/{filename}.md"], check=True)
+    subprocess.run(["bash", f"{deploy_dir}/run_md2html.sh", parent_dir, f"deploy/{filename}"], check=True)
+    subprocess.run(["cp", f"{deploy_dir}/{filename}.html", f"{output_dir}/{filename}.html"], check=True)
+    subprocess.run(f"rm -r {deploy_dir}/{filename}.*", shell=True)
+
+@celery_app.task(name="create_markdown_file")
+def create_markdown_file(filename: str) -> None:
+    upload_dir = DATA_FOLDER_PATH_YAML
+    output_dir = DATA_FOLDER_PATH_MARKDOWN
+
+    subprocess.run(["cp", f"{upload_dir}/{filename}.yaml", f"{deploy_dir}/{filename}.yaml"], check=True)
+    subprocess.run(["bash", f"{deploy_dir}/run_yaml2md.sh", parent_dir, f"deploy/{filename}"], check=True)
+    subprocess.run(["cp", f"{deploy_dir}/{filename}.md", f"{output_dir}/{filename}.md"], check=True)
+    subprocess.run(f"rm -r {deploy_dir}/{filename}.*", shell=True)
+
+
+@celery_app.task(name="yaml_to_html")
+def yaml_to_html(filename: str) -> None:
+    upload_dir = DATA_FOLDER_PATH_YAML
+    output_dir = DATA_FOLDER_PATH_HTML
+
+    subprocess.run(["cp", f"{upload_dir}/{filename}.yaml", f"{deploy_dir}/{filename}.yaml"], check=True)
+    subprocess.run(["bash", f"{deploy_dir}/run_yaml2md.sh", parent_dir, f"deploy/{filename}"], check=True)
+    subprocess.run(["bash", f"{deploy_dir}/run_md2html.sh", parent_dir, f"deploy/{filename}"], check=True)
+    subprocess.run(["cp", f"{deploy_dir}/{filename}.html", f"{output_dir}/{filename}.html"], check=True)
+    subprocess.run(f"rm -r {deploy_dir}/{filename}.*", shell=True)

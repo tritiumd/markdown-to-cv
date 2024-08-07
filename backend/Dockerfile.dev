@@ -1,3 +1,5 @@
+# This version is for mounting the volume in the local machine and continue developing the app
+
 FROM python:3.12.2-slim
 
 RUN apt-get update && \
@@ -14,19 +16,4 @@ COPY requirements.txt /tmp/requirements/requirements.txt
 RUN pip install -U pip && \
     pip install --no-cache-dir -r /tmp/requirements/requirements.txt
 
-COPY . /src
-
-ENV PATH "$PATH:/src/script"
-
-RUN useradd -m -d /src -s /bin/bash app \
-    && chown -R app:app /src/* && chmod +x /src/script/*
-
-# Data path for storing uploaded files
-RUN mkdir /data
-
-RUN chown -R app:app /data && chmod 750 /data
-
-WORKDIR /src
-USER app
-
-CMD ["./script/start-api.sh"]
+ENTRYPOINT [ ]

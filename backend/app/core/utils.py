@@ -1,10 +1,10 @@
-import subprocess
-
 import aiofiles
 import os
 from app.core.config import settings
 import time
-
+import celery
+import logging
+logger = logging.getLogger(__name__)
 
 def measure_time(func):
     def wrapper(*args, **kwargs):
@@ -20,26 +20,35 @@ def measure_time(func):
 deploy_dir = settings.DATA_FOLDER_PATH_DEPLOY
 parent_dir = os.path.abspath(os.path.join(deploy_dir, os.pardir))
 
+logger.debug("Broker URL: ", settings.CELERY_BROKER_URL)
+logger.debug("Result Backend: ", settings.CELERY_RESULT_BACKEND)
 
-@measure_time
+celery_app = celery.Celery(
+    __name__,
+    broker=settings.CELERY_BROKER_URL,
+    backend=settings.CELERY_RESULT_BACKEND,
+    include=["worker"],
+    task_serializer=settings.CELERY_TASK_SERIALIZER,
+    result_serializer=settings.CELERY_RESULT_SERIALIZER,
+    accept_content=settings.CELERY_ACCEPT_CONTENT,
+    timezone=settings.CELERY_TIMEZONE,
+    enable_utc=settings.CELERY_ENABLE_UTC,
+)
+
+
+# @measure_time
 def create_output_file(filename: str) -> None:
-    upload_dir = settings.DATA_FOLDER_PATH_MARKDOWN
-    output_dir = settings.DATA_FOLDER_PATH_HTML
-    subprocess.run(["cp", f"{upload_dir}/{filename}.md", f"{deploy_dir}/{filename}.md"], check=True)
-    subprocess.run(["bash", f"{deploy_dir}/run_md2html.sh", parent_dir, f"deploy/{filename}"], check=True)
-    subprocess.run(["cp", f"{deploy_dir}/{filename}.html", f"{output_dir}/{filename}.html"], check=True)
-    subprocess.run(f"rm -r {deploy_dir}/{filename}.*", shell=True)
+    celery_app.send_task("create_output_file", args=[filename])
+    logger.info("Send task to create output file")
 
+def yaml_to_html(filename: str) -> None:
+    celery_app.send_task("yaml_to_html", args=[filename])
+    logger.info("Send task to create html file")
 
-@measure_time
+# @measure_time
 def create_markdown_file(filename: str) -> None:
-    upload_dir = settings.DATA_FOLDER_PATH_YAML
-    output_dir = settings.DATA_FOLDER_PATH_MARKDOWN
-
-    subprocess.run(["cp", f"{upload_dir}/{filename}.yaml", f"{deploy_dir}/{filename}.yaml"], check=True)
-    subprocess.run(["bash", f"{deploy_dir}/run_yaml2md.sh", parent_dir, f"deploy/{filename}"], check=True)
-    subprocess.run(["cp", f"{deploy_dir}/{filename}.md", f"{output_dir}/{filename}.md"], check=True)
-    subprocess.run(f"rm -r {deploy_dir}/{filename}.*", shell=True)
+    celery_app.send_task("create_markdown_file", args=[filename])
+    logger.info("Send task to create markdown file")
 
 
 async def read_file(file_path: str) -> str:

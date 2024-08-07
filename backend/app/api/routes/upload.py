@@ -1,17 +1,16 @@
 import os
 import uuid
-from typing import Any
 
-from app.worker import create_output_file
 from fastapi import APIRouter, File, UploadFile, Depends, HTTPException, BackgroundTasks
 from sqlmodel import Session
 
 from app.core import utils
 from app.core.config import settings
 from app.core.db import get_session
-from app.core.utils import create_output_file
 from app.models import MarkdownFile, HTMLFile
+import logging
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
@@ -21,7 +20,7 @@ def validate_file(file: UploadFile):
 
 
 @router.post("/upload-md/")
-async def upload_md_file(background_tasks: BackgroundTasks, file: UploadFile = File(...),
+async def upload_md_file(file: UploadFile = File(...),
                          session: Session = Depends(get_session)
                          ):
     validate_file(file)
@@ -33,10 +32,11 @@ async def upload_md_file(background_tasks: BackgroundTasks, file: UploadFile = F
     #     f.write(await uploaded_file.read())
     file_content = await file.read()
     await utils.write_file(md_file_path, file_content)
-    background_tasks.add_task(create_output_file, new_uid)
+    utils.create_output_file(new_uid)
 
     output_dir = settings.DATA_FOLDER_PATH_HTML
     html_file_path = os.path.join(output_dir, new_uid + ".html")
+    logger.debug("file_path: %s", md_file_path)
     md_file = MarkdownFile(
         title=file.filename,
         data_path=md_file_path,

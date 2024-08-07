@@ -2,7 +2,7 @@ import json
 import os
 import uuid
 
-from fastapi import APIRouter, Request, BackgroundTasks, Depends
+from fastapi import APIRouter, Request, Depends
 from pydantic import BaseModel, ValidationError, Field
 from typing import List, Optional
 from pydantic_yaml import to_yaml_str
@@ -12,8 +12,10 @@ from app.core import utils
 from app.core.config import settings
 from app.core.db import get_session
 from app.models import YAMLFile, MarkdownFile, HTMLFile
+import logging
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 class InfoDetailSchema(BaseModel):
@@ -93,12 +95,11 @@ class FormSchema(BaseModel):
 
 
 @router.post("/submit-form/")
-async def submit_form(request: Request, background_tasks: BackgroundTasks, session: Session = Depends(get_session)):
+async def submit_form(request: Request, session: Session = Depends(get_session)):
     """
     Submit form data
     Args:
         request: Request: Request object
-        background_tasks: BackgroundTasks: BackgroundTasks object
         session: Session: Session object
     Returns:
 
@@ -107,6 +108,7 @@ async def submit_form(request: Request, background_tasks: BackgroundTasks, sessi
     # print(form_data)
     try:
         data = await request.json()
+        logger.debug(data)
         form_data = FormSchema(**data)
         form_dir = settings.DATA_FOLDER_PATH_YAML
         # Generate uuid for the form
@@ -117,9 +119,12 @@ async def submit_form(request: Request, background_tasks: BackgroundTasks, sessi
 
         # utils.create_markdown_file(new_uid)
         # utils.create_output_file(new_uid)
-        background_tasks.add_task(utils.create_markdown_file, new_uid)
-        background_tasks.add_task(utils.create_output_file, new_uid)
-
+        # background_tasks.add_task(utils.create_markdown_file, new_uid)
+        # background_tasks.add_task(utils.create_output_file, new_uid)
+        # utils.create_markdown_file(new_uid)
+        # utils.create_output_file(new_uid)
+        utils.yaml_to_html(new_uid)
+        logger.debug("file_path: %s", file_path)
         yaml_file = YAMLFile(
             title="form.yaml",
             data_path=file_path,
