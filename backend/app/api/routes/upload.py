@@ -32,7 +32,7 @@ async def upload_md_file(file: UploadFile = File(...),
     #     f.write(await uploaded_file.read())
     file_content = await file.read()
     await utils.write_file(md_file_path, file_content)
-    utils.create_output_file(new_uid)
+    utils.md_to_html(new_uid)
 
     output_dir = settings.DATA_FOLDER_PATH_HTML
     html_file_path = os.path.join(output_dir, new_uid + ".html")

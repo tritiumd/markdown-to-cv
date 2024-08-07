@@ -1,4 +1,4 @@
-FROM ngocptblaplafla/pandoc-texlive-full:latest
+FROM ngocptblaplafla/pandoc-texlive-full:nightly
 
 # Remove old entrypoint
 ENTRYPOINT [ ]
@@ -11,7 +11,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING=utf-8
 
-COPY requirements.txt /tmp/requirements/requirements.txt
+COPY requirements-worker.txt /tmp/requirements/requirements.txt
 
 # Create and activate virtual environment, then install dependencies
 RUN python3 -m venv /venv && \
@@ -20,14 +20,9 @@ RUN python3 -m venv /venv && \
     pip install --no-cache-dir -r /tmp/requirements/requirements.txt
 
 
-COPY ./worker /worker
-
 ENV PATH "$PATH:/worker"
 
-RUN adduser -D -h /worker -s /bin/sh app \
-    && chown -R app:app /worker/* && chmod +x /worker/start-worker.sh
+RUN mkdir /worker
 
 WORKDIR /worker
 USER app
-
-CMD ["./start-worker.sh"]

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:13
@@ -9,6 +7,8 @@ services:
       POSTGRES_DB: $POSTGRES_DB
     volumes:
       - markdown_db:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
     networks:
       - backend
 
@@ -17,23 +17,28 @@ services:
     networks:
       - backend
 
-  # api:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.yaml
-  #   volumes:
-  #     - ./app:/src/app
-  #     - $DATA_FOLDER_PATH_DOCKER:/data
-  #   ports:
-  #     - "8000:8000"
-  #   depends_on:
-  #     - db
-  #     - redis
-  #   env_file:
-  #     - .env.docker
-  #   networks:
-  #     - backend
-  #   user: "${UID}:${GID}"
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/src
+      - $DATA_FOLDER_PATH_DOCKER:/data
+      - $DATA_FOLDER_PATH_ENGINE:/engine
+    environment:
+      - BACKEND_CORS_ORIGINS=["*"]
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env.docker
+    networks:
+      - backend
+    user: ${CURRENT_UID:?"Please run as follows 'CURRENT_UID=$(id -u):$(id -g) docker-compose up'"}
+    working_dir: "/src"
+    command: ["fastapi", "dev", "--host", "0.0.0.0"]
 
   worker:
     build:
@@ -42,24 +47,29 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+    environment:
+      - DATA_FOLDER_PATH_DEPLOY:/engine/deploy
+      - DATA_FOLDER_PATH_MARKDOWN:/data/markdown
+      - DATA_FOLDER_PATH_HTML:/data/html
+      - DATA_FOLDER_PATH_YAML:/data/yaml
+      - REDIS_HOST=redis
     volumes:
+      - ./worker:/worker
+      - $DATA_FOLDER_PATH_ENGINE:/engine
       - $DATA_FOLDER_PATH_DOCKER:/data
     depends_on:
       - db
       - redis
     env_file:
       - .env.docker
-    environment:
-      - REDIS_HOST=redis
     networks:
       - backend
     user: "${UID}:${GID}"
-
+    command: ["./start-worker.sh"]
 
 
 volumes:
   markdown_db:
-  markdown_file_data:
 
 networks:
   backend:

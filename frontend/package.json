@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
-    "int": "next dev -p 3001",
+    "int": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

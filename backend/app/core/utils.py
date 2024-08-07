@@ -37,8 +37,8 @@ celery_app = celery.Celery(
 
 
 # @measure_time
-def create_output_file(filename: str) -> None:
-    celery_app.send_task("create_output_file", args=[filename])
+def md_to_html(filename: str) -> None:
+    celery_app.send_task("md_to_html", args=[filename])
     logger.info("Send task to create output file")
 
 def yaml_to_html(filename: str) -> None:
