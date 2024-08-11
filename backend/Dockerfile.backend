@@ -18,13 +18,8 @@ COPY . /src
 
 ENV PATH "$PATH:/src/script"
 
-RUN useradd -m -d /src -s /bin/bash app \
-    && chown -R app:app /src/* && chmod +x /src/script/*
-
 # Data path for storing uploaded files
 RUN mkdir /data
-
-RUN chown -R app:app /data && chmod 750 /data
 
 WORKDIR /src
 USER app

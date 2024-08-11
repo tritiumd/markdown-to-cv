@@ -8,9 +8,10 @@ from starlette.responses import HTMLResponse
 from app.core import utils
 from app.core.db import get_session
 from app.models import HTMLFile
-
+from logging import getLogger
 router = APIRouter()
 
+logger = getLogger(__name__)
 
 @router.get("/output-html/{file_uid}")
 async def get_output_file(file_uid: str, session: Session = Depends(get_session)) -> Any:
@@ -30,4 +31,5 @@ async def get_output_file(file_uid: str, session: Session = Depends(get_session)
 @router.get("/output-html")
 async def get_default_output() -> Any:
     content = await utils.read_file("example/test.html")
+    logger.info("content: %s", content)
     return HTMLResponse(content=content, status_code=200)
