@@ -38,7 +38,8 @@ services:
       - backend
     user: ${CURRENT_UID:?"Please run as follows 'CURRENT_UID=$(id -u):$(id -g) docker-compose up'"}
     working_dir: "/src"
-    command: ["fastapi", "dev", "--host", "0.0.0.0"]
+    # command: ["fastapi", "dev", "--host", "0.0.0.0"]
+    command: ["./script/start-api.sh"]
 
   worker:
     build:

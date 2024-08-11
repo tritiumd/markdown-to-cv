@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
-    "int": "next dev -p 3000",
+    "int": "NODE_ENV=development next dev -p 3001",
     "build": "next build",
     "start": "next start",
+    "stop": "kill -9 $(pgrep -f '^next-server')",
     "lint": "next lint"
   },
   "dependencies": {
