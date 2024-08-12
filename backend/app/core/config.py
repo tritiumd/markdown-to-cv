@@ -1,7 +1,7 @@
-from typing import Any, Literal, Annotated
+from typing import Any, Literal, List, Union
 
 from pydantic import (
-    AnyUrl, BeforeValidator, HttpUrl, computed_field, PostgresDsn
+    AnyUrl, HttpUrl, computed_field, PostgresDsn, DirectoryPath, validator
 )
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -34,9 +34,11 @@ class Settings(BaseSettings):
             return f"http://{self.DOMAIN}"
         return f"https://{self.DOMAIN}"
 
-    BACKEND_CORS_ORIGINS: Annotated[
-        list[AnyUrl] | str, BeforeValidator(parse_cors)
-    ] = []
+    BACKEND_CORS_ORIGINS: Union[List[AnyUrl], List[str], str] = []
+
+    @validator("BACKEND_CORS_ORIGINS", pre=True)
+    def assemble_cors_origins(cls, v: Any) -> list[str] | str:
+        return parse_cors(v)
 
     PROJECT_NAME: str
     SENTRY_DSN: HttpUrl | None = None
@@ -46,10 +48,13 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str = ""
 
-    DATA_FOLDER_PATH: str = "./markdown"
-    DATA_OUTPUT_FOLDER_PATH: str = "./html"
-    DEPLOY_DIRECTORY: str = "./deploy"
-
+    DATA_FOLDER_PATH: DirectoryPath = "./data"
+    DATA_FOLDER_PATH_MARKDOWN: DirectoryPath = "./data/markdown"
+    DATA_FOLDER_PATH_HTML: DirectoryPath = "./data/html"
+    DATA_FOLDER_PATH_DEPLOY: DirectoryPath = "./data/deploy"
+    DATA_FOLDER_PATH_YAML: DirectoryPath = "./data/yaml"
+    
+    # Folder path validation
     @computed_field  # type: ignore[misc]
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
@@ -61,6 +66,32 @@ class Settings(BaseSettings):
             port=self.POSTGRES_PORT,
             path=self.POSTGRES_DB,
         )
+    
+    # Redis configuration
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_QUEUE_DB: int = 0
+    REDIS_BACKEND_DB: int = 1
+
+    # Celery configuration
+    # CELERY_BROKER_URL: str = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_QUEUE_DB}"
+    # CELERY_RESULT_BACKEND: str = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_BACKEND_DB}"
+    @computed_field  # type: ignore[misc]
+    @property
+    def CELERY_BROKER_URL(self) -> str:
+        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_QUEUE_DB}"
+    
+    @computed_field  # type: ignore[misc]
+    @property
+    def CELERY_RESULT_BACKEND(self) -> str:
+        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_BACKEND_DB}"
+        
+    CELERY_TASK_SERIALIZER: str = "json"
+    CELERY_RESULT_SERIALIZER: str = "json"
+    CELERY_ACCEPT_CONTENT: list[str] = ["json"]
+    CELERY_TIMEZONE: str = "UTC"
+    CELERY_ENABLE_UTC: bool = True
+
     #
     # SMTP_TLS: bool = True
     # SMTP_SSL: bool = False

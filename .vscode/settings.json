@@ -1,0 +1,8 @@
+{
+    "python.defaultInterpreterPath": "${env:VIRTUAL_ENV}",
+    "python.languageServer": "Jedi",
+    "ruff.path": [
+        "${workspaceFolder}/app",
+        "${workspaceFolder}/test"
+    ]
+}

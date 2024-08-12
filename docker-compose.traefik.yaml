@@ -1,0 +1,18 @@
+services:
+  traefik:
+    image: traefik:3.0
+    ports:
+      - "8009:8080"
+      - "3000:443"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yaml:/traefik.yaml:ro
+      - ./certificates.yaml:/certificates.yaml:ro
+      - /data/app/origin-certificates/:/origin-certificates/
+    networks:
+      - traefik-public
+
+networks:
+  traefik-public:
+    external: true
