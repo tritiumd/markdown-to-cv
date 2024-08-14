@@ -19,6 +19,7 @@ import {
   ResumeFormType,
   useFormCreateForm,
 } from "../Schema/formSchema";
+import ChooseLanguageFormButton from "@/components/custom/button/ChooseLanguageFormButton/ChooseLanguageFormButton";
 
 const url = BASE_URL;
 const FORM_DATA_KEY = "app_form_local_data";
@@ -60,11 +61,13 @@ export default function CvForm() {
     value: methods.getValues(),
     localStorageKey: FORM_DATA_KEY,
   });
+  const [formLanguage, setFormLanguage] = React.useState("vi");
   async function handleSubmit(values: ResumeFormType) {
     try {
       console.log("submit values", values);
+      console.log(JSON.stringify(values));
       // post to your API
-      const response = await fetch(`${url}/submit-form`, {
+      const response = await fetch(`${url}/submit-form?language=${formLanguage}`, {
         method: "POST",
         body: JSON.stringify(values),
       });
@@ -74,8 +77,8 @@ export default function CvForm() {
       // Handle response if necessary
       const data = await response.json();
 
-      console.log("Submission data:", data);
       const uid = data.uid;
+      console.log("Return data:", data);
       dispatch(setApiUrl(uid));
       console.log("Form data:", values);
 
@@ -118,6 +121,11 @@ export default function CvForm() {
             >
               Reset
             </Button>
+            <ChooseLanguageFormButton 
+              value={formLanguage}
+              onChange={setFormLanguage}
+            />
+
           </CardFooter>
         </form>
       </FormProvider>

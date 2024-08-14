@@ -1,8 +1,9 @@
 import json
 import os
 import uuid
-
-from fastapi import APIRouter, Request, Depends
+from typing import Annotated
+from fastapi import APIRouter, Depends, Form, status, Request
+from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, ValidationError, Field
 from typing import List, Optional
 from pydantic_yaml import to_yaml_str
@@ -13,6 +14,7 @@ from app.core.config import settings
 from app.core.db import get_session
 from app.models import YAMLFile, MarkdownFile, HTMLFile
 import logging
+from fastapi.exceptions import HTTPException
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -95,11 +97,16 @@ class FormSchema(BaseModel):
 
 
 @router.post("/submit-form/")
-async def submit_form(request: Request, session: Session = Depends(get_session)):
+async def submit_form(
+    request: Request,
+    language: str = "vi",
+    session: Session = Depends(get_session),
+):
     """
     Submit form data
     Args:
         request: Request: Request object
+        language: str: Language for CV
         session: Session: Session object
     Returns:
 
@@ -108,12 +115,13 @@ async def submit_form(request: Request, session: Session = Depends(get_session))
     # print(form_data)
     try:
         data = await request.json()
-        logger.debug(data)
+        # logger.debug(data)
         form_data = FormSchema(**data)
         form_dir = settings.DATA_FOLDER_PATH_YAML
         # Generate uuid for the form
         new_uid = str(uuid.uuid4())
         file_path = os.path.join(form_dir, f"{new_uid}.yaml")
+        logger.debug("file_path: %s", file_path)
         # Write the yaml file to YAML folder:
         await utils.write_file(file_path, to_yaml_str(form_data))
 
@@ -123,7 +131,7 @@ async def submit_form(request: Request, session: Session = Depends(get_session))
         # background_tasks.add_task(utils.create_output_file, new_uid)
         # utils.create_markdown_file(new_uid)
         # utils.create_output_file(new_uid)
-        utils.yaml_to_html(new_uid)
+        utils.yaml_to_html(new_uid, language)
         logger.debug("file_path: %s", file_path)
         yaml_file = YAMLFile(
             title="form.yaml",
@@ -135,13 +143,13 @@ async def submit_form(request: Request, session: Session = Depends(get_session))
             title="form.md",
             data_path=os.path.join(settings.DATA_FOLDER_PATH_MARKDOWN, f"{new_uid}.md"),
             owner_id=0,
-            uid=new_uid
+            uid=new_uid,
         )
         html_file = HTMLFile(
             title="form.html",
             data_path=os.path.join(settings.DATA_FOLDER_PATH_HTML, f"{new_uid}.html"),
             owner_id=0,
-            uid=new_uid
+            uid=new_uid,
         )
         try:
             session.add(yaml_file)
@@ -161,8 +169,11 @@ async def submit_form(request: Request, session: Session = Depends(get_session))
         return {"message": "Form submitted successfully", "uid": new_uid}
 
     except json.JSONDecodeError:
+        logger.error("Invalid JSON format")
         return {"message": "Invalid JSON format"}
     except ValidationError as e:
+        logger.error("Validation error", e.errors())
         return {"error": "Validation error", "details": e.errors()}
     except Exception as e:
+        logger.error("Error: %s", e)
         return {"error": str(e)}

@@ -27,7 +27,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+*.env*
+!.env.example
 
 # vercel
 .vercel
@@ -42,13 +43,6 @@ next-env.d.ts
 **/**/build
 
 **/.idea/**/*
-!**/.idea/.name
-!**/.idea/compiler.xml
-!**/.idea/gradle.xml
-!**/.idea/kotlinc.xml
-!**/.idea/misc.xml
-!**/.idea/vcs.xml
-!**/.idea/jarRepositories.xml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

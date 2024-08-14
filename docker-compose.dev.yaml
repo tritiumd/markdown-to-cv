@@ -1,0 +1,56 @@
+services:
+  db-dev:
+    image: postgres:13
+    container_name: db-dev
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
+    volumes:
+      - markdown_db_dev:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    networks:
+      - dev
+
+  redis-dev:
+    container_name: redis-dev
+    image: redis:7.4.0
+    ports:
+      - "${REDIS_PORT}:6379"
+    networks:
+      - dev
+
+  worker-dev:
+    container_name: worker-dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.worker
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      - DATA_FOLDER_PATH_DEPLOY:/engine/deploy
+      - DATA_FOLDER_PATH_MARKDOWN:/data/markdown
+      - DATA_FOLDER_PATH_HTML:/data/html
+      - DATA_FOLDER_PATH_YAML:/data/yaml
+      - REDIS_HOST=redis-dev
+      - REDIS_PORT=6379
+    volumes:
+      - ./backend/worker:/worker
+      - $DATA_FOLDER_PATH_ENGINE:/engine
+      - $DATA_FOLDER_PATH_DOCKER:/data
+    depends_on:
+      - db-dev
+      - redis-dev
+    networks:
+      - dev
+    user: "${UID}:${GID}"
+    command: ["sh", "./start-worker.sh"]
+
+volumes:
+  markdown_db_dev:
+
+networks:
+  dev:
+    driver: bridge

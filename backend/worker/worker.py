@@ -6,7 +6,6 @@ REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = os.getenv("REDIS_PORT", "6379")
 REDIS_QUEUE_DB = os.getenv("REDIS_QUEUE_DB", "0")
 REDIS_BACKEND_DB = os.getenv("REDIS_BACKEND_DB", "1")
-DEPLOY_DIRECTORY = os.getenv("DEPLOY_DIRECTORY", "/tmp")
 
 broker_url = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_QUEUE_DB}"
 result_backend = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_BACKEND_DB}"
@@ -73,15 +72,19 @@ def create_markdown_file(filename: str) -> None:
 
 
 @celery_app.task(name="yaml_to_html")
-def yaml_to_html(filename: str) -> None:
+def yaml_to_html(filename: str, language: str) -> None:
     upload_dir = DATA_FOLDER_PATH_YAML
     output_dir = DATA_FOLDER_PATH_HTML
 
     yaml_file = f"{upload_dir}/{filename}.yaml"
     html_file = f"{output_dir}/{filename}.html"
+    map_language = {
+        "vi": "",
+        "en": "-en",
+    }
     command = f""" 
     echo "" |\
-        pandoc --data-dir /pandoc --metadata-file {yaml_file} --template pandoc-cv.markdown | \
+        pandoc --data-dir /pandoc --metadata-file {yaml_file} --template /engine/pandoc/templates/pandoc-cv{map_language[language]}.markdown | \
         pandoc --data-dir /pandoc --template pandoc-cv.html5 -L pandoc-cv-html-sup.lua -o {html_file}
     """
     subprocess.run(command, shell=True)

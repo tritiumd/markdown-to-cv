@@ -4,7 +4,9 @@ from app.core.config import settings
 import time
 import celery
 import logging
+
 logger = logging.getLogger(__name__)
+
 
 def measure_time(func):
     def wrapper(*args, **kwargs):
@@ -41,9 +43,17 @@ def md_to_html(filename: str) -> None:
     celery_app.send_task("md_to_html", args=[filename])
     logger.info("Send task to create output file")
 
-def yaml_to_html(filename: str) -> None:
-    celery_app.send_task("yaml_to_html", args=[filename])
+
+def yaml_to_html(filename: str, language: str) -> None:
+    """Yaml to html
+
+    Args:
+        filename (str): uid of the file
+        language (str): language of the CV
+    """
+    celery_app.send_task("yaml_to_html", args=[filename, language])
     logger.info("Send task to create html file")
+
 
 # @measure_time
 def create_markdown_file(filename: str) -> None:
