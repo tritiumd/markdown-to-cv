@@ -13,42 +13,42 @@ const Preview: React.FC = () => {
   const [content, setContent] = React.useState<string>("");
   const currentUrl = useSelector(getApiUrl);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [retryCount, setRetryCount] = React.useState<number>(0);
+  const [error, setError] = React.useState<string | null>(null);
+  const fetchData = React.useCallback(async () => {
+    let retries = 0;
+    while (retries < MAX_RETRIES) {
+      try {
+        const res = await fetch(currentUrl);
+        if (!res.ok) {
+          if (res.status === 404) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            retries++;
+            continue;
+          }
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const data = await res.text();
+        const root = parse(data);
+        setContent(root.toString());
+        setIsLoading(false);
+        setError(null);
+        return;
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+        retries++;
+      }
+    }
+    setIsLoading(false);
+    setError("Failed to fetch data after multiple attempts");
+  }, [currentUrl]);
+
   React.useEffect(() => {
     setIsLoading(true);
-    const fetchData = () => {
-      if (retryCount >= MAX_RETRIES) {
-        console.error("Maximum retries reached. Stopping further attempts.");
-        setIsLoading(false);
-        return;
-      }
-      fetch(currentUrl)
-        .then((res) => {
-          if (!res.ok && res.status === 404) {
-            // If status code is 404, wait 1s and refetch
-            setTimeout(() => {
-              setRetryCount(retryCount + 1);
-              fetchData(); // Call fetchData again to refetch
-            }, 1000);
-            return Promise.reject("404 Not Found");
-          }
-          return res.text();
-        })
-        .then((data) => {
-          const root = parse.parse(data);
-          setContent(root.toString());
-          setIsLoading(false);
-          setRetryCount(0);
-        })
-        .catch((error) => {
-          console.error("Failed to fetch data:", error);
-          // Stop fetching if error occurs
-          setIsLoading(false);
-        })
-    };
-
-    fetchData(); // Initial fetch
-  }, [currentUrl, content]);
+    setError(null);
+    const abortController = new AbortController();
+    fetchData();
+    return () => abortController.abort();
+  }, [fetchData]);
   return (
     <div className="w-full h-full">
       {isLoading ? (
