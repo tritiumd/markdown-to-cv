@@ -25,7 +25,7 @@ const RenderMultiplePhaseField = ({
   name,
   methods,
 }: {
-  name: `experience.${number}.phase` | `activity.${number}.phase`;
+  name: `experience.${number}.phase` | `activity.${number}.phase` | `project.${number}.phase`;
   methods: UseFormReturn<ResumeFormType>;
 }) => {
   const { fields, remove, append, move } = useFieldArray({
