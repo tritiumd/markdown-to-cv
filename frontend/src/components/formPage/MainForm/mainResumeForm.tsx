@@ -20,6 +20,8 @@ import {
   useFormCreateForm,
 } from "../Schema/formSchema";
 import ChooseLanguageFormButton from "@/components/custom/button/ChooseLanguageFormButton/ChooseLanguageFormButton";
+import ProjectForm from "../SubForm/projectForm";
+import ReferenceForm from "../SubForm/referenceForm";
 
 const url = BASE_URL;
 const FORM_DATA_KEY = "app_form_local_data";
@@ -107,7 +109,9 @@ export default function CvForm() {
             <CertificateForm />
             <EducationForm />
             <ExperienceForm />
+            <ProjectForm/>
             <ActivityForm />
+            <ReferenceForm/>
           </div>
           <CardFooter className="pt-10 gap-2">
             <Button type="submit" className="w-full">

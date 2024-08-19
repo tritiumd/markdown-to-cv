@@ -75,14 +75,21 @@ class ExperienceSchema(BaseModel):
     phase: List[PhaseSchema]
 
 
+class ProjectSchema(BaseModel):
+    place: str
+    phase: List[PhaseSchema]
+
+
 class ActivitySchema(BaseModel):
     place: str
     phase: List[PhaseSchema]
 
 
 class ReferenceSchema(BaseModel):
-    # TODO: Add more fields
-    value: str
+    name: str
+    position: str
+    phone: str
+    email: str
 
 
 class FormSchema(BaseModel):
@@ -118,6 +125,7 @@ class FormSchema(BaseModel):
     certificate: Optional[List[CertificateSchema]] = Field(default=None)
     education: Optional[List[EducationSchema]] = Field(default=None)
     experience: Optional[List[ExperienceSchema]] = Field(default=None)
+    project: Optional[List[ProjectSchema]] = Field(default=None)
     activity: Optional[List[ActivitySchema]] = Field(default=None)
     reference: Optional[List[ReferenceSchema]] = Field(default=None)
 

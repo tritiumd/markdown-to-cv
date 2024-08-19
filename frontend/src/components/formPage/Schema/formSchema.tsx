@@ -32,13 +32,20 @@ export const schemaExperience = z.object({
   phase: z.array(schemaPhase.optional()),
 });
 
+export const schemaProject= z.object({
+  place: z.string().describe("Your project title"),
+  phase: z.array(schemaPhase.optional()),
+});
 export const schemaActivity = z.object({
   place: z.string().describe("Your group in past"),
   phase: z.array(schemaPhase.optional()),
 });
 
 export const schemaReference = z.object({
-  value: z.string(),
+  name: z.string().describe("Your reference name"),
+  position: z.string().describe("Your reference position"),
+  phone: z.string().describe("Your reference phone"),
+  email: z.string().describe("Your reference email"),
 });
 export const formResumeSchema = z.object({
   name: z.string().max(100),
@@ -49,6 +56,7 @@ export const formResumeSchema = z.object({
   certificate: z.array(schemaCertificate.optional()),
   education: z.array(schemaEducation.optional()),
   experience: z.array(schemaExperience.optional()),
+  project: z.array(schemaProject.optional()),
   activity: z.array(schemaActivity.optional()),
   reference: z.array(schemaReference).optional(),
 });
@@ -66,6 +74,7 @@ export const initialResumeValue = {
   certificate: [],
   education: [],
   experience: [],
+  project: [],
   activity: [],
   reference: [],
 };
