@@ -1,10 +1,8 @@
 import json
 import os
 import uuid
-from typing import Annotated
 from fastapi import APIRouter, Depends, Form, status, Request
-from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, ValidationError, Field
+from pydantic import BaseModel, ValidationError, Field, field_validator
 from typing import List, Optional
 from pydantic_yaml import to_yaml_str
 from sqlmodel import Session
@@ -15,6 +13,7 @@ from app.core.db import get_session
 from app.models import YAMLFile, MarkdownFile, HTMLFile
 import logging
 from fastapi.exceptions import HTTPException
+import re
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -30,6 +29,13 @@ class CertificateSchema(BaseModel):
     name: str
     extra: Optional[str] = Field(default=None)
 
+    @field_validator("extra", mode="before")
+    @classmethod
+    def set_extra_to_none(cls, v):
+        if v == "":
+            return None
+        return v
+
 
 class EducationSchema(BaseModel):
     place: str
@@ -37,11 +43,30 @@ class EducationSchema(BaseModel):
     time: str
     extra: Optional[str] = Field(default=None)
 
+    @field_validator("extra", mode="before")
+    @classmethod
+    def set_extra_to_none(cls, v):
+        if v == "":
+            return None
+        return v
+
 
 class PhaseSchema(BaseModel):
     time: str
     position: str
-    detail: Optional[str] = Field(default=None)
+    detail: Optional[List[str]] = Field(default=None)
+
+    @field_validator("detail", mode="before")
+    @classmethod
+    def detail_to_list(cls, v):
+        if isinstance(v, str):
+            # Remove unwanted characters like \n, multiple spaces, etc.
+            v = v.strip()
+            result = v.split("\n")
+            result = [re.sub(r"^[\-\+\s]+", "", item) for item in result]
+            print(result)
+            return result
+        return v
 
 
 class ExperienceSchema(BaseModel):
