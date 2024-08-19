@@ -2,8 +2,8 @@ import json
 import os
 import uuid
 from fastapi import APIRouter, Depends, Form, status, Request
-from pydantic import BaseModel, ValidationError, Field, field_validator
-from typing import List, Optional, Union
+from pydantic import BaseModel, ValidationError, Field, BeforeValidator
+from typing import List, Optional, Union, Annotated
 from pydantic_yaml import to_yaml_str
 from sqlmodel import Session
 
@@ -19,6 +19,19 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 
+DetailType = Union[str, List[str]]
+
+
+def validate_detail(v: str) -> List[str]:
+    if v == "":
+        return []
+    # Remove unwanted characters like \n, multiple spaces, etc.
+    v = v.strip()
+    result = v.split("\n")
+    result = [re.sub(r"^[\-\+\s]+", "", item) for item in result]
+    return result
+
+
 class InfoDetailSchema(BaseModel):
     icon: str
     data: str
@@ -27,47 +40,20 @@ class InfoDetailSchema(BaseModel):
 class CertificateSchema(BaseModel):
     year: str
     name: str
-    extra: Union[str, list] = Field(default=None)
-
-    @field_validator("extra", mode="before")
-    @classmethod
-    def set_extra_to_none(cls, v):
-        if v == "":
-            return []
-        return v
+    extra: Annotated[DetailType, BeforeValidator(validate_detail)]
 
 
 class EducationSchema(BaseModel):
     place: str
     major: str
     time: str
-    extra: Union[str, list] = Field(default=None)
-
-    @field_validator("extra", mode="before")
-    @classmethod
-    def set_extra_to_none(cls, v):
-        if v == "":
-            return []
-        return v
+    extra: Annotated[DetailType, BeforeValidator(validate_detail)]
 
 
 class PhaseSchema(BaseModel):
     time: str
     position: str
-    detail: Union[str, list] = Field(default=None)
-
-    @field_validator("detail", mode="before")
-    @classmethod
-    def detail_to_list(cls, v):
-        if isinstance(v, str):
-            if v == "":
-                return []
-            # Remove unwanted characters like \n, multiple spaces, etc.
-            v = v.strip()
-            result = v.split("\n")
-            result = [re.sub(r"^[\-\+\s]+", "", item) for item in result]
-            return result
-        return v
+    detail: Annotated[DetailType, BeforeValidator(validate_detail)]
 
 
 class ExperienceSchema(BaseModel):
