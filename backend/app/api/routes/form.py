@@ -3,7 +3,7 @@ import os
 import uuid
 from fastapi import APIRouter, Depends, Form, status, Request
 from pydantic import BaseModel, ValidationError, Field, field_validator
-from typing import List, Optional
+from typing import List, Optional, Union
 from pydantic_yaml import to_yaml_str
 from sqlmodel import Session
 
@@ -27,13 +27,13 @@ class InfoDetailSchema(BaseModel):
 class CertificateSchema(BaseModel):
     year: str
     name: str
-    extra: Optional[str] = Field(default=None)
+    extra: Union[str, list] = Field(default=None)
 
     @field_validator("extra", mode="before")
     @classmethod
     def set_extra_to_none(cls, v):
         if v == "":
-            return None
+            return []
         return v
 
 
@@ -41,30 +41,31 @@ class EducationSchema(BaseModel):
     place: str
     major: str
     time: str
-    extra: Optional[str] = Field(default=None)
+    extra: Union[str, list] = Field(default=None)
 
     @field_validator("extra", mode="before")
     @classmethod
     def set_extra_to_none(cls, v):
         if v == "":
-            return None
+            return []
         return v
 
 
 class PhaseSchema(BaseModel):
     time: str
     position: str
-    detail: Optional[List[str]] = Field(default=None)
+    detail: Union[str, list] = Field(default=None)
 
     @field_validator("detail", mode="before")
     @classmethod
     def detail_to_list(cls, v):
         if isinstance(v, str):
+            if v == "":
+                return []
             # Remove unwanted characters like \n, multiple spaces, etc.
             v = v.strip()
             result = v.split("\n")
             result = [re.sub(r"^[\-\+\s]+", "", item) for item in result]
-            print(result)
             return result
         return v
 
@@ -137,7 +138,6 @@ async def submit_form(
 
     """
     # json_data = jsonable_encoder(form_data)
-    # print(form_data)
     try:
         data = await request.json()
         # logger.debug(data)
@@ -149,15 +149,10 @@ async def submit_form(
         logger.debug("file_path: %s", file_path)
         # Write the yaml file to YAML folder:
         await utils.write_file(file_path, to_yaml_str(form_data))
+        logging.debug(to_yaml_str(form_data))
 
-        # utils.create_markdown_file(new_uid)
-        # utils.create_output_file(new_uid)
-        # background_tasks.add_task(utils.create_markdown_file, new_uid)
-        # background_tasks.add_task(utils.create_output_file, new_uid)
-        # utils.create_markdown_file(new_uid)
-        # utils.create_output_file(new_uid)
         utils.yaml_to_html(new_uid, language)
-        logger.debug("file_path: %s", file_path)
+        logging.info("file_path: %s", file_path)
         yaml_file = YAMLFile(
             title="form.yaml",
             data_path=file_path,

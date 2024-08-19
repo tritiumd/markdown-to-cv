@@ -9,12 +9,9 @@ from logging.config import dictConfig
 import os
 from datetime import datetime
 
-app = FastAPI(
-    title=settings.PROJECT_NAME,
-)
 
 filename = os.path.join(
-    os.environ.get("LOG_FOLDER", "."),
+    os.environ.get("LOG_FOLDER", "./logs"),
     "webserver_error_%s.log" % (datetime.now().strftime("%Y-%m-%d")),
 )
 dictConfig(
@@ -42,6 +39,13 @@ dictConfig(
         "root": {"level": "DEBUG", "handlers": ["console", "file"]},
     }
 )
+
+
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+)
+
+
 # add openapi redoc
 def custom_openapi():
     if app.openapi_schema:
@@ -62,7 +66,9 @@ def custom_openapi():
 
 app.openapi = custom_openapi
 
-app.mount("/static", StaticFiles(directory=settings.DATA_FOLDER_PATH_HTML), name="static")
+app.mount(
+    "/static", StaticFiles(directory=settings.DATA_FOLDER_PATH_HTML), name="static"
+)
 
 # Set all CORS enabled origins
 if settings.BACKEND_CORS_ORIGINS:

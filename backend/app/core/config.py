@@ -1,7 +1,12 @@
 from typing import Any, Literal, List, Union
 
 from pydantic import (
-    AnyUrl, HttpUrl, computed_field, PostgresDsn, DirectoryPath, validator
+    AnyUrl,
+    HttpUrl,
+    computed_field,
+    PostgresDsn,
+    DirectoryPath,
+    validator,
 )
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -53,7 +58,7 @@ class Settings(BaseSettings):
     DATA_FOLDER_PATH_HTML: DirectoryPath = "./data/html"
     DATA_FOLDER_PATH_DEPLOY: DirectoryPath = "./data/deploy"
     DATA_FOLDER_PATH_YAML: DirectoryPath = "./data/yaml"
-    
+
     # Folder path validation
     @computed_field  # type: ignore[misc]
     @property
@@ -66,7 +71,7 @@ class Settings(BaseSettings):
             port=self.POSTGRES_PORT,
             path=self.POSTGRES_DB,
         )
-    
+
     # Redis configuration
     REDIS_HOST: str = "localhost"
     REDIS_PORT: int = 6379
@@ -74,18 +79,16 @@ class Settings(BaseSettings):
     REDIS_BACKEND_DB: int = 1
 
     # Celery configuration
-    # CELERY_BROKER_URL: str = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_QUEUE_DB}"
-    # CELERY_RESULT_BACKEND: str = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_BACKEND_DB}"
     @computed_field  # type: ignore[misc]
     @property
     def CELERY_BROKER_URL(self) -> str:
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_QUEUE_DB}"
-    
+
     @computed_field  # type: ignore[misc]
     @property
     def CELERY_RESULT_BACKEND(self) -> str:
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_BACKEND_DB}"
-        
+
     CELERY_TASK_SERIALIZER: str = "json"
     CELERY_RESULT_SERIALIZER: str = "json"
     CELERY_ACCEPT_CONTENT: list[str] = ["json"]

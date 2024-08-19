@@ -1,4 +1,4 @@
-FROM ngocptblaplafla/pandoc-texlive-full:nightly
+FROM ngocptblaplafla/pandoc-texlive-full:v1.1-nightly
 
 # Remove old entrypoint
 ENTRYPOINT [ ]

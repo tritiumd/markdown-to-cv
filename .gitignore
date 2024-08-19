@@ -51,3 +51,6 @@ __pycache__/
 # MAC OS
 .DS_Store
 */.DS_Store
+
+# Log files
+*/logs
