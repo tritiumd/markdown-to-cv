@@ -84,7 +84,7 @@ def yaml_to_html(filename: str, language: str) -> None:
     }
     command = f""" 
     echo "" |\
-        pandoc --data-dir /pandoc --metadata-file {yaml_file} --template /engine/pandoc/templates/pandoc-cv{map_language[language]}.markdown | \
-        pandoc --data-dir /pandoc --template pandoc-cv.html5 -L pandoc-cv-html-sup.lua -o {html_file}
+        pandoc --data-dir /pandoc --metadata-file {yaml_file} --template /engine/pandoc/templates/pandoc-cv{map_language[language]}.markdown --wrap none | \
+        pandoc --data-dir /pandoc --template pandoc-cv.html5 -L pandoc-cv-html-sup.lua  -o {html_file}
     """
     subprocess.run(command, shell=True)
