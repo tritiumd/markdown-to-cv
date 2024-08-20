@@ -5,7 +5,7 @@ import { RootState } from './store'
 export const apiSlice = createSlice({
     name: 'apiUrl',
     initialState: {
-        currentUrl: OUTPUT_URL,
+        currentUrl: `${OUTPUT_URL}/output`,
     },
     reducers: {
 

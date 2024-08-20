@@ -47,7 +47,7 @@ def md_to_html(filename: str) -> None:
     html_file = f"{output_dir}/{filename}.html"
     command = f""" 
     echo "" |\
-        pandoc --data-dir /pandoc --template pandoc-cv.html5 -L pandoc-cv-html-sup.lua -o {html_file} {md_file}
+        pandoc  --template pandoc-cv.html5 -L pandoc-cv-html-sup.lua -o {html_file} {md_file}
     """
     subprocess.run(command, shell=True)
 
@@ -84,7 +84,8 @@ def yaml_to_html(filename: str, language: str) -> None:
     }
     command = f""" 
     echo "" |\
-        pandoc --data-dir /pandoc --metadata-file {yaml_file} --template /engine/pandoc/templates/pandoc-cv{map_language[language]}.markdown --wrap none | \
-        pandoc --data-dir /pandoc --template pandoc-cv.html5 -L pandoc-cv-html-sup.lua  -o {html_file}
+        pandoc  --metadata-file {yaml_file} --template /engine/pandoc/templates/pandoc-cv{map_language[language]}.markdown --wrap none | \
+        pandoc  --template /engine/pandoc/templates/pandoc-cv.html5 -L pandoc-cv-html-sup.lua  -o {html_file}
+
     """
     subprocess.run(command, shell=True)

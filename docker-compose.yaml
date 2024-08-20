@@ -81,7 +81,7 @@ services:
       dockerfile: Dockerfile.worker
     deploy:
       mode: replicated
-      replicas: 1
+      replicas: 5
     environment:
       - DATA_FOLDER_PATH_DEPLOY:/engine/deploy
       - DATA_FOLDER_PATH_MARKDOWN:/data/markdown
