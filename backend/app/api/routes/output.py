@@ -17,7 +17,7 @@ logger = getLogger(__name__)
 async def get_output_file(file_uid: str, session: Session = Depends(get_session)) -> Any:
     try:
         query = select(HTMLFile).where(HTMLFile.uid == file_uid)
-        output_file = session.exec(query).one()
+        output_file = session.exec(query).first()
         if not output_file:
             raise HTTPException(status_code=404, detail="File not found")
         content = await utils.read_file(output_file.data_path)
