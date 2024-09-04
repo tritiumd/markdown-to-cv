@@ -1,6 +1,7 @@
 import subprocess
 import os
 from celery import Celery
+import logging
 
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = os.getenv("REDIS_PORT", "6379")
@@ -47,7 +48,7 @@ def md_to_html(filename: str) -> None:
     html_file = f"{output_dir}/{filename}.html"
     command = f""" 
     echo "" |\
-        pandoc  --template pandoc-cv.html5 -L pandoc-cv-html-sup.lua -o {html_file} {md_file}
+        pandoc  --template /engine/pandoc/templates/pandoc-cv.html5 -L /engine/pandoc/filters/pandoc-cv-html-sup.lua -o {html_file} {md_file}
     """
     subprocess.run(command, shell=True)
 
@@ -77,15 +78,18 @@ def yaml_to_html(filename: str, language: str) -> None:
     output_dir = DATA_FOLDER_PATH_HTML
 
     yaml_file = f"{upload_dir}/{filename}.yaml"
-    html_file = f"{output_dir}/{filename}.html"
     map_language = {
         "vi": "",
         "en": "-en",
     }
+    # check if file yaml exists
+    if not os.path.exists(yaml_file):
+        logging.error(f"File {yaml_file} not found")
+        return
     command = f""" 
     echo "" |\
         pandoc  --metadata-file {yaml_file} --template /engine/pandoc/templates/pandoc-cv{map_language[language]}.markdown --wrap none | \
-        pandoc  --template /engine/pandoc/templates/pandoc-cv.html5 -L pandoc-cv-html-sup.lua  -o {html_file}
-
+        pandoc  --template /engine/pandoc/templates/pandoc-cv.html5 -L /engine/pandoc/filters/pandoc-cv-html-sup.lua
     """
-    subprocess.run(command, shell=True)
+    result = subprocess.run(command, shell=True, capture_output=True)
+    return result.stdout

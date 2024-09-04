@@ -9,21 +9,22 @@ from app.core import utils
 from app.core.db import get_session
 from app.models import HTMLFile
 from logging import getLogger
+
 router = APIRouter()
 
 logger = getLogger(__name__)
 
+
 @router.get("/output-html/{file_uid}")
-async def get_output_file(file_uid: str, session: Session = Depends(get_session)) -> Any:
+async def get_output_file(
+    file_uid: str, session: Session = Depends(get_session)
+) -> Any:
     try:
-        query = select(HTMLFile).where(HTMLFile.uid == file_uid)
-        output_file = session.exec(query).first()
-        if not output_file:
-            raise HTTPException(status_code=404, detail="File not found")
-        content = await utils.read_file(output_file.data_path)
+        task_result = utils.get_celery_task_result(file_uid)
+        if task_result.status == "PENDING":
+            return HTMLResponse(status_code=202, content="Task is pending")
+        content = task_result.result
         return HTMLResponse(content=content, status_code=200)
-    except NoResultFound:
-        return HTMLResponse(status_code=404, content="File not found")
     except Exception as e:
         return HTMLResponse(status_code=404, content=str(e))
 
@@ -33,3 +34,14 @@ async def get_default_output() -> Any:
     content = await utils.read_file("example/test.html")
     logger.info("content: %s", content)
     return HTMLResponse(content=content, status_code=200)
+
+
+@router.get("/celery-output")
+async def get_celery_output(id: str) -> Any:
+    try:
+        content = await utils.get_celery_task_result(id)
+        logger.info("content: %s", content)
+        return HTMLResponse(content=content, status_code=200)
+    except Exception as e:
+        logger.error("Error: %s", e)
+        return HTMLResponse(status_code=404, content=str(e))

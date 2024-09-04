@@ -145,23 +145,11 @@ async def submit_form(
         await utils.write_file(file_path, to_yaml_str(form_data))
         logging.debug(to_yaml_str(form_data))
 
-        utils.yaml_to_html(new_uid, language)
+        task_id = utils.yaml_to_html(new_uid, language)
         logging.info("file_path: %s", file_path)
         yaml_file = YAMLFile(
             title="form.yaml",
             data_path=file_path,
-            owner_id=0,
-            uid=new_uid,
-        )
-        md_file = MarkdownFile(
-            title="form.md",
-            data_path=os.path.join(settings.DATA_FOLDER_PATH_MARKDOWN, f"{new_uid}.md"),
-            owner_id=0,
-            uid=new_uid,
-        )
-        html_file = HTMLFile(
-            title="form.html",
-            data_path=os.path.join(settings.DATA_FOLDER_PATH_HTML, f"{new_uid}.html"),
             owner_id=0,
             uid=new_uid,
         )
@@ -170,17 +158,10 @@ async def submit_form(
             session.flush()
             session.refresh(yaml_file)
 
-            session.add(md_file)
-            session.flush()
-            session.refresh(md_file)
-
-            session.add(html_file)
-            session.commit()
-            session.refresh(html_file)
         except Exception as e:
             return {"error": str(e)}
 
-        return {"message": "Form submitted successfully", "uid": new_uid}
+        return {"message": "Form submitted successfully", "uid": task_id}
 
     except json.JSONDecodeError:
         logger.error("Invalid JSON format")

@@ -44,15 +44,22 @@ def md_to_html(filename: str) -> None:
     logger.info("Send task to create output file")
 
 
-def yaml_to_html(filename: str, language: str) -> None:
+def yaml_to_html(filename: str, language: str) -> str:
     """Yaml to html
 
     Args:
         filename (str): uid of the file
         language (str): language of the CV
     """
-    celery_app.send_task("yaml_to_html", args=[filename, language])
+    task = celery_app.send_task("yaml_to_html", args=[filename, language])
+    print("celery task id: ", task.id)
+    return task.id
     logger.info("Send task to create html file")
+
+
+def get_celery_task_result(task_id: str) -> any:
+    result = celery_app.AsyncResult(task_id)
+    return result
 
 
 # @measure_time
