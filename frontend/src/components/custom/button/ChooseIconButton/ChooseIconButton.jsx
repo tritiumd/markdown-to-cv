@@ -2,11 +2,12 @@ import {
   FaGithub,
   FaPhone,
   FaLinkedinIn,
-  FaRegEnvelope,
+  FaEnvelope,
   FaTwitter,
   FaFacebook,
   FaInstagram,
   FaCakeCandles,
+  FaRegCircle,
 } from "react-icons/fa6";
 
 import {
@@ -32,11 +33,12 @@ const icons = [
   { name: "Phone", Component: FaPhone, value: "fa-phone" },
   { name: "Github", Component: FaGithub, value: "fab .fa-github" },
   { name: "Linkedin", Component: FaLinkedinIn, value: "fab .fa-linkedin" },
-  { name: "Mail", Component: FaRegEnvelope, value: "fa-envelope" },
+  { name: "Mail", Component: FaEnvelope, value: "fa-envelope" },
   { name: "Twitter", Component: FaTwitter, value: "fab .fa-twitter" },
   { name: "Facebook", Component: FaFacebook, value: "fab .fa-facebook" },
   { name: "Instagram", Component: FaInstagram, value: "fab .fa-instagram" },
   { name: "Birthday", Component: FaCakeCandles, value: "fa-cake-candles" },
+  { name: "None", Component: FaRegCircle, value: "" },
 ];
 
 const ChooseIconButton = React.forwardRef(({ className, ...props }, ref) => {

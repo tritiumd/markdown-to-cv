@@ -15,6 +15,15 @@ const Preview: React.FC = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
   const fetchData = React.useCallback(async () => {
+    const cacheKey = `cache_cv`;
+    const cachedContent = localStorage.getItem(cacheKey);
+
+    if (cachedContent) {
+      setContent(cachedContent);
+      setIsLoading(false);
+      setError(null);
+      return;
+    }
     let retries = 0;
     while (retries < MAX_RETRIES) {
       try {
@@ -29,7 +38,9 @@ const Preview: React.FC = () => {
         }
         const data = await res.text();
         const root = parse(data);
-        setContent(root.toString());
+        const contentString = root.toString();
+        setContent(contentString);
+        localStorage.setItem(cacheKey, contentString);
         setIsLoading(false);
         setError(null);
         return;
