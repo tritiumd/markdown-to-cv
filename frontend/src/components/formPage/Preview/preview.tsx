@@ -6,30 +6,29 @@ import { useSelector } from "react-redux";
 import { getApiUrl } from "@/store/slice";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast";
 
 const MAX_RETRIES = 5;
 
 const Preview: React.FC = () => {
+  const {toast} = useToast();
   const [content, setContent] = React.useState<string>("");
   const currentUrl = useSelector(getApiUrl);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
   const fetchData = React.useCallback(async () => {
-    const cacheKey = `cache_cv`;
-    const cachedContent = localStorage.getItem(cacheKey);
-
-    if (cachedContent) {
-      setContent(cachedContent);
-      setIsLoading(false);
-      setError(null);
-      return;
-    }
     let retries = 0;
     while (retries < MAX_RETRIES) {
       try {
         const res = await fetch(currentUrl);
         if (!res.ok) {
-          if (res.status === 404) {
+          if (res.status === 404 || res.status === 202) {
+            if (res.status === 202) {
+              toast({description: "Pending",
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+              })
+            }
             await new Promise(resolve => setTimeout(resolve, 1000));
             retries++;
             continue;
@@ -40,7 +39,6 @@ const Preview: React.FC = () => {
         const root = parse(data);
         const contentString = root.toString();
         setContent(contentString);
-        localStorage.setItem(cacheKey, contentString);
         setIsLoading(false);
         setError(null);
         return;
