@@ -19,19 +19,25 @@ logger = getLogger(__name__)
 async def get_output_file(
     file_uid: str, session: Session = Depends(get_session)
 ) -> Any:
+    # This is for default output
     try:
-        task_result = utils.get_celery_task_result(file_uid)
-        if task_result.status == "PENDING":
-            return HTMLResponse(status_code=202, content="Task is pending")
-        content = task_result.result
-        return HTMLResponse(content=content, status_code=200)
+        if file_uid == "output":
+            output_path = "/data/html/output.html"
+            content = await utils.read_file(output_path)
+            return HTMLResponse(content=file.content, status_code=200)
+        else:
+            task_result = utils.get_celery_task_result(file_uid)
+            if task_result.status == "PENDING":
+                return HTMLResponse(status_code=202, content="Task is pending")
+            content = task_result.result
+            return HTMLResponse(content=content, status_code=200)
     except Exception as e:
         return HTMLResponse(status_code=404, content=str(e))
 
 
 @router.get("/output-html")
 async def get_default_output() -> Any:
-    content = await utils.read_file("example/test.html")
+    content = await utils.read_file("/data/html/output.html")
     logger.info("content: %s", content)
     return HTMLResponse(content=content, status_code=200)
 
