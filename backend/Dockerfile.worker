@@ -9,6 +9,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 RUN --mount=type=bind,source=requirements-worker.txt,target=/tmp/requirements.txt pip3 install -r /tmp/requirements.txt
 
+# Install watchdog[watchmedo]
+RUN python -m pip install -U "watchdog[watchmedo]"
+
 ENV PATH "$PATH:/worker"
 
 RUN mkdir /worker

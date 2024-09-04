@@ -46,7 +46,7 @@ services:
     networks:
       - dev
     user: "${UID}:${GID}"
-    command: ["sh", "./start-worker.sh"]
+    command: ["sh", "./start-worker-dev.sh"]
 
 volumes:
   markdown_db_dev:
