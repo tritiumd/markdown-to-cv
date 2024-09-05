@@ -101,13 +101,7 @@ class FormSchema(BaseModel):
         max_length=500,
         min_length=0,
     )
-    skill: str = Field(
-        ...,
-        title="Skills",
-        description="Skills of the user",
-        max_length=500,
-        min_length=0,
-    )
+    skill: Annotated[DetailType, BeforeValidator(validate_detail)]
     certificate: Optional[List[CertificateSchema]] = Field(default=None)
     education: Optional[List[EducationSchema]] = Field(default=None)
     experience: Optional[List[ExperienceSchema]] = Field(default=None)
@@ -152,6 +146,7 @@ async def submit_form(
             data_path=file_path,
             owner_id=0,
             uid=new_uid,
+            time_stamp=utils.get_current_time(),
         )
         try:
             session.add(yaml_file)
