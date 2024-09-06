@@ -5,19 +5,16 @@ import { Navbar } from "@/components/common/navbar/Navbar";
 import UploadField from "@/components/uploadPage/upload";
 import { Metadata } from "next";
 import FormPage from "./form/page";
-
-// export const metadata: Metadata = {
-//   title: "Tritiumd",
-// };
+import FormGroup from "@/components/formPage/ResizableGroup/resizableGroup";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between break-words">
+    <main className="flex-col items-center break-words">
       <Navbar />
 
-      <UploadField className="flex-row grow h-4/5 overflow-y-auto" />
+      <FormGroup defaultLayout={[50, 50]} />
 
-      <Footer className="grow self-end" />
+      {/* <Footer className="grow self-end" /> */}
     </main>
   );
 }

@@ -1,7 +1,7 @@
 import json
 import os
 import uuid
-from fastapi import APIRouter, Depends, Form, status, Request
+from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel, ValidationError, Field, BeforeValidator
 from typing import List, Optional, Union, Annotated
 from pydantic_yaml import to_yaml_str
@@ -10,13 +10,11 @@ from sqlmodel import Session
 from app.core import utils
 from app.core.config import settings
 from app.core.db import get_session
-from app.models import YAMLFile, MarkdownFile, HTMLFile
-import logging
-from fastapi.exceptions import HTTPException
+from app.models import YAMLFile
 import re
+from loguru import logger
 
 router = APIRouter()
-logger = logging.getLogger(__name__)
 
 
 DetailType = Union[str, List[str]]
@@ -137,10 +135,10 @@ async def submit_form(
         logger.debug("file_path: %s", file_path)
         # Write the yaml file to YAML folder:
         await utils.write_file(file_path, to_yaml_str(form_data))
-        logging.debug(to_yaml_str(form_data))
+        logger.debug(to_yaml_str(form_data))
 
         task_id = utils.yaml_to_html(new_uid, language)
-        logging.info("file_path: %s", file_path)
+        logger.info("file_path: %s", file_path)
         yaml_file = YAMLFile(
             title="form.yaml",
             data_path=file_path,

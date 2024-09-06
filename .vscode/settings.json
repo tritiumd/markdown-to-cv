@@ -1,8 +1,8 @@
 {
-    "python.defaultInterpreterPath": "${env:VIRTUAL_ENV}",
+    "python.defaultInterpreterPath": "backend/${env:VIRTUAL_ENV}",
     "python.languageServer": "Jedi",
     "ruff.path": [
-        "${workspaceFolder}/app",
-        "${workspaceFolder}/test"
-    ]
+        "${workspaceFolder}/backend/venv/bin/ruff",
+    ],
+    "editor.formatOnSave": true
 }

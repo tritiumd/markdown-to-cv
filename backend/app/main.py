@@ -5,7 +5,8 @@ from starlette.staticfiles import StaticFiles
 from app.api.main import api_router
 from app.core.config import settings
 from app.core.db import init_db
-from logging.config import dictConfig
+from loguru import logger
+import sys
 import os
 from datetime import datetime
 
@@ -14,32 +15,11 @@ filename = os.path.join(
     os.environ.get("LOG_FOLDER", "./logs"),
     "webserver_error_%s.log" % (datetime.now().strftime("%Y-%m-%d")),
 )
-dictConfig(
-    {
-        "version": 1,
-        "formatters": {
-            "default": {
-                "format": "[%(asctime)s] %(levelname)s %(filename)s line %(lineno)d: %(message)s",
-                "datefmt": "%Y-%m-%d %H:%M:%S",
-            }
-        },
-        "handlers": {
-            "console": {
-                "class": "logging.StreamHandler",
-                "formatter": "default",
-                "level": "DEBUG",
-            },
-            "file": {
-                "class": "logging.FileHandler",
-                "formatter": "default",
-                "filename": filename,
-                "level": "ERROR",
-            },
-        },
-        "root": {"level": "DEBUG", "handlers": ["console", "file"]},
-    }
-)
 
+logger.add(filename, level="ERROR", rotation="1 day", retention="7 days", enqueue=True)
+logger.add(
+    sys.stderr, format="{time} {level} {message}", filter="my_module", level="INFO"
+)
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -72,11 +52,21 @@ app.mount(
 
 # Set all CORS enabled origins
 if settings.BACKEND_CORS_ORIGINS:
+    logger.info("BACKEND_CORS_ORIGINS: {}", settings.BACKEND_CORS_ORIGINS)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[
             str(origin).strip("/") for origin in settings.BACKEND_CORS_ORIGINS
         ],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    logger.info("BACKEND_CORS_ORIGINS: *")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
