@@ -12,8 +12,8 @@ import EducationForm from "../SubForm/educationForm";
 import ActivityForm from "../SubForm/activityForm";
 import ExperienceForm from "../SubForm/experienceForm";
 import { BASE_URL } from "@/constants/variables";
-import { useDispatch } from "react-redux";
-import { submitUID } from "@/store/slice";
+import { useDispatch, useSelector } from "react-redux";
+import { getCurrentUID, submitUID } from "@/store/slice";
 import {
   initialResumeValue,
   ResumeFormType,
@@ -22,7 +22,8 @@ import {
 import ChooseLanguageFormButton from "@/components/custom/button/ChooseLanguageFormButton/ChooseLanguageFormButton";
 import ProjectForm from "../SubForm/projectForm";
 import ReferenceForm from "../SubForm/referenceForm";
-import { submitAPI } from "@/app/form/routes/Api";
+import { downloadAPI, submitAPI } from "@/app/form/routes/Api";
+import { Download } from "lucide-react";
 
 const url = BASE_URL;
 const FORM_DATA_KEY = "app_form_local_data";
@@ -65,6 +66,7 @@ export default function CvForm() {
     localStorageKey: FORM_DATA_KEY,
   });
   const [formLanguage, setFormLanguage] = React.useState("vi");
+  const currentUID = useSelector(getCurrentUID);
   async function handleSubmit(values: ResumeFormType) {
     try {
       console.log("submit values", values);
@@ -86,6 +88,24 @@ export default function CvForm() {
         variant: "destructive",
         action: (
           <ToastAction altText="Try again" onClick={() => handleSubmit(values)}>
+            Try again
+          </ToastAction>
+        ),
+      });
+    }
+  }
+  async function handleDownload() {
+    try {
+      await downloadAPI(currentUID);
+    } catch (error) {
+      console.error("Download error:", error);
+      // Optionally, show an error toast
+      toast({
+        title: "Error",
+        description: "There was an issue!",
+        variant: "destructive",
+        action: (
+          <ToastAction altText="Try again" onClick={() => handleDownload()}>
             Try again
           </ToastAction>
         ),
@@ -121,6 +141,13 @@ export default function CvForm() {
               value={formLanguage}
               onChange={setFormLanguage}
             />
+            <Button
+              onClick={handleDownload}
+              variant="outline"
+              className="place-self-center gap-2">
+              <Download />
+              Download
+            </Button>
           </CardFooter>
         </form>
       </FormProvider>

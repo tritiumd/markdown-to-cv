@@ -1,15 +1,12 @@
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.exc import NoResultFound
-from sqlmodel import Session, select
-from starlette.responses import HTMLResponse
-
 from app.core import utils
-from app.core.db import get_session
-from app.models import HTMLFile
-from loguru import logger
 from app.core.config import settings
+from app.core.db import get_session
+from fastapi import APIRouter, Depends
+from loguru import logger
+from sqlmodel import Session
+from starlette.responses import HTMLResponse
 
 router = APIRouter()
 logger.add("logs/output.log", rotation="1 day", retention="7 days", enqueue=True)

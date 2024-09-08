@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { submitSlice } from "./slice";
+import { submitSlice, previewSlice } from "./slice";
 
 export const store = configureStore({
   reducer: {
     submit: submitSlice.reducer,
+    preview: previewSlice.reducer,
   },
 });
 

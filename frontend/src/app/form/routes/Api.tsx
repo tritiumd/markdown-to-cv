@@ -21,7 +21,7 @@ export async function previewAPI(uid: string): Promise<string> {
       return data;
     } catch (error) {
       toast({
-        description: `Failed to fetch data. Retrying ${retries} ${retries <= 1 ? "time" : "times"}`,
+        description: `Failed to fetch data. Retried ${retries} ${retries <= 1 ? "time" : "times"}`,
         variant: "destructive",
       });
       console.error("Failed to fetch data:", error);
@@ -29,6 +29,28 @@ export async function previewAPI(uid: string): Promise<string> {
     }
   }
   throw new Error("Failed to fetch data after multiple attempts");
+}
+
+export async function downloadAPI(uid: string): Promise<void> {
+  // TODO: check the legit later
+  const currentUrl = `${OUTPUT_URL}/${uid}?download=true`;
+  try {
+    const res = await fetch(currentUrl);
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "resume.pdf";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Failed to download data:", error);
+    throw error;
+  }
 }
 
 export async function submitAPI(
