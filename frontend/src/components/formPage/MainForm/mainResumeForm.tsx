@@ -13,7 +13,7 @@ import ActivityForm from "../SubForm/activityForm";
 import ExperienceForm from "../SubForm/experienceForm";
 import { BASE_URL } from "@/constants/variables";
 import { useDispatch } from "react-redux";
-import { setApiUrl } from "@/store/slice";
+import { submitUID } from "@/store/slice";
 import {
   initialResumeValue,
   ResumeFormType,
@@ -22,6 +22,7 @@ import {
 import ChooseLanguageFormButton from "@/components/custom/button/ChooseLanguageFormButton/ChooseLanguageFormButton";
 import ProjectForm from "../SubForm/projectForm";
 import ReferenceForm from "../SubForm/referenceForm";
+import { submitAPI } from "@/app/form/routes/Api";
 
 const url = BASE_URL;
 const FORM_DATA_KEY = "app_form_local_data";
@@ -68,20 +69,8 @@ export default function CvForm() {
     try {
       console.log("submit values", values);
       console.log(JSON.stringify(values));
-      // post to your API
-      const response = await fetch(`${url}/submit-form?language=${formLanguage}`, {
-        method: "POST",
-        body: JSON.stringify(values),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to submit the data. Please try again.");
-      }
-      // Handle response if necessary
-      const data = await response.json();
-
-      const uid = data.uid;
-      console.log("Return data:", data);
-      dispatch(setApiUrl(uid));
+      const uid = await submitAPI(values, formLanguage);
+      dispatch(submitUID(uid));
       console.log("Form data:", values);
 
       toast({
@@ -95,7 +84,11 @@ export default function CvForm() {
         title: "Error",
         description: "There was an issue!",
         variant: "destructive",
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
+        action: (
+          <ToastAction altText="Try again" onClick={() => handleSubmit(values)}>
+            Try again
+          </ToastAction>
+        ),
       });
     }
   }
@@ -109,9 +102,9 @@ export default function CvForm() {
             <CertificateForm />
             <EducationForm />
             <ExperienceForm />
-            <ProjectForm/>
+            <ProjectForm />
             <ActivityForm />
-            <ReferenceForm/>
+            <ReferenceForm />
           </div>
           <CardFooter className="pt-10 gap-2">
             <Button type="submit" className="w-full">
@@ -121,15 +114,13 @@ export default function CvForm() {
               type={"reset"}
               variant="outline"
               className={"place-self-center"}
-              onClick={() => methods.reset(initialResumeValue)}
-            >
+              onClick={() => methods.reset(initialResumeValue)}>
               Reset
             </Button>
-            <ChooseLanguageFormButton 
+            <ChooseLanguageFormButton
               value={formLanguage}
               onChange={setFormLanguage}
             />
-
           </CardFooter>
         </form>
       </FormProvider>

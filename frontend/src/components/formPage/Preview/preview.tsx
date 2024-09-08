@@ -3,53 +3,36 @@ import * as React from "react";
 
 import parse from "node-html-parser";
 import { useSelector } from "react-redux";
-import { getApiUrl } from "@/store/slice";
+import { getCurrentUID } from "@/store/slice";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { ToastAction } from "@/components/ui/toast"
+import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import { previewAPI } from "@/app/form/routes/Api";
 
 const MAX_RETRIES = 5;
 
 const Preview: React.FC = () => {
-  const {toast} = useToast();
+  const { toast } = useToast();
   const [content, setContent] = React.useState<string>("");
-  const currentUrl = useSelector(getApiUrl);
+  const currentUID = useSelector(getCurrentUID);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
   const fetchData = React.useCallback(async () => {
-    let retries = 0;
-    while (retries < MAX_RETRIES) {
-      try {
-        const res = await fetch(currentUrl);
-        if (!res.ok) {
-          if (res.status === 404 || res.status === 202) {
-            if (res.status === 202) {
-              toast({description: "Pending",
-                action: <ToastAction altText="Try again">Try again</ToastAction>,
-              })
-            }
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            retries++;
-            continue;
-          }
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        const data = await res.text();
-        const root = parse(data);
-        const contentString = root.toString();
-        setContent(contentString);
-        setIsLoading(false);
-        setError(null);
-        return;
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-        retries++;
-      }
+    try {
+      const data = await previewAPI(currentUID);
+      const root = parse(data);
+      const contentString = root.toString();
+      setContent(contentString);
+      setIsLoading(false);
+      setError(null);
+      return;
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+      setIsLoading(false);
+      setError("Failed to fetch data after multiple attempts");
     }
-    setIsLoading(false);
-    setError("Failed to fetch data after multiple attempts");
-  }, [currentUrl]);
+  }, [currentUID]);
 
   React.useEffect(() => {
     setIsLoading(true);

@@ -1,26 +1,38 @@
-import { OUTPUT_URL } from '@/constants/variables'
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RootState } from './store'
+import { OUTPUT_URL } from "@/constants/variables";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "./store";
 
-export const apiSlice = createSlice({
-    name: 'apiUrl',
-    initialState: {
-        currentUrl: OUTPUT_URL,
+export const submitSlice = createSlice({
+  name: "submit",
+  initialState: {
+    currentID: "",
+  },
+  reducers: {
+    resetUID: (state) => {
+      state.currentID = "";
     },
-    reducers: {
+    submitUID: (state, action: PayloadAction<string>) => {
+      state.currentID = action.payload;
+    },
+  },
+});
 
-        resetApiUrl: (state) => {
-            state.currentUrl = OUTPUT_URL
-        },
-        setApiUrl: (state, action: PayloadAction<string>) => {
-            state.currentUrl = `${OUTPUT_URL}/${action.payload}`
-        }
-
-    }
-})
+export const previewSlice = createSlice({
+  name: "preview",
+  initialState: {
+    currentID: "",
+  },
+  reducers: {
+    resetApiUrl: (state) => {
+      state.currentID = "";
+    },
+    setApiUrl: (state, action: PayloadAction<string>) => {
+      state.currentID = action.payload;
+    },
+  },
+});
 
 // Action creators are generated for each case reducer function
-export const { setApiUrl, resetApiUrl } = apiSlice.actions
+export const { submitUID, resetUID } = submitSlice.actions;
 
-export const getApiUrl = (state: RootState) => state.apiUrl.currentUrl
-export default apiSlice.reducer
+export const getCurrentUID = (state: RootState) => state.submit.currentID;
