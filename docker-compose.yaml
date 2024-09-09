@@ -1,5 +1,6 @@
 services:
   adminer:
+    container_name: ${STACK_NAME?Variable not set}-adminer
     image: adminer
     restart: always
     networks:
@@ -20,8 +21,8 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-adminer.tls=true
       - traefik.http.services.${STACK_NAME?Variable not set}-adminer.loadbalancer.server.port=8080
 
-
   db:
+    container_name: ${STACK_NAME?Variable not set}-db
     image: postgres:13
     environment:
       POSTGRES_USER: $POSTGRES_USER
@@ -60,7 +61,7 @@ services:
       - traefik-public
     user: "${UID}:${GID}"
     working_dir: "/src"
-    command: ["./script/start-api.sh"]
+    command: [ "./script/start-api.sh" ]
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
@@ -79,6 +80,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.worker
+    container_name: ${STACK_NAME?Variable not set}-worker
     deploy:
       mode: replicated
       replicas: 5
@@ -100,10 +102,10 @@ services:
     networks:
       - backend
     user: "${UID}:${GID}"
-    command: ["sh", "./start-worker.sh"]
+    command: [ "sh", "./start-worker.sh" ]
 
   frontend:
-    build: 
+    build:
       context: ./frontend
       dockerfile: Dockerfile.frontend
       args:
@@ -113,7 +115,7 @@ services:
     volumes:
       - ./worker:/worker
       - $DATA_FOLDER_PATH_ENGINE:/engine
-      - $DATA_FOLDER_PATH_DOCKER:/data        
+      - $DATA_FOLDER_PATH_DOCKER:/data
     networks:
       - frontend
       - traefik-public
@@ -127,13 +129,13 @@ services:
       - traefik.http.routers.${STACK_NAME}-frontend.entrypoints=websecure
       - traefik.http.routers.${STACK_NAME}-frontend.tls=true
       - traefik.http.routers.${STACK_NAME}-frontend.service=${STACK_NAME}-frontend
-
       # # Enable www redirection for HTTP and HTTPS
       # - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.middlewares=${STACK_NAME?Variable not set}-www-redirect
       # - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.middlewares=https-redirect,${STACK_NAME?Variable not set}-www-redirect
 
 volumes:
   markdown_db:
+
 
 networks:
   backend:

@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFormContext } from "react-hook-form";
-import * as z from "zod";
+import { z } from "zod";
 
 export const schemaInfo = z.object({
   icon: z.string(),
