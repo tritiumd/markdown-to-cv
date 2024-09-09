@@ -1,9 +1,12 @@
-import aiofiles
-import os
-from app.core.config import settings
-import time
-import celery
+import datetime
 import logging
+import os
+import time
+
+import aiofiles
+import celery
+
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +45,10 @@ celery_app = celery.Celery(
 def md_to_html(filename: str) -> None:
     celery_app.send_task("md_to_html", args=[filename])
     logger.info("Send task to create output file")
+
+
+def get_current_time() -> str:
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def yaml_to_html(filename: str, language: str) -> str:

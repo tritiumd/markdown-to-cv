@@ -1,32 +1,53 @@
-from typing import Any
+from typing import Any, Optional
 
 from app.core import utils
 from app.core.config import settings
-from app.core.db import get_session
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, BackgroundTasks
+from fastapi.responses import FileResponse, HTMLResponse
 from loguru import logger
-from sqlmodel import Session
-from starlette.responses import HTMLResponse
+from playwright.async_api import async_playwright
 
 router = APIRouter()
 logger.add("logs/output.log", rotation="1 day", retention="7 days", enqueue=True)
 
 
+async def create_pdf(html_content: str, output_path: str):
+    async with async_playwright() as p:
+        browser = await p.chromium.launch()
+        page = await browser.new_page()
+        await page.set_content(html_content, wait_until="networkidle")
+        await page.pdf(path=output_path)
+        await browser.close()
+
+
 @router.get("/output-html/{file_uid}")
 @logger.catch
 async def get_output_file(
-    file_uid: str, session: Session = Depends(get_session)
+    background_tasks: BackgroundTasks,
+    file_uid: Optional[str],
+    is_download: Optional[bool] = False,
 ) -> Any:
-    # This is for default output
     try:
-        logger.debug("get_output_file: %s", file_uid)
+        logger.debug(f"get_output_file: {file_uid}")
         task_result = utils.get_celery_task_result(file_uid)
         if task_result.status == "PENDING":
             return HTMLResponse(status_code=202, content="Task is pending")
         content = task_result.result
+        if is_download:
+            pdf_path = "tmp/resume.pdf"
+            html_content = content.decode("utf-8")
+            await create_pdf(html_content, pdf_path)
+            # background_tasks.add_task(os.remove, pdf_path)
+            return FileResponse(
+                pdf_path,
+                filename="resume.pdf",
+                media_type="application/pdf",
+                # background=background_tasks,
+            )
+
         return HTMLResponse(content=content, status_code=200)
     except Exception as e:
-        logger.error("Error: %s", e)
+        logger.error(f"Error: {e}")
         return HTMLResponse(status_code=404, content=str(e))
 
 

@@ -1,19 +1,18 @@
 "use client";
 import * as React from "react";
 
+import { previewAPI } from "@/app/form/routes/Api";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { getCurrentUID } from "@/store/slice";
+import { Loader2 } from "lucide-react";
 import parse from "node-html-parser";
 import { useSelector } from "react-redux";
-import { getCurrentUID } from "@/store/slice";
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { ToastAction } from "@/components/ui/toast";
-import { useToast } from "@/components/ui/use-toast";
-import { previewAPI } from "@/app/form/routes/Api";
 
 const MAX_RETRIES = 5;
 
 const Preview: React.FC = () => {
-  const { toast } = useToast();
+  const {toast} = useToast();
   const [content, setContent] = React.useState<string>("");
   const currentUID = useSelector(getCurrentUID);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
@@ -41,6 +40,7 @@ const Preview: React.FC = () => {
     fetchData();
     return () => abortController.abort();
   }, [fetchData]);
+
   return (
     <div className="w-full h-full">
       {isLoading ? (
@@ -51,7 +51,9 @@ const Preview: React.FC = () => {
           </Button>
         </div>
       ) : (
-        <iframe className="w-full h-full" srcDoc={content}></iframe>
+        <iframe
+          className="w-full h-full"
+          srcDoc={content}></iframe>
       )}
     </div>
   );

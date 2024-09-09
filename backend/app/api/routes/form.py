@@ -1,18 +1,18 @@
 import json
 import os
+import re
 import uuid
-from fastapi import APIRouter, Depends, Request
-from pydantic import BaseModel, ValidationError, Field, BeforeValidator
-from typing import List, Optional, Union, Annotated
-from pydantic_yaml import to_yaml_str
-from sqlmodel import Session
+from typing import Annotated, List, Optional, Union
 
 from app.core import utils
 from app.core.config import settings
 from app.core.db import get_session
 from app.models import YAMLFile
-import re
+from fastapi import APIRouter, Depends, Request
 from loguru import logger
+from pydantic import BaseModel, BeforeValidator, Field, ValidationError
+from pydantic_yaml import to_yaml_str
+from sqlmodel import Session
 
 router = APIRouter()
 
@@ -160,8 +160,8 @@ async def submit_form(
         logger.error("Invalid JSON format")
         return {"message": "Invalid JSON format"}
     except ValidationError as e:
-        logger.error("Validation error", e.errors())
+        logger.error(f"Validation error: {e.errors()}")
         return {"error": "Validation error", "details": e.errors()}
     except Exception as e:
-        logger.error("Error: %s", e)
+        logger.error(f"Error: {e}")
         return {"error": str(e)}

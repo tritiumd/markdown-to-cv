@@ -139,7 +139,7 @@ const RenderMultiplePhaseField = ({
       <Button
         variant="ghost"
         size="sm"
-        className="w-full"
+        className="w-full gap-2 text-secondary self-center"
         onClick={(e) => {
           e.preventDefault();
           append({
@@ -149,7 +149,7 @@ const RenderMultiplePhaseField = ({
           });
         }}
       >
-        <Plus size={16} />
+        <Plus size={16} /> <p> Add more phase </p>
       </Button>
     </React.Fragment>
   );

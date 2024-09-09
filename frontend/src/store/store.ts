@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { submitSlice, previewSlice } from "./slice";
+import { previewSlice, submitSlice } from "./slice";
 
 export const store = configureStore({
   reducer: {

@@ -1,31 +1,28 @@
 "use client";
-import { FormProvider } from "react-hook-form";
+import { downloadAPI, submitAPI } from "@/app/form/routes/Api";
+import ChooseLanguageFormButton from "@/components/custom/button/ChooseLanguageFormButton/ChooseLanguageFormButton";
 import { Button } from "@/components/ui/button";
 import { CardFooter } from "@/components/ui/card";
-import * as React from "react";
-import "./form.css";
-import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import PersonalForm from "../SubForm/personalForm";
-import CertificateForm from "../SubForm/certificateForm";
-import EducationForm from "../SubForm/educationForm";
-import ActivityForm from "../SubForm/activityForm";
-import ExperienceForm from "../SubForm/experienceForm";
-import { BASE_URL } from "@/constants/variables";
-import { useDispatch, useSelector } from "react-redux";
+import { useToast } from "@/components/ui/use-toast";
 import { getCurrentUID, submitUID } from "@/store/slice";
+import { Download } from "lucide-react";
+import * as React from "react";
+import { FormProvider } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import {
   initialResumeValue,
   ResumeFormType,
   useFormCreateForm,
 } from "../Schema/formSchema";
-import ChooseLanguageFormButton from "@/components/custom/button/ChooseLanguageFormButton/ChooseLanguageFormButton";
+import ActivityForm from "../SubForm/activityForm";
+import CertificateForm from "../SubForm/certificateForm";
+import EducationForm from "../SubForm/educationForm";
+import ExperienceForm from "../SubForm/experienceForm";
+import PersonalForm from "../SubForm/personalForm";
 import ProjectForm from "../SubForm/projectForm";
 import ReferenceForm from "../SubForm/referenceForm";
-import { downloadAPI, submitAPI } from "@/app/form/routes/Api";
-import { Download } from "lucide-react";
 
-const url = BASE_URL;
 const FORM_DATA_KEY = "app_form_local_data";
 export const usePersistForm = ({
   value,
