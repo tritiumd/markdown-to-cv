@@ -1,13 +1,13 @@
 import {
-  FaGithub,
-  FaPhone,
-  FaLinkedinIn,
-  FaEnvelope,
-  FaTwitter,
-  FaFacebook,
-  FaInstagram,
   FaCakeCandles,
+  FaEnvelope,
+  FaFacebook,
+  FaGithub,
+  FaInstagram,
+  FaLinkedinIn,
+  FaPhone,
   FaRegCircle,
+  FaTwitter,
 } from "react-icons/fa6";
 
 import {
@@ -25,10 +25,8 @@ import {
 } from "@/components/ui/popover";
 
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import * as React from "react";
 import { cn } from "@/lib/utils";
+import * as React from "react";
 const icons = [
   { name: "Phone", Component: FaPhone, value: "fa-phone" },
   { name: "Github", Component: FaGithub, value: "fab .fa-github" },
@@ -38,7 +36,7 @@ const icons = [
   { name: "Facebook", Component: FaFacebook, value: "fab .fa-facebook" },
   { name: "Instagram", Component: FaInstagram, value: "fab .fa-instagram" },
   { name: "Birthday", Component: FaCakeCandles, value: "fa-cake-candles" },
-  { name: "None", Component: FaRegCircle, value: "" },
+  { name: "None", Component: FaRegCircle, value: "" }, // empty string for none
 ];
 
 const ChooseIconButton = React.forwardRef(({ className, ...props }, ref) => {

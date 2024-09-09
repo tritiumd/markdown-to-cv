@@ -1,18 +1,17 @@
-import { toast } from "@/components/ui/use-toast";
 import { MAX_RETRIES, OUTPUT_URL } from "@/constants/variables";
 
-export async function previewAPI(uid: string): Promise<string> {
+export async function previewAPI(uid: string, toast: any): Promise<string> {
   const currentUrl = `${OUTPUT_URL}/${uid}`;
   let retries = 0;
   while (retries < MAX_RETRIES) {
     try {
       const res = await fetch(currentUrl);
-      if (!res.ok) {
+      if (!res.ok || res.status === 202) {
         if (res.status === 202) {
           toast({ description: "The data is not ready yet. Retrying..." });
+          console.log("The data is not ready yet. Retrying...");
           await new Promise((resolve) => setTimeout(resolve, 1000));
-          retries++;
-          continue;
+          throw new Error("The data is not ready yet");
         } else {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
@@ -20,12 +19,13 @@ export async function previewAPI(uid: string): Promise<string> {
       const data = await res.text();
       return data;
     } catch (error) {
-      toast({
-        description: `Failed to fetch data. Retried ${retries} ${retries <= 1 ? "time" : "times"}`,
-        variant: "destructive",
-      });
-      console.error("Failed to fetch data:", error);
       retries++;
+      toast({
+        description: `Retried ${retries} ${retries <= 1 ? "time" : "times"}`,
+      });
+      if (retries >= MAX_RETRIES) {
+        console.error("Failed to fetch data after multiple attempts:", error);
+      }
     }
   }
   throw new Error("Failed to fetch data after multiple attempts");

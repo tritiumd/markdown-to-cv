@@ -66,11 +66,8 @@ export default function CvForm() {
   const currentUID = useSelector(getCurrentUID);
   async function handleSubmit(values: ResumeFormType) {
     try {
-      console.log("submit values", values);
-      console.log(JSON.stringify(values));
       const uid = await submitAPI(values, formLanguage);
       dispatch(submitUID(uid));
-      console.log("Form data:", values);
 
       toast({
         title: "Success",

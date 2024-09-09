@@ -152,6 +152,7 @@ async def submit_form(
             session.refresh(yaml_file)
 
         except Exception as e:
+            logger.error(f"Error: {e}")
             return {"error": str(e)}
 
         return {"message": "Form submitted successfully", "uid": task_id}

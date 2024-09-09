@@ -6,16 +6,13 @@ import Link from "next/link";
 import * as React from "react";
 
 export const Navbar: React.FC<{ className?: string }> = ({ className }) => {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [language, setLanguage] = React.useState<"en" | "vi">("en");
-  const [theme, setCurrentTheme] = React.useState<"light" | "dark">("light");
-
   const toggleLanguage = () => {
     setLanguage((prev) => (prev === "en" ? "vi" : "en"));
   };
 
   const changeTheme = () => {
-    setCurrentTheme((prev) => (prev === "light" ? "dark" : "light"));
     setTheme(theme === "light" ? "dark" : "light");
   };
 
@@ -56,12 +53,6 @@ export const Navbar: React.FC<{ className?: string }> = ({ className }) => {
               Upload
             </Link>
 
-            {/* <Link
-              href="/form"
-              className="font-medium text-sm border-b-2 border-transparent transition-colors hover:text-gray-900 hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"
-              prefetch={false}>
-              Form
-            </Link> */}
             <Link
               href="https://markdown-to-cv.notion.site/"
               className="font-medium text-sm border-b-2 border-transparent transition-colors hover:text-gray-900 hover:border-gray-100 dark:hover:text-gray-50 dark:hover:border-gray-800"

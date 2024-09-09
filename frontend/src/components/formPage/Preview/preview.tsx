@@ -19,7 +19,7 @@ const Preview: React.FC = () => {
   const [error, setError] = React.useState<string | null>(null);
   const fetchData = React.useCallback(async () => {
     try {
-      const data = await previewAPI(currentUID);
+      const data = await previewAPI(currentUID, toast);
       const root = parse(data);
       const contentString = root.toString();
       setContent(contentString);
