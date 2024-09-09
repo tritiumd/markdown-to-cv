@@ -10,7 +10,7 @@ class File(SQLModel):
     title: Optional[str]
     data_path: str
     owner_id: Optional[int] = 0  # Will change whenever we implement authentication and user table
-    time_stamp: Optional[datetime.datetime] = None
+    time_stamp: Optional[datetime.datetime] = datetime.datetime.now()
 
 
 class MarkdownFile(File, table=True):
