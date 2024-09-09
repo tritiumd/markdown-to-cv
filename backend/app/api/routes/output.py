@@ -1,3 +1,4 @@
+import os
 from typing import Any, Optional
 
 from app.core import utils
@@ -25,7 +26,7 @@ async def create_pdf(html_content: str, output_path: str):
 async def get_output_file(
     background_tasks: BackgroundTasks,
     file_uid: Optional[str],
-    is_download: Optional[bool] = False,
+    download: Optional[bool] = False,
 ) -> Any:
     try:
         logger.debug(f"get_output_file: {file_uid}")
@@ -33,16 +34,16 @@ async def get_output_file(
         if task_result.status == "PENDING":
             return HTMLResponse(status_code=202, content="Task is pending")
         content = task_result.result
-        if is_download:
+        if download:
             pdf_path = "tmp/resume.pdf"
             html_content = content.decode("utf-8")
             await create_pdf(html_content, pdf_path)
-            # background_tasks.add_task(os.remove, pdf_path)
+            background_tasks.add_task(os.remove, pdf_path)
             return FileResponse(
                 pdf_path,
                 filename="resume.pdf",
                 media_type="application/pdf",
-                # background=background_tasks,
+                background=background_tasks,
             )
 
         return HTMLResponse(content=content, status_code=200)

@@ -91,7 +91,8 @@ export default function CvForm() {
       });
     }
   }
-  async function handleDownload() {
+  async function handleDownload(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
     try {
       await downloadAPI(currentUID);
     } catch (error) {
@@ -102,7 +103,7 @@ export default function CvForm() {
         description: "There was an issue!",
         variant: "destructive",
         action: (
-          <ToastAction altText="Try again" onClick={() => handleDownload()}>
+          <ToastAction altText="Try again" onClick={() => handleDownload(event)}>
             Try again
           </ToastAction>
         ),
@@ -110,6 +111,10 @@ export default function CvForm() {
     }
   }
 
+  function handleReset() {
+    methods.reset(initialResumeValue);
+    dispatch(submitUID(""));
+  }
   return (
     <div className="flex-col items-center justify-between px-10 pt-2 overflow-hidden max-h-full overflow-y-auto h-full">
       <FormProvider {...methods}>
@@ -131,7 +136,7 @@ export default function CvForm() {
               type={"reset"}
               variant="outline"
               className={"place-self-center"}
-              onClick={() => methods.reset(initialResumeValue)}>
+              onClick={handleReset}>
               Reset
             </Button>
             <ChooseLanguageFormButton
@@ -141,6 +146,7 @@ export default function CvForm() {
             <Button
               onClick={handleDownload}
               variant="outline"
+              disabled={!currentUID}
               className="place-self-center gap-2">
               <Download />
               Download
