@@ -14,9 +14,6 @@ COPY requirements.txt /tmp/requirements/requirements.txt
 RUN pip install -U pip && \
     pip install --no-cache-dir -r /tmp/requirements/requirements.txt
 
-# Install Playwright and its dependencies
-RUN playwright install
-
 COPY . /src
 
 ENV PATH "$PATH:/src/script"
@@ -24,7 +21,7 @@ ENV PATH "$PATH:/src/script"
 # Data path for storing uploaded files
 RUN mkdir /data
 
+# Create a non-root user
 WORKDIR /src
-USER app
 
 CMD ["./script/start-api.sh"]

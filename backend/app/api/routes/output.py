@@ -8,20 +8,10 @@ from app.models import YAMLFile
 from fastapi import APIRouter, BackgroundTasks, Depends
 from fastapi.responses import FileResponse, HTMLResponse
 from loguru import logger
-from playwright.async_api import async_playwright
 from sqlmodel import Session, select
 
 router = APIRouter()
 logger.add("logs/output.log", rotation="1 day", retention="7 days", enqueue=True)
-
-
-async def create_pdf(html_content: str, output_path: str):
-    async with async_playwright() as p:
-        browser = await p.chromium.launch()
-        page = await browser.new_page()
-        await page.set_content(html_content, wait_until="networkidle")
-        await page.pdf(path=output_path)
-        await browser.close()
 
 
 @router.get("/output-html/{task_id}")
