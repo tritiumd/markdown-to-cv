@@ -46,9 +46,13 @@ export async function downloadAPI(
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "resume.pdf";
+
+    // Temporary set filename to cv.pdf
+    a.download = "cv.pdf";
+
     document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   } catch (error) {
     console.error("Failed to download data:", error);

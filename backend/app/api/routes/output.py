@@ -39,11 +39,14 @@ async def get_output_file(
             # how can we wait for the task to finish and get the result
             export_task_result = await utils.wait_for_task(export_task_id)
             pdf_path = Path(settings.DATA_FOLDER_PATH_PDF) / f"{yaml_file.uid}.pdf"
-
+            html_path = Path(settings.DATA_FOLDER_PATH_HTML) / f"{yaml_file.uid}.html"
+            background_tasks.add_task(utils.delete_file, pdf_path)
+            background_tasks.add_task(utils.delete_file, html_path)
             return FileResponse(
                 path=pdf_path,
-                filename=f"{yaml_file.uid}.pdf",
+                filename="cv.pdf",
                 media_type="application/pdf",
+                background=background_tasks,
             )
         content = task_result.result
 

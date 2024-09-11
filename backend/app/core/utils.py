@@ -3,6 +3,7 @@ import datetime
 import logging
 import os
 import time
+from pathlib import Path
 
 import aiofiles
 from celery import Celery, chain, signature
@@ -150,3 +151,13 @@ async def write_file(file_path: str, content: bytes | str) -> None:
     else:
         async with aiofiles.open(file_path, "w") as f:
             await f.write(content)
+
+
+def delete_file(file_path: Path) -> None:
+    """Delete file utils instead of import os directly
+
+    Args:
+        file_path (str): File path
+    """
+    os.remove(file_path)
+    logger.info(f"Deleted file: {file_path}")
