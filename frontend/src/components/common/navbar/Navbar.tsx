@@ -32,7 +32,7 @@ export const Navbar: React.FC<{ className?: string }> = ({ className }) => {
             <span>Tritiumd</span>
           </Link>
           <nav className="ml-auto flex items-center space-x-4">
-            <Button variant="outline" size="icon" onClick={changeTheme}>
+            <Button variant="outline" size="icon" onClick={changeTheme} suppressHydrationWarning>
               {theme === "light" ? (
                 <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               ) : (

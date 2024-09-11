@@ -1,10 +1,11 @@
+import asyncio
 import datetime
 import logging
 import os
 import time
 
 import aiofiles
-import celery
+from celery import Celery, chain, signature
 
 from app.core.config import settings
 
@@ -28,7 +29,7 @@ parent_dir = os.path.abspath(os.path.join(deploy_dir, os.pardir))
 logger.debug("Broker URL: ", settings.CELERY_BROKER_URL)
 logger.debug("Result Backend: ", settings.CELERY_RESULT_BACKEND)
 
-celery_app = celery.Celery(
+celery_app = Celery(
     __name__,
     broker=settings.CELERY_BROKER_URL,
     backend=settings.CELERY_RESULT_BACKEND,
@@ -59,14 +60,75 @@ def yaml_to_html(filename: str, language: str) -> str:
         language (str): language of the CV
     """
     task = celery_app.send_task("yaml_to_html", args=[filename, language])
-    print("celery task id: ", task.id)
-    return task.id
     logger.info("Send task to create html file")
+    return task.id
+
+
+def export_to_pdf(filename: str, language: str) -> str:
+    """Export to pdf
+
+    Args:
+        filename (str): uid of the file
+    """
+    # # First create the html file
+    # task = celery_app.send_task("md_to_html", args=[filename])
+    # # when task is finished, create the pdf file
+    # task = celery_app.send_task("export_to_pdf", args=[filename])
+
+    task_chain = chain(
+        signature("yaml_to_html", args=[filename, language, True])
+        | signature("html_to_pdf", imutable=True),
+    )
+    try:
+        task = task_chain.apply_async()
+        logger.info("Send task to create pdf file")
+        return task.id
+    except Exception as e:
+        logger.error("Error: ", e)
+        raise
 
 
 def get_celery_task_result(task_id: str) -> any:
     result = celery_app.AsyncResult(task_id)
     return result
+
+
+async def wait_for_task(task_id: str, timeout: int = 300, interval: float = 2.0) -> any:
+    """
+    Asynchronously wait for a Celery task to complete and return its result.
+
+    Args:
+        task_id (str): The ID of the Celery task to wait for.
+        timeout (int): Maximum time to wait for the task in seconds. Defaults to 300 seconds (5 minutes).
+        interval (float): Time to wait between status checks in seconds. Defaults to 2 seconds.
+
+    Returns:
+        Any: The result of the Celery task.
+
+    Raises:
+        TimeoutError: If the task doesn't complete within the specified timeout.
+        Exception: If the task fails or returns an exception.
+    """
+    start_time = time.time()
+    result = celery_app.AsyncResult(task_id)
+
+    while True:
+        if result.ready():
+            if result.successful():
+                logger.info(f"Task {task_id} completed successfully")
+                return result.get()
+            else:
+                logger.error(f"Task {task_id} failed")
+                raise result.result
+
+        if time.time() - start_time > timeout:
+            logger.error(f"Task {task_id} timed out after {timeout} seconds")
+            raise TimeoutError(
+                f"Task {task_id} did not complete within {timeout} seconds"
+            )
+
+        logger.debug(f"Task {task_id} status: {result.status}")
+        await asyncio.sleep(interval)
 
 
 # @measure_time

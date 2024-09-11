@@ -34,6 +34,7 @@ services:
       - DATA_FOLDER_PATH_MARKDOWN:/data/markdown
       - DATA_FOLDER_PATH_HTML:/data/html
       - DATA_FOLDER_PATH_YAML:/data/yaml
+      - DATA_FOLDER_PATH_PDF:/data/pdf
       - REDIS_HOST=redis-dev
       - REDIS_PORT=6379
     volumes:

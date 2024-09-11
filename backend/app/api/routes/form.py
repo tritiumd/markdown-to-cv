@@ -145,11 +145,13 @@ async def submit_form(
             owner_id=0,
             uid=new_uid,
             time_stamp=utils.get_current_time(),
+            task_id=task_id,
         )
         try:
             session.add(yaml_file)
-            session.flush()
+            session.commit()
             session.refresh(yaml_file)
+            logger.debug(yaml_file)
 
         except Exception as e:
             logger.error(f"Error: {e}")

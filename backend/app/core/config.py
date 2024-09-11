@@ -1,11 +1,11 @@
-from typing import Any, Literal, List, Union
+from typing import Any, List, Literal, Union
 
 from pydantic import (
     AnyUrl,
-    HttpUrl,
-    computed_field,
-    PostgresDsn,
     DirectoryPath,
+    HttpUrl,
+    PostgresDsn,
+    computed_field,
     validator,
 )
 from pydantic_core import MultiHostUrl
@@ -58,6 +58,7 @@ class Settings(BaseSettings):
     DATA_FOLDER_PATH_HTML: DirectoryPath = "./data/html"
     DATA_FOLDER_PATH_DEPLOY: DirectoryPath = "./data/deploy"
     DATA_FOLDER_PATH_YAML: DirectoryPath = "./data/yaml"
+    DATA_FOLDER_PATH_PDF: DirectoryPath = "./data/pdf"
 
     # Folder path validation
     @computed_field  # type: ignore[misc]

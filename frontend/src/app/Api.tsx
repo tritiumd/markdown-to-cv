@@ -31,9 +31,12 @@ export async function previewAPI(uid: string, toast: any): Promise<string> {
   throw new Error("Failed to fetch data after multiple attempts");
 }
 
-export async function downloadAPI(uid: string): Promise<void> {
+export async function downloadAPI(
+  uid: string,
+  language: string
+): Promise<void> {
   // TODO: check the legit later
-  const currentUrl = `${OUTPUT_URL}/${uid}?download=true`;
+  const currentUrl = `${OUTPUT_URL}/${uid}?download=true&language=${language}`;
   try {
     const res = await fetch(currentUrl);
     if (!res.ok) {

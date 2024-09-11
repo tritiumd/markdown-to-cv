@@ -14,7 +14,5 @@ RUN python -m pip install -U "watchdog[watchmedo]"
 
 ENV PATH "$PATH:/worker"
 
-RUN mkdir /worker
-
 WORKDIR /worker
 USER app
