@@ -80,7 +80,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.worker
-    container_name: ${STACK_NAME?Variable not set}-worker
     deploy:
       mode: replicated
       replicas: 5
