@@ -22,6 +22,7 @@ import ExperienceForm from "../SubForm/experienceForm";
 import PersonalForm from "../SubForm/personalForm";
 import ProjectForm from "../SubForm/projectForm";
 import ReferenceForm from "../SubForm/referenceForm";
+import "./form.css";
 
 const FORM_DATA_KEY = "app_form_local_data";
 export const usePersistForm = ({
