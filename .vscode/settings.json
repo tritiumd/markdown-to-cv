@@ -1,23 +1,19 @@
 {
-    "python.defaultInterpreterPath": "backend/${env:VIRTUAL_ENV}",
-    "python.languageServer": "Jedi",
-    "ruff.path": [
-        "${workspaceFolder}/backend/venv/bin/ruff",
-    ],
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": "always",
-        "source.fixAll": "explicit"
-    },
-    "[python]": {
-        "diffEditor.ignoreTrimWhitespace": false,
-        "editor.formatOnType": true,
-        "editor.wordBasedSuggestions": "off",
-        "editor.defaultFormatter": "charliermarsh.ruff"
-    },
-    "[javascript,typescript]": {
-        "editor.maxTokenizationLineLength": 2500,
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "editor.linkedEditing": true
+  "ruff.path": ["${workspaceFolder}/backend/venv/bin/ruff"],
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always",
+    "source.fixAll": "explicit"
+  },
+  "[python]": {
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.formatOnType": true,
+    "editor.wordBasedSuggestions": "off",
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "[javascript,typescript]": {
+    "editor.maxTokenizationLineLength": 2500,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.linkedEditing": true
 }

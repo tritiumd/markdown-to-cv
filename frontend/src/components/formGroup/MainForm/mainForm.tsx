@@ -1,6 +1,7 @@
 "use client";
 import { downloadAPI, submitAPI } from "@/app/Api";
 import ChooseLanguageFormButton from "@/components/custom/button/ChooseLanguageFormButton/ChooseLanguageFormButton";
+import { DialogCloseButton } from "@/components/custom/dialog/ShareDialog/ShareDialog";
 import { Button } from "@/components/ui/button";
 import { CardFooter } from "@/components/ui/card";
 import { ToastAction } from "@/components/ui/toast";
@@ -65,30 +66,36 @@ export default function CvForm() {
   });
   const [formLanguage, setFormLanguage] = React.useState("vi");
   const currentUID = useSelector(getCurrentUID);
-  async function handleSubmit(values: ResumeFormType) {
-    try {
-      const uid = await submitAPI(values, formLanguage);
-      dispatch(submitUID(uid));
+  const handleSubmit = React.useCallback(
+    async (values: ResumeFormType) => {
+      try {
+        const uid = await submitAPI(values, formLanguage);
+        dispatch(submitUID(uid));
 
-      toast({
-        title: "Success",
-        description: "Your CV has been submitted",
-      });
-    } catch (error) {
-      console.error("Submission error:", error);
-      // Optionally, show an error toast
-      toast({
-        title: "Error",
-        description: "There was an issue!",
-        variant: "destructive",
-        action: (
-          <ToastAction altText="Try again" onClick={() => handleSubmit(values)}>
-            Try again
-          </ToastAction>
-        ),
-      });
-    }
-  }
+        toast({
+          title: "Success",
+          description: "Your CV has been submitted",
+        });
+      } catch (error) {
+        console.error("Submission error:", error);
+        // Optionally, show an error toast
+        toast({
+          title: "Error",
+          description: "There was an issue!",
+          variant: "destructive",
+          action: (
+            <ToastAction
+              altText="Try again"
+              onClick={() => handleSubmit(values)}
+            >
+              Try again
+            </ToastAction>
+          ),
+        });
+      }
+    },
+    [dispatch]
+  );
   async function handleDownload(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     try {
@@ -133,6 +140,7 @@ export default function CvForm() {
             <Button type="submit" className="w-full">
               Create CV now
             </Button>
+            <DialogCloseButton />
             <Button
               type={"reset"}
               variant="outline"

@@ -1,34 +1,12 @@
-import { MAX_RETRIES, OUTPUT_URL } from "@/constants/variables";
+import { OUTPUT_URL } from "@/constants/variables";
 
-export async function previewAPI(uid: string, toast: any): Promise<string> {
+export async function previewAPI(uid: string): Promise<string> {
   const currentUrl = `${OUTPUT_URL}/${uid}`;
-  let retries = 0;
-  while (retries < MAX_RETRIES) {
-    try {
-      const res = await fetch(currentUrl);
-      if (!res.ok || res.status === 202) {
-        if (res.status === 202) {
-          toast({ description: "The data is not ready yet. Retrying..." });
-          console.log("The data is not ready yet. Retrying...");
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          throw new Error("The data is not ready yet");
-        } else {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-      }
-      const data = await res.text();
-      return data;
-    } catch (error) {
-      retries++;
-      toast({
-        description: `Retried ${retries} ${retries <= 1 ? "time" : "times"}`,
-      });
-      if (retries >= MAX_RETRIES) {
-        console.error("Failed to fetch data after multiple attempts:", error);
-      }
-    }
+  const res = await fetch(currentUrl);
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
   }
-  throw new Error("Failed to fetch data after multiple attempts");
+  return await res.text();
 }
 
 export async function downloadAPI(

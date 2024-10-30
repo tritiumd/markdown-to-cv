@@ -32,7 +32,7 @@ export const schemaExperience = z.object({
   phase: z.array(schemaPhase.optional()),
 });
 
-export const schemaProject= z.object({
+export const schemaProject = z.object({
   place: z.string().describe("Your project title"),
   phase: z.array(schemaPhase.optional()),
 });
@@ -59,6 +59,7 @@ export const formResumeSchema = z.object({
   project: z.array(schemaProject.optional()),
   activity: z.array(schemaActivity.optional()),
   reference: z.array(schemaReference).optional(),
+  language: z.string(),
 });
 
 export const initialResumeValue = {
@@ -77,6 +78,7 @@ export const initialResumeValue = {
   project: [],
   activity: [],
   reference: [],
+  language: "vi",
 };
 export type ResumeFormType = z.infer<typeof formResumeSchema>;
 
