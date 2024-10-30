@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import * as React from "react";
-import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +8,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Check, ChevronDown, Globe } from "lucide-react";
+import * as React from "react";
 
-interface ChooseIconButtonProps {
+interface ChooseCVLanguageButtonProps {
   value: string;
   onChange: (value: string) => void;
 }
@@ -21,9 +20,9 @@ const languages = [
   { value: "vi", label: "Tiếng Việt" },
 ];
 
-const ChooseIconButton = React.forwardRef<
+const ChooseCVLanguageButton = React.forwardRef<
   HTMLButtonElement,
-  ChooseIconButtonProps
+  ChooseCVLanguageButtonProps
 >((props, ref) => {
   return (
     <DropdownMenu>
@@ -60,5 +59,5 @@ const ChooseIconButton = React.forwardRef<
   );
 });
 
-ChooseIconButton.displayName = "ChooseIconButton";
-export default ChooseIconButton;
+ChooseCVLanguageButton.displayName = "ChooseIconButton";
+export default ChooseCVLanguageButton;

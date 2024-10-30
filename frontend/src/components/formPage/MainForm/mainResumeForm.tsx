@@ -63,7 +63,7 @@ export default function CvForm() {
     value: methods.getValues(),
     localStorageKey: FORM_DATA_KEY,
   });
-  const [formLanguage, setFormLanguage] = React.useState("vi");
+  const [formLanguage, setFormLanguage] = React.useState("en");
   const currentUID = useSelector(getCurrentUID);
   async function handleSubmit(values: ResumeFormType) {
     try {
